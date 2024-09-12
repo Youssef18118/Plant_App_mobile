@@ -41,8 +41,8 @@ class MainApp extends StatelessWidget {
         ),
         
       ],
-      child: GetMaterialApp(
-        home: Login(),
+      child: const GetMaterialApp(
+        home:  Login(),
         debugShowCheckedModeBanner: false,
       ),
     );

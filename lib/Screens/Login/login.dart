@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/LoginForm/LoginForm.dart';
 import 'package:plant_app/Screens/Login/LoginWidgets.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
+import 'package:plant_app/Screens/Signup/register.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -47,13 +48,13 @@ class _LoginState extends State<Login> {
                     child: Column(
                       children: [
                         Container(
-                          width: 70,
-                          height: 70,
+                          width: 100,
+                          height: 100,
                           child: Image.asset("assets/images/logo.png"),
                         ),
-                        SizedBox(
-                          height: height * 0.02,
-                        ),
+                        // SizedBox(
+                        //   height: height * 0.005,
+                        // ),
                         const Text(
                           "Welcome Back",
                           style: TextStyle(
@@ -155,7 +156,7 @@ class _LoginState extends State<Login> {
                             ),
                             InkWell(
                                 onTap: () {
-                                  // Get.to(() => const register());
+                                  Get.to(() => const register());
                                 },
                                 child: const Text(
                                   "Register",
