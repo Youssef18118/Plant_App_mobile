@@ -1,13 +1,29 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
+import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
+import 'package:plant_app/Screens/helpers/dio_helpers.dart';
+import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 
-void main() {
-  // runApp(const MainApp());
+void main() async{
+  await Hive.initFlutter();
+  await Hive.openBox(HiveHelpers.TokenBox);
+  DioHelpers.init();
 
-  DevicePreview(
-     builder: (context) =>MainApp(),
-  );
+  // Set the token before running the app
+  final token = HiveHelpers.getToken();
+  if (token != null && token.isNotEmpty) {
+    DioHelpers.setToken(token);
+  }
+  
+  
+  runApp(const MainApp());
+
+  
 }
 
 class MainApp extends StatelessWidget {
@@ -15,14 +31,19 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: DevicePreview.appBuilder,
-      locale: DevicePreview.locale(context),
-      debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: Login(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => LoginCubit(),
         ),
+        BlocProvider(
+          create: (context) => RegisterCubit(),
+        ),
+        
+      ],
+      child: GetMaterialApp(
+        home: Login(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
