@@ -9,8 +9,10 @@ import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
+import 'package:plant_app/Screens/splash/cubit/splash_screen_cubit.dart';
+import 'package:plant_app/Screens/splash/splash.dart';
 
-void main() async{
+void main() async {
   await Hive.initFlutter();
   await Hive.openBox(HiveHelpers.TokenBox);
   DioHelpers.init();
@@ -20,11 +22,8 @@ void main() async{
   if (token != null && token.isNotEmpty) {
     DioHelpers.setToken(token);
   }
-  
-  
-  runApp(const MainApp());
 
-  
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -35,15 +34,17 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (context) => SplashScreenCubit()..splashScreenView(),
+        ),
+        BlocProvider(
           create: (context) => LoginCubit(),
         ),
         BlocProvider(
           create: (context) => RegisterCubit(),
         ),
-        
       ],
       child: const GetMaterialApp(
-        home:  Onboarding(),
+        home: SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
