@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 4)).then((val) {
-      Get.off(const Onboarding());
+        Get.offAll(() => const Onboarding());
     });
   }
 
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: SizedBox(
             width: 270,
             height: 270,
-            child: Image.asset(imagePath + 'GreenLife logo.png')),
+            child: Image.asset(imagePath + 'logoWithText.png')),
       ),
     );
   }

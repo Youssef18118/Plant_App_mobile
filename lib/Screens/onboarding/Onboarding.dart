@@ -18,7 +18,7 @@ class _OnboardingState extends State<Onboarding> {
       index++;
       setState(() {});
     } else {
-      Get.off(const AuthenticationScreen());
+      Get.off(() => const AuthenticationScreen());
     }
   }
 

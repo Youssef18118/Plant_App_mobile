@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/LoginForm/LoginForm.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
+import 'package:plant_app/const.dart';
 
 class register extends StatelessWidget {
   const register({super.key});
@@ -44,7 +45,7 @@ class register extends StatelessWidget {
                     Container(
                       width: 70,
                       height: 70,
-                      child: Image.asset("assets/images/logo.png"),
+                      child: Image.asset(imagePath + "logoWithoutText.png"),
                     ),
                     SizedBox(
                       height: height * 0.02,

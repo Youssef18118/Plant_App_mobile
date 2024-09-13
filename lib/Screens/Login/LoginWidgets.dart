@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_app/const.dart';
 Text smallText(String text) {
     return Text(
       text,
@@ -24,7 +25,7 @@ Text smallText(String text) {
             SizedBox(
               width: 22,
               height: 22,
-              child: Image.asset("assets/images/$image"),
+              child: Image.asset(imagePath +"$image"),
             ),
           ],
           const SizedBox(width: 10,),

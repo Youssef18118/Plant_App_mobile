@@ -14,16 +14,16 @@ class OnboardingModel {
 
 List<OnboardingModel> onBoardingList = [
   OnboardingModel(
-    title: "Identify Plants",
+    title: "Browse Plants",
     image: "Pic1.png",
-    mess1: "You can identify the plants you don't know through your camera ",
+    mess1: "You can browse the plants you can add to your Garden ",
     elipse: "elipse1.PNG",
   ),
   OnboardingModel(
-      title: "Learn Many Plants Species",
+      title: "Care For Any Plant",
       image: "Pic2.png",
       mess1:
-          "Let's learn about the many plant species that exist in this world",
+          "Let's learn how to care for any plant species that exist in this world",
       elipse: "elipse2.PNG"),
   OnboardingModel(
       title: "Read Many Articles About Plant",

@@ -5,6 +5,7 @@ import 'package:plant_app/Screens/Login/LoginForm/LoginForm.dart';
 import 'package:plant_app/Screens/Login/LoginWidgets.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Signup/register.dart';
+import 'package:plant_app/const.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -50,7 +51,7 @@ class _LoginState extends State<Login> {
                         Container(
                           width: 100,
                           height: 100,
-                          child: Image.asset("assets/images/logo.png"),
+                          child: Image.asset(imagePath +"logoWithoutText.png"),
                         ),
                         // SizedBox(
                         //   height: height * 0.005,
