@@ -8,6 +8,7 @@ import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/onboarding/Onboarding.dart';
 
 void main() async{
   await Hive.initFlutter();
@@ -42,7 +43,7 @@ class MainApp extends StatelessWidget {
         
       ],
       child: const GetMaterialApp(
-        home:  Login(),
+        home:  Onboarding(),
         debugShowCheckedModeBanner: false,
       ),
     );
