@@ -9,7 +9,7 @@ import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
-import 'package:plant_app/Screens/splash/cubit/splash_screen_cubit.dart';
+
 import 'package:plant_app/Screens/splash/splash.dart';
 
 void main() async {
@@ -33,9 +33,6 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => SplashScreenCubit()..splashScreenView(),
-        ),
         BlocProvider(
           create: (context) => LoginCubit(),
         ),

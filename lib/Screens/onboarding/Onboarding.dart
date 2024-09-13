@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/login.dart';
+import 'package:plant_app/Screens/authentication/authentication.dart';
 import 'package:plant_app/Screens/onboarding/model/onboardingmodel.dart';
 import 'package:plant_app/const.dart';
 
@@ -16,8 +18,7 @@ class _OnboardingState extends State<Onboarding> {
       index++;
       setState(() {});
     } else {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Login()));
+      Get.off(const AuthenticationScreen());
     }
   }
 
@@ -35,7 +36,8 @@ class _OnboardingState extends State<Onboarding> {
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 120),
-                      child: Image.asset(imagePath + onBoardingList[index].image!),
+                      child:
+                          Image.asset(imagePath + onBoardingList[index].image!),
                     ),
                   ),
                   const SizedBox(
@@ -58,8 +60,7 @@ class _OnboardingState extends State<Onboarding> {
                   ),
                   Center(
                     child: Text(
-                      onBoardingList[index].mess1!
-                          .replaceFirst('and', '\nand'),
+                      onBoardingList[index].mess1!.replaceFirst('and', '\nand'),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 17,
