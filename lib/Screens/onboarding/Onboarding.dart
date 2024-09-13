@@ -24,6 +24,8 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -40,8 +42,8 @@ class _OnboardingState extends State<Onboarding> {
                           Image.asset(imagePath + onBoardingList[index].image!),
                     ),
                   ),
-                  const SizedBox(
-                    height: 40,
+                  SizedBox(
+                    height: height * 0.05,
                   ),
                   Center(
                     child: Text(
@@ -51,12 +53,11 @@ class _OnboardingState extends State<Onboarding> {
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF36455A),
-                        height: 1.5,
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
+                  SizedBox(
+                    height: height * 0.02,
                   ),
                   Center(
                     child: Text(
@@ -65,41 +66,40 @@ class _OnboardingState extends State<Onboarding> {
                       style: const TextStyle(
                         fontSize: 17,
                         color: Colors.grey,
-                        height: 1.3,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: height * 0.05),
                   Image.asset(imagePath + onBoardingList[index].elipse!),
+                  SizedBox(
+                    height: height * 0.03,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: GestureDetector(
+                      onTap: _onTap,
+                      child: Container(
+                        height: height * 0.06,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 45, 218, 147),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "NEXT",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: GestureDetector(
-              onTap: _onTap,
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 45, 218, 147),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: const Center(
-                  child: Text(
-                    "NEXT",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 70,
           ),
         ],
       ),
