@@ -21,6 +21,7 @@ dependencies:
   cached_network_image: ^3.2.3
   path_provider_android: ^2.2.10
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

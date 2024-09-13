@@ -25,73 +25,82 @@ class _OnboardingState extends State<Onboarding> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(40),
-        child: Column(
-          children: [
-            Center(
-                child: Expanded(
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(40),
+              child: Column(
+                children: [
+                  Center(
                     child: Padding(
-              padding: const EdgeInsets.only(top: 120),
-              child: Container(
-                  child: Image.asset(imagePath + onBoardingList[index].image!)),
-            ))),
-            SizedBox(
-              height: 40,
-            ),
-            Center(
-              child: Expanded(
-                child: Text(
-                  onBoardingList[index].title!,
-                  style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: Expanded(
-                child: Text(
-                  onBoardingList[index].mess1!,
-                  style: TextStyle(fontSize: 19, color: Colors.grey),
-                ),
-              ),
-            ),
-            SizedBox(height: 50),
-            Container(
-              
-                child: Image.asset(imagePath + onBoardingList[index].elipse!)),
-            SizedBox(
-              height: 40,
-            ),
-            GestureDetector(
-              onTap: _onTap,
-              child: Expanded(
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 45, 218, 147),
-                    borderRadius: BorderRadius.circular(5),
+                      padding: const EdgeInsets.only(top: 120),
+                      child: Image.asset(imagePath + onBoardingList[index].image!),
+                    ),
                   ),
-                  child: const Center(
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Center(
                     child: Text(
-                      "NEXT",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                      onBoardingList[index].title!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF36455A),
+                        height: 1.5,
                       ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: Text(
+                      onBoardingList[index].mess1!
+                          .replaceFirst('and', '\nand'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        color: Colors.grey,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  Image.asset(imagePath + onBoardingList[index].elipse!),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: GestureDetector(
+              onTap: _onTap,
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 45, 218, 147),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Center(
+                  child: Text(
+                    "NEXT",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 70,
+          ),
+        ],
       ),
     );
   }
