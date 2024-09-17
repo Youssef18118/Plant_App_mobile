@@ -9,12 +9,14 @@ import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
+import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 
 import 'package:plant_app/Screens/splash/splash.dart';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox(HiveHelpers.TokenBox);
+  await Hive.openBox(HiveHelpers.tokenBox);
+  await Hive.openBox(HiveHelpers.gardenBox);
   DioHelpers.init();
 
   // Set the token before running the app
@@ -38,6 +40,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => RegisterCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ProfileCubit()..getProfile(),
         ),
       ],
       child: const GetMaterialApp(

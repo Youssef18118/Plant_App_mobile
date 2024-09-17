@@ -65,7 +65,7 @@ class AuthenticationScreen extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.to(const Login());
+                      Get.to(() =>const Login());
                     },
                     child: Container(
                       decoration: const BoxDecoration(
@@ -87,7 +87,7 @@ class AuthenticationScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.to(const register());
+                      Get.to(() => const register());
                     },
                     child: Container(
                       decoration: BoxDecoration(

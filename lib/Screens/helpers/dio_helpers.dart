@@ -25,9 +25,21 @@ class DioHelpers {
   static Future<Response> getData({
     required String path,
     Map<String, dynamic>? queryParameters,
+    String? customBaseUrl, // Optional custom base URL
   }) async {
-    final response = _dio!.get(path, queryParameters: queryParameters);
-    return response;
+    if (customBaseUrl != null) {
+      final response = await Dio(
+        BaseOptions(
+          baseUrl: customBaseUrl,
+          headers: _dio!.options.headers, // Use the same headers
+          receiveTimeout: _dio!.options.receiveTimeout,
+        ),
+      ).get(path, queryParameters: queryParameters);
+      return response;
+    } else {
+      final response = await _dio!.get(path, queryParameters: queryParameters);
+      return response;
+    }
   }
 
   //Post
