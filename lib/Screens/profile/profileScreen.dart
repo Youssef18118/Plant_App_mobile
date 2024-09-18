@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
-import 'package:hive/hive.dart';
-import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
-import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/Screens/profile/profileWidgets.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -22,7 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
 
-    // // Add some sample plant IDs for testing (show be )
+    // // Add some sample plant IDs for testing (should be removed)
     // HiveHelpers.addPlantId(1);  
     // HiveHelpers.addPlantId(2);  
     // HiveHelpers.addPlantId(3);  

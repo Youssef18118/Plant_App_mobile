@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
+import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
@@ -43,6 +44,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ProfileCubit()..getProfile(),
+        ),
+        BlocProvider(
+          create: (context) => GuideCubit(),
         ),
       ],
       child: const GetMaterialApp(
