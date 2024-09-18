@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:plant_app/Screens/Login/login.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
@@ -128,6 +126,7 @@ Widget myGardenButton() {
                   ElevatedButton(
                     onPressed: () {
                       // Show plant care guides
+                      Get.to(() => GuideScreen(plantId: plant.id! ,URL: plant.defaultImage?.mediumUrl ?? '',));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[400],
