@@ -70,5 +70,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     plantList.removeWhere((plant) => plant.id == plantId);
     HiveHelpers.removePlantId(plantId); 
     emit(ProfileSuccessState());
+  
   }
 }
