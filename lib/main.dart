@@ -11,6 +11,8 @@ import 'package:plant_app/Screens/Species/speciesScreen.dart';
 import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
+import 'package:plant_app/Screens/home/get_plants_dio_helper.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
@@ -22,6 +24,7 @@ void main() async {
   await Hive.openBox(HiveHelpers.tokenBox);
   await Hive.openBox(HiveHelpers.gardenBox);
   DioHelpers.init();
+  PlantsDioHelper.init();
 
   // Set the token before running the app
   final token = HiveHelpers.getToken();
@@ -45,6 +48,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(
           create: (context) => RegisterCubit(),
         ),
+        BlocProvider(create: (context) => HomeScreenCubit()..gettingPlants()),
         BlocProvider(
           create: (context) => ProfileCubit()..getProfile(),
         ),

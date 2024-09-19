@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/navigation/navigation.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
 import 'package:plant_app/const.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
@@ -22,41 +23,27 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginPasswordVisibilityChanged(isPasswordVisible));
   }
 
+  void login({required String email, required String password}) async {
+    emit(LoginLoadingState());
 
-  void login({
-  required String email,
-  required String password
-}) async {
-  emit(LoginLoadingState());
-
-
-  AuthenticationModel model = AuthenticationModel();
-  try {
-    final response = await DioHelpers.postData(
-      path: LoginPath,
-      body: {
+    AuthenticationModel model = AuthenticationModel();
+    try {
+      final response = await DioHelpers.postData(path: LoginPath, body: {
         "email": email,
         "password": password,
+      });
+
+      model = AuthenticationModel.fromJson(response.data);
+      if (model.status ?? false) {
+        HiveHelpers.setToken(model.data?.token);
+        DioHelpers.setToken(model.data?.token ?? '');
+        Get.offAll(() => const NavigationScreen());
+        emit(LoginSucessState());
+      } else {
+        emit(LogineErrorState(model.message ?? "Error"));
       }
-    );
-
-
-    model = AuthenticationModel.fromJson(response.data);
-    if (model.status ?? false) {
-      HiveHelpers.setToken(model.data?.token);
-      DioHelpers.setToken(model.data?.token ?? '');
-      Get.offAll(() => const ProfileScreen());
-      emit(LoginSucessState());
-    } else {
-      emit(LogineErrorState(model.message ?? "Error"));
+    } catch (e) {
+      emit(LogineErrorState(e.toString()));
     }
-
-  } catch (e) {
-    
-    emit(LogineErrorState(e.toString()));
-    
   }
-}
-
-  
 }

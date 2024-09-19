@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/navigation/navigation.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
 
@@ -20,13 +21,13 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
 
-    if (HiveHelpers.getToken() != null) {
-      Get.offAll(() => const ProfileScreen()); // should be HomeScreen
-      return;
-    }
-    
+      if (HiveHelpers.getToken() != null) {
+        Get.offAll(() => const NavigationScreen()); // should be HomeScreen
+        return;
+      }
+
       Future.delayed(const Duration(seconds: 4)).then((val) {
-          Get.offAll(() => const Onboarding());
+        Get.offAll(() => const Onboarding());
       });
     });
   }
