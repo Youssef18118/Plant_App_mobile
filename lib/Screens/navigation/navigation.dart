@@ -21,27 +21,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: SizedBox(
-          height: 65,
-          width: 65,
-          child: FittedBox(
-            child: Visibility(
-              child: FloatingActionButton(
-                onPressed: () {
-                  // ! add to my garden
-                },
-                child: Icon(Icons.add),
-                backgroundColor: Color.fromARGB(255, 23, 190, 140),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 3, color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(100)),
-                elevation: 0,
-              ),
-            ),
-          ),
-        ),
         body: _screens[_selectedIndex],
         bottomNavigationBar: FlashyTabBar(
           height: 55,

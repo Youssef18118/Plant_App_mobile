@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/get_plants_dio_helper.dart';
 import 'package:plant_app/Screens/home/model/plant_species.dart';
 
@@ -9,6 +10,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   HomeScreenCubit() : super(HomeScreenInitial());
   PlantSpeciesModel plantSpeciesModel = PlantSpeciesModel();
   List<PlantSpeciesModel> plantsSpecies = [];
+  Set<int> pressedPlantIds = {};
 
   void gettingPlants({String? searchText}) async {
     emit(GettingPlantsLoading());
@@ -32,5 +34,17 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     } catch (e) {
       emit(GettingPlantsFailed(msg: 'Couldnt find plants'));
     }
+  }
+
+  void addPlant(int plantID) {
+    if (!pressedPlantIds.contains(plantID)) {
+      pressedPlantIds.add(plantID);
+      HiveHelpers.addPlantId(plantID);
+      emit(ChangeButton());
+    }
+  }
+
+  bool isPlantAdded(int plantID) {
+    return pressedPlantIds.contains(plantID);
   }
 }

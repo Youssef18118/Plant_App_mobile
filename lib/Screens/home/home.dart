@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
+import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
@@ -60,9 +61,9 @@ class HomeScreen extends StatelessWidget {
                                 BlocBuilder<ProfileCubit, ProfileState>(
                                   builder: (context, state) {
                                     return Text(
-                                        'Hello  ${profileCubit.Profmodel.data?.name ?? "N/A"} ',
+                                        'Hello ${profileCubit.Profmodel.data?.name ?? "N/A"} ',
                                         style: TextStyle(
-                                            fontSize: 25, color: Colors.white));
+                                            fontSize: 22, color: Colors.white));
                                   },
                                 ),
                                 SizedBox(
@@ -198,7 +199,8 @@ class HomeScreen extends StatelessWidget {
               width: width * 0.62,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey, width: width * 0.009)),
+                  border: Border.all(
+                      color: Color(0xff5edab5), width: width * 0.009)),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -216,52 +218,67 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: height * 0.013,
+                    ),
+                    SizedBox(
+                      width: width * 0.45,
+                      child: Text(plant.commonName ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                    ),
+                    SizedBox(
+                      height: height * 0.008,
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            Text(
-                              'Plant Name:',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                            SizedBox(
-                              width: width * 0.33,
-                              child: Text(plant.commonName ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
-                            )
-                          ],
+                        BlocBuilder<HomeScreenCubit, HomeScreenState>(
+                          builder: (context, state) {
+                            final isAdded = bloc.isPlantAdded(plant.id ?? 1);
+                            return InkWell(
+                              onTap: isAdded
+                                  ? null
+                                  : () {
+                                      bloc.addPlant(plant.id ?? 1);
+                                    },
+                              child: Container(
+                                height: height * 0.053,
+                                width: width * 0.115,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: isAdded ? Colors.grey : Colors.green,
+                                ),
+                                child: Icon(
+                                  isAdded ? Icons.check : Icons.add,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: InkWell(
-                            onTap: () {
-                              Get.to(() => GuideScreen(
-                                  plantId: plant.id ?? 1, URL: plantBaseUrl));
-                            },
-                            child: Container(
-                              height: height * 0.06,
-                              width: width * 0.14,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: const Color.fromARGB(255, 62, 62, 62),
-                              ),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
+                        SizedBox(
+                          width: width * 0.023,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(() => GuideScreen(
+                                plantId: plant.id ?? 1, URL: plantBaseUrl));
+                          },
+                          child: Container(
+                            height: height * 0.053,
+                            width: width * 0.115,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.black,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ],
