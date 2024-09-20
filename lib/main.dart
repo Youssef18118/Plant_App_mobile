@@ -32,7 +32,7 @@ void main() async {
   if (token != null && token.isNotEmpty) {
     DioHelpers.setToken(token);
   }
-
+  // HiveHelpers.clearPlantIds();
   runApp(const MainApp());
 }
 
@@ -51,17 +51,19 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => HomeScreenCubit()..gettingPlants()),
         BlocProvider(
-          create: (context) => ProfileCubit()..getProfile(),
+          create: (context) => ProfileCubit()
+            ..getProfile()
+            ..fetchAllPlants(),
         ),
         BlocProvider(
           create: (context) => GuideCubit(),
         ),
-        BlocProvider (
-          create: (context)=>SpeciesCubit()..getAllSpecies(),
+        BlocProvider(
+          create: (context) => SpeciesCubit()..getAllSpecies(),
         ),
       ],
       child: const GetMaterialApp(
-        home: Speciesscreen(),
+        home: SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

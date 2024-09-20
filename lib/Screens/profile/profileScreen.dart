@@ -18,9 +18,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
 
     // // Add some sample plant IDs for testing (should be removed)
-    //  HiveHelpers.addPlantId(1);  
-    //  HiveHelpers.addPlantId(2);  
-    //  HiveHelpers.addPlantId(3);  
+    //  HiveHelpers.addPlantId(1);
+    //  HiveHelpers.addPlantId(2);
+    //  HiveHelpers.addPlantId(3);
 
     context.read<ProfileCubit>().fetchAllPlants();
   }
@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           if (state is ProfileSuccessState) {
             final profile = cubit.Profmodel.data;
-            final plantList = cubit.plantList; 
+            final plantList = cubit.plantList;
 
             return Scaffold(
               body: SingleChildScrollView(
@@ -62,9 +62,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     ProfileInfo(height, context, width, profile),
                     myGardenButton(),
-                    plantList.isEmpty 
+                    plantList.isEmpty
                         ? Padding(
-                            padding: EdgeInsets.symmetric(vertical: height *0.25),
+                            padding:
+                                EdgeInsets.symmetric(vertical: height * 0.25),
                             child: Text(
                               "My Garden is empty.",
                               style: TextStyle(
@@ -77,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero, 
+                            padding: EdgeInsets.zero,
                             itemCount: plantList.length,
                             itemBuilder: (context, index) {
                               final plant = plantList[index];
@@ -99,6 +100,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
-  
 }

@@ -15,3 +15,5 @@ final class GettingPlantsFailed extends HomeScreenState {
 final class GettingPlantsLoading extends HomeScreenState {}
 
 final class ChangeButton extends HomeScreenState {}
+
+final class ToggeldSuccessState extends HomeScreenState {}

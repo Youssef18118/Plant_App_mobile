@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
+import 'package:plant_app/Screens/Species/speciesScreen.dart';
+import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
@@ -122,7 +124,7 @@ class HomeScreen extends StatelessWidget {
                       Spacer(),
                       GestureDetector(
                         onTap: () {
-                          // ! Navigate to species screen
+                          Get.to(() => Speciesscreen());
                         },
                         child: Text(
                           'View All',
@@ -191,6 +193,8 @@ class HomeScreen extends StatelessWidget {
         itemCount: plants.length,
         itemBuilder: (context, index) {
           final plant = plants[index];
+          final isAdded =
+              bloc.addedPlantIds.contains(plant.id); // Check if plant is added
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -234,37 +238,50 @@ class HomeScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        BlocBuilder<HomeScreenCubit, HomeScreenState>(
-                          builder: (context, state) {
-                            final isAdded = bloc.isPlantAdded(plant.id ?? 1);
-                            return InkWell(
-                              onTap: isAdded
-                                  ? null
-                                  : () {
-                                      bloc.addPlant(plant.id ?? 1);
-                                    },
-                              child: Container(
-                                height: height * 0.053,
-                                width: width * 0.115,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: isAdded ? Colors.grey : Colors.green,
-                                ),
-                                child: Icon(
-                                  isAdded ? Icons.check : Icons.add,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
+                        // Toggle between Plus (add) and Check (added) icons
+                        BlocListener<HomeScreenCubit, HomeScreenState>(
+                          listener: (context, state) {
+                            if (state is ToggeldSuccessState) {
+                              context.read<ProfileCubit>().fetchAllPlants();
+                            }
                           },
+                          child: BlocBuilder<HomeScreenCubit, HomeScreenState>(
+                            builder: (context, state) {
+                              return InkWell(
+                                onTap: () {
+                                  if (!isAdded) {
+                                    bloc.togglePlant(plant.id ??
+                                        1); // Add the plant only if not added
+                                  } // Toggle add/remove once
+                                  // context.read<ProfileCubit>().fetchAllPlants();
+                                },
+                                child: Container(
+                                  height: height * 0.053,
+                                  width: width * 0.115,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: isAdded
+                                        ? Colors.red
+                                        : Colors.green, // Toggle colors
+                                  ),
+                                  child: Icon(
+                                    isAdded
+                                        ? Icons.delete
+                                        : Icons.add, // Toggle icons
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                         SizedBox(
                           width: width * 0.023,
                         ),
                         InkWell(
                           onTap: () {
-                            Get.to(() => GuideScreen(
-                                plantId: plant.id ?? 1, URL: plantBaseUrl));
+                            Get.to(() =>
+                                PlantDetailScreen(plantId: plant.id ?? 1));
                           },
                           child: Container(
                             height: height * 0.053,

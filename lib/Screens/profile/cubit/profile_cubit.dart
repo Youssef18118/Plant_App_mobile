@@ -10,8 +10,10 @@ part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
+
   ProfileModel Profmodel = ProfileModel();
-  List<PlantModel> plantList = []; 
+  List<PlantModel> plantList = [];
+  List<int> fetchedPlantIds = []; // List to track fetched plant IDs
 
   void getProfile() async {
     emit(ProfileLoadingState());
@@ -35,28 +37,42 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void fetchAllPlants() async {
     emit(ProfileLoadingState());
-    final plantIds = HiveHelpers.getPlantIds(); 
+
+    // Clear plant list to ensure fresh load without duplicates
+    plantList.clear();
+    fetchedPlantIds.clear();
+
+    final plantIds = HiveHelpers.getPlantIds();
 
     for (var plantId in plantIds) {
-      await getPlantById(plantId); 
+      if (!fetchedPlantIds.contains(plantId)) {
+        // Check if the plant ID is unique
+        await getPlantById(plantId);
+        fetchedPlantIds.add(plantId); // Add to the list of fetched IDs
+      }
     }
 
     emit(ProfileSuccessState());
   }
 
   Future<void> getPlantById(int plantId) async {
+    // Check if the plant is already in the list by its ID
+    if (plantList.any((plant) => plant.id == plantId)) {
+      return; // Plant is already in the list, no need to fetch again
+    }
+
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
         queryParameters: {
-          'key': apiKey,
+          'key': apiKey3,
         },
-        customBaseUrl: plantBaseUrl, 
+        customBaseUrl: plantBaseUrl,
       );
 
       if (response.statusCode == 200) {
         final plant = PlantModel.fromJson(response.data);
-        plantList.add(plant); 
+        plantList.add(plant);
       } else {
         emit(ProfileErrorState("Failed to fetch plant details"));
       }
@@ -65,11 +81,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-
   void removePlantById(int plantId) {
     plantList.removeWhere((plant) => plant.id == plantId);
-    HiveHelpers.removePlantId(plantId); 
+    HiveHelpers.removePlantId(plantId);
+    fetchedPlantIds.remove(plantId); // Remove the ID from the fetched list
     emit(ProfileSuccessState());
-  
   }
 }
