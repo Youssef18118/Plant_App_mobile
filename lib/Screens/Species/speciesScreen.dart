@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
+import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 
@@ -110,6 +111,9 @@ class Speciesscreen extends StatelessWidget {
     return InkWell(
       onTap: () {
         // Navigate to details screen
+        Get.to(() => PlantDetailScreen(
+              plantId: plantdata!.id!,
+            ));
       },
       child: Card(
         shape: RoundedRectangleBorder(
