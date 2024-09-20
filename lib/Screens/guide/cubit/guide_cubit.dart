@@ -10,24 +10,22 @@ class GuideCubit extends Cubit<GuideState> {
   GuideCubit() : super(GuideInitial());
   GuideModel guideModel = GuideModel();
 
-
   Future<void> getGuideById(int plantId) async {
     try {
       emit(GuideLoadingState());
       final response = await DioHelpers.getData(
         path: "/api/species-care-guide-list",
         queryParameters: {
-          'key': apiKey,
-          'species_id' : plantId,
+          'key': apiKey2,
+          'species_id': plantId,
           // 'page' : 1
         },
-        customBaseUrl: plantBaseUrl, 
+        customBaseUrl: plantBaseUrl,
       );
 
       if (response.statusCode == 200) {
         guideModel = GuideModel.fromJson(response.data);
         emit(GuideSuccessState());
-        
       } else {
         emit(GuideErrorState("Failed to fetch plant details"));
       }

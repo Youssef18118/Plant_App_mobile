@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/profileWidgets.dart';
 
@@ -17,9 +18,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
 
     // // Add some sample plant IDs for testing (should be removed)
-    // HiveHelpers.addPlantId(1);  
-    // HiveHelpers.addPlantId(2);  
-    // HiveHelpers.addPlantId(3);  
+    //  HiveHelpers.addPlantId(1);  
+    //  HiveHelpers.addPlantId(2);  
+    //  HiveHelpers.addPlantId(3);  
 
     context.read<ProfileCubit>().fetchAllPlants();
   }

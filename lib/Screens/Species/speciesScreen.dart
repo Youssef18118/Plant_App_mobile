@@ -1,10 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
+import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
+import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
-import 'package:plant_app/main.dart';
 
 class Speciesscreen extends StatelessWidget {
   const Speciesscreen({super.key});
@@ -22,152 +23,171 @@ class Speciesscreen extends StatelessWidget {
               backgroundColor: Colors.red, colorText: Colors.white);
         }
       },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Stack(children: [
-              Container(
-                width: double.infinity,
-                height: height * 0.29,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/ProfileBackground.png"),
-                    fit: BoxFit.cover,
-                  ),
+      child: BlocBuilder<SpeciesCubit, SpeciesState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Column(
+              children: [
+                Container(
+                  height: height * 0.30,
+                  child: Stack(children: [
+                    Container(
+                      width: double.infinity,
+                      height: height * 0.28,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                              AssetImage("assets/images/ProfileBackground.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Species",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 30),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -height * 0.25,
+                      left: width * 0.05,
+                      right: width * 0.05,
+                      child: _searchField(context, height, width),
+                    ),
+                  ]),
                 ),
-                child: Center(
-                  child: Text(
-                    "Species",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 30),
-                  ),
-                ),
-              ),
-              _searchField(context, height, width),
-            ]),
-            Expanded(
-              child: BlocBuilder<SpeciesCubit, SpeciesState>(
-                builder: (context, state) {
-                  return ListView.builder(
-                    
-                    itemCount: 10,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cubit.filteredSpecies?.length ?? 0,
                     itemBuilder: (context, index) =>
-                        PlantCard(PlantModel(), width, height ),
-                  );
-                },
-              ),
-            )
-          ],
+                        PlantCard(cubit.filteredSpecies?[index], width, height),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _searchField(BuildContext context, double height, double width) {
+    final cubit = context.read<SpeciesCubit>();
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: height * 0.25, horizontal: width * 0.10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: TextFormField(
+          onChanged: (value) {
+            cubit.searchSpecies(value); // Call search method on input change
+          },
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.grey,
+            ),
+            labelText: "Search For Species",
+            labelStyle: TextStyle(color: Colors.grey),
+          ),
         ),
       ),
     );
   }
-}
 
-Widget _searchField(BuildContext context, double height, double width) {
-  return Padding(
-    padding:
-        EdgeInsets.symmetric(vertical: height * 0.25, horizontal: width * 0.10),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(40),
-      ),
-      child: TextFormField(
-        onTapOutside: (event) {
-          FocusScope.of(context).unfocus();
-        },
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.grey,
-          ),
-          label: Text(
-            "Search For Species",
-            style: TextStyle(color: Colors.grey),
+  Widget PlantCard(Plantalldata? plantdata, double width, double height) {
+    return InkWell(
+      onTap: () {
+        // Navigate to details screen
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image section
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Container(
+                  width: width * 0.3,
+                  height: width * 0.3,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: CachedNetworkImage(
+                      imageUrl: plantdata?.defaultImage?.mediumUrl ?? "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: width * 0.05),
+              // Text and Buttons section
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      plantdata?.commonName ?? 'Unknown Species',
+                      style: TextStyle(
+                        fontSize: width * 0.05,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // Handle Garden Action
+                          },
+                          child: Text(
+                            'Garden',
+                            style: TextStyle(fontSize: width * 0.04),
+                          ),
+                        ),
+                        SizedBox(width: width * 0.02),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.to(() => GuideScreen(
+                                plantId: plantdata!.id!,
+                                URL: plantdata!.defaultImage!.mediumUrl!));
+                          },
+                          child: Text(
+                            'Guides',
+                            style: TextStyle(fontSize: width * 0.04),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    ),
-  );
-}
-
-Widget PlantCard(PlantModel plantdata, double width, double height) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image section
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: SizedBox(
-              width: width * 0.3, // Set a fixed width for the image
-              height: width * 0.3, // Set a fixed height for the image
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Image.network(
-                  plantdata.defaultImage?.mediumUrl ??
-                      "assets/images/teest plant.png",
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: width * 0.05), // Responsive spacing
-          // Text and Buttons section
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  plantdata.commonName ?? 'Unknown Species',
-                  style: TextStyle(
-                    fontSize: width * 0.05, // Responsive font size
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1, // Ensure text does not overflow
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: height * 0.02), // Responsive spacing
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle Garden Action
-                      },
-                      child: Text(
-                        'Garden',
-                        style: TextStyle(fontSize: width * 0.04),
-                      ),
-                    ),
-                    SizedBox(width: width * 0.02), // Spacing between buttons
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle Guides Action
-                      },
-                      child: Text(
-                        'Guides',
-                        style: TextStyle(fontSize: width * 0.04),
-                      ),
-                    ),
-                    // Spacing between buttons
-                    
-                  ],
-                ),
-                
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }

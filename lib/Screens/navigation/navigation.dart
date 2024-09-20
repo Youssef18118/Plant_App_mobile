@@ -1,4 +1,4 @@
-import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import "package:flashy_tab_bar2/flashy_tab_bar2.dart";
 import 'package:flutter/material.dart';
 import 'package:plant_app/Screens/home/home.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';

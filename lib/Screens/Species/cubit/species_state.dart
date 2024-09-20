@@ -13,3 +13,4 @@ final class speciesErrorState extends SpeciesState {
   String? message;
   speciesErrorState(this.message);
   }
+  class SpeciesFiltered extends SpeciesState {}

@@ -8,6 +8,7 @@ import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/Species/speciesScreen.dart';
+
 import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
@@ -56,7 +57,7 @@ class MainApp extends StatelessWidget {
           create: (context) => GuideCubit(),
         ),
         BlocProvider (
-          create: (context)=>SpeciesCubit()..getSpecies(12),
+          create: (context)=>SpeciesCubit()..getAllSpecies(),
         ),
       ],
       child: const GetMaterialApp(
