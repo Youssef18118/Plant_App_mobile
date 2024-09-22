@@ -1,53 +1,72 @@
 import 'package:bloc/bloc.dart';
-import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
-import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
-
 part 'species_state.dart';
 
 class SpeciesCubit extends Cubit<SpeciesState> {
   SpeciesCubit() : super(SpeciesInitial());
 
-  PlantAllModel model = PlantAllModel();
+  PlantSpeciesModel model = PlantSpeciesModel();
   List<Plantalldata>? filteredSpecies;
+  int currentPage = 1; // Keep track of the current page
+  bool isLoadingMore = false; // Flag to check if more data is being loaded
 
-  // get plant model
+  // get plant model for the first page
   void getAllSpecies() async {
     emit(speciesloadingState());
+    await _fetchSpecies(); // Fetch the first page
+  }
+
+  // Function to fetch species data for the current page
+  Future<void> _fetchSpecies() async {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species-list",
-        queryParameters: {'key': apiKey2, 'page': 1},
+        queryParameters: {'key': apiKey, 'page': currentPage},
         customBaseUrl: plantBaseUrl,
       );
 
-      // Print the response to the console
-      print("Response data: ${response.data}");
-      print("Response status: ${response.statusCode}");
-      model = PlantAllModel.fromJson(response.data);
+      PlantSpeciesModel currentPageModel =
+          PlantSpeciesModel.fromJson(response.data);
 
-      if (response.statusCode == 200) {
-        // Initialize filteredSpecies with the full data set
-        filteredSpecies = model.data;
+      if (response.statusCode == 200 && currentPageModel.data != null) {
+        if (currentPage == 1) {
+          filteredSpecies = currentPageModel.data; // Initialize with first page
+        } else {
+          filteredSpecies!.addAll(currentPageModel.data!); // Append more data
+        }
+
+        // If no more data, stop loading
+        if (currentPageModel.data!.isEmpty) {
+          isLoadingMore = false;
+        }
+
         emit(speciesSuccessState());
       } else {
         emit(speciesErrorState("Failed to load species"));
       }
     } catch (e) {
-      emit(speciesErrorState("Failed to load species"));
+      emit(speciesErrorState("Failed to load species: ${e.toString()}"));
     }
+  }
+
+  // Function to load the next page
+  void loadMoreSpecies() async {
+    if (isLoadingMore) return; // Prevent multiple loads at the same time
+
+    isLoadingMore = true;
+    currentPage++;
+    await _fetchSpecies(); // Fetch the next page
+    isLoadingMore = false;
   }
 
   // Search functionality to filter species based on query
   void searchSpecies(String query) {
     if (query.isEmpty) {
-      // If the search query is empty, reset the filtered list to the full list
       filteredSpecies = model.data;
     } else {
-      // Filter species based on the search query
       filteredSpecies = model.data?.where((species) {
         final commonName = species.commonName?.toLowerCase() ?? '';
         return commonName.contains(query.toLowerCase());

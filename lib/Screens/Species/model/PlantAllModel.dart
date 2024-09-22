@@ -1,4 +1,4 @@
-class PlantAllModel {
+class PlantSpeciesModel {
   List<Plantalldata>? data;
   int? to;
   int? perPage;
@@ -7,7 +7,7 @@ class PlantAllModel {
   int? lastPage;
   int? total;
 
-  PlantAllModel(
+  PlantSpeciesModel(
       {this.data,
       this.to,
       this.perPage,
@@ -16,7 +16,7 @@ class PlantAllModel {
       this.lastPage,
       this.total});
 
-  PlantAllModel.fromJson(Map<String, dynamic> json) {
+  PlantSpeciesModel.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
       data = <Plantalldata>[];
       json['data'].forEach((v) {
@@ -30,8 +30,6 @@ class PlantAllModel {
     lastPage = json['last_page'];
     total = json['total'];
   }
-
-  
 }
 
 class Plantalldata {
@@ -66,8 +64,6 @@ class Plantalldata {
         ? new DefaultImage.fromJson(json['default_image'])
         : null;
   }
-
-  
 }
 
 class DefaultImage {
@@ -100,6 +96,4 @@ class DefaultImage {
     smallUrl = json['small_url'];
     thumbnail = json['thumbnail'];
   }
-
-  
 }

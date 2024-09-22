@@ -6,10 +6,36 @@ import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
-import 'package:plant_app/Screens/profile/model/plantModel.dart';
 
-class Speciesscreen extends StatelessWidget {
+class Speciesscreen extends StatefulWidget {
   const Speciesscreen({super.key});
+
+  @override
+  _SpeciesscreenState createState() => _SpeciesscreenState();
+}
+
+class _SpeciesscreenState extends State<Speciesscreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Attach scroll listener
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // When scrolled to the end, load more species
+        context.read<SpeciesCubit>().loadMoreSpecies();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +88,8 @@ class Speciesscreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: cubit.filteredSpecies?.length ?? 0,
+                    controller: _scrollController, // Add scroll controller
+                    itemCount: cubit.filteredSpecies?.length,
                     itemBuilder: (context, index) =>
                         PlantCard(cubit.filteredSpecies?[index], width, height),
                   ),
