@@ -76,14 +76,13 @@ Widget myGardenButton() {
     );
   }
 
-  Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, ProfileCubit cubit) {
+  Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, ProfileCubit cubit, {required VoidCallback onRemove}) {
     return GestureDetector(
       onTap: () {
-        // go to details page
+        // Navigate to the plant's details page
         print("Details page of index $index");
       },
       child: Card(
-        // Remove the margin for the first card
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -126,20 +125,22 @@ Widget myGardenButton() {
                   ElevatedButton(
                     onPressed: () {
                       // Show plant care guides
-                      Get.to(() => GuideScreen(plantId: plant.id! ,URL: plant.defaultImage?.mediumUrl ?? '',));
+                      Get.to(() => GuideScreen(
+                            plantId: plant.id!,
+                            URL: plant.defaultImage?.mediumUrl ?? '',
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[400],
                     ),
                     child: const Text(
                       "Show Guides",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      cubit.removePlantById(plant.id!);
-                    },
+                    onPressed: onRemove, // Remove the plant
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
@@ -155,4 +156,5 @@ Widget myGardenButton() {
         ),
       ),
     );
-}
+  }
+

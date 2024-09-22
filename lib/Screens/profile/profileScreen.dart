@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/profileWidgets.dart';
 
@@ -14,20 +15,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
-  void initState() {
-    super.initState();
-
-    // // Add some sample plant IDs for testing (should be removed)
-    //  HiveHelpers.addPlantId(1);
-    //  HiveHelpers.addPlantId(2);
-    //  HiveHelpers.addPlantId(3);
-
-    context.read<ProfileCubit>().fetchAllPlants();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ProfileCubit>();
+    final profileCubit = context.read<ProfileCubit>();
+    final homeCubit = context.read<HomeScreenCubit>();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -53,8 +43,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           if (state is ProfileSuccessState) {
-            final profile = cubit.Profmodel.data;
-            final plantList = cubit.plantList;
+            final profile = profileCubit.Profmodel.data;
+            final plantList = profileCubit.plantList;
 
             return Scaffold(
               body: SingleChildScrollView(
@@ -64,8 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     myGardenButton(),
                     plantList.isEmpty
                         ? Padding(
-                            padding:
-                                EdgeInsets.symmetric(vertical: height * 0.25),
+                            padding: EdgeInsets.symmetric(
+                                vertical: height * 0.25),
                             child: Text(
                               "My Garden is empty.",
                               style: TextStyle(
@@ -82,7 +72,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             itemCount: plantList.length,
                             itemBuilder: (context, index) {
                               final plant = plantList[index];
-                              return PlantCard(plant, plantList, index, cubit);
+                              return PlantCard(
+                                plant,
+                                plantList,
+                                index,
+                                profileCubit,
+                                onRemove: () {
+                                  profileCubit.removePlantById(
+                                      plant.id!, homeCubit);
+                                },
+                              );
                             },
                           ),
                   ],

@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage(
                             imagePath + 'ProfileBackground.png',
@@ -64,14 +64,14 @@ class HomeScreen extends StatelessWidget {
                                   builder: (context, state) {
                                     return Text(
                                         'Hello ${profileCubit.Profmodel.data?.name ?? "N/A"} ',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 22, color: Colors.white));
                                   },
                                 ),
                                 SizedBox(
                                   height: height * 0.007,
                                 ),
-                                Text(
+                                const Text(
                                   'Lets learn more about plants',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'plants species',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 22),
@@ -126,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                         onTap: () {
                           Get.to(() => Speciesscreen());
                         },
-                        child: Text(
+                        child: const Text(
                           'View All',
                           style: TextStyle(color: Colors.green, fontSize: 18),
                         ),
@@ -142,7 +142,7 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(
                             height: height * 0.25,
                           ),
-                          Center(
+                          const Center(
                             child: CircularProgressIndicator(),
                           ),
                         ],
@@ -156,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(
                           height: height * 0.29,
                           child: containerBuilder(height, width,
-                              isFirstHalf: true, context: context),
+                              isFirstHalf: true, context: context, profileCubit: profileCubit, HomeCubit: cubit),
                         ),
                         SizedBox(
                           height: height * 0.02,
@@ -164,7 +164,7 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(
                           height: height * 0.29,
                           child: containerBuilder(height, width,
-                              isFirstHalf: false, context: context),
+                              isFirstHalf: false, context: context, profileCubit: profileCubit, HomeCubit: cubit),
                         ),
                       ],
                     );
@@ -177,7 +177,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget containerBuilder(double height, double width,
-      {required bool isFirstHalf, required BuildContext context}) {
+      {required bool isFirstHalf, required BuildContext context, required ProfileCubit profileCubit, required HomeScreenCubit HomeCubit}) {
     final bloc = context.read<HomeScreenCubit>();
     final List<PlantSpeciesModel> allData = bloc.plantsSpecies;
     int midindex = (allData.length / 2).ceil();
@@ -186,15 +186,14 @@ class HomeScreen extends StatelessWidget {
 
     return ListView.separated(
         scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         separatorBuilder: (context, index) => SizedBox(
               height: height * 0.015,
             ),
         itemCount: plants.length,
         itemBuilder: (context, index) {
           final plant = plants[index];
-          final isAdded =
-              bloc.addedPlantIds.contains(plant.id); // Check if plant is added
+          final isAdded = bloc.addedPlantIds.contains(plant.id); // Check if plant is added
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -204,7 +203,7 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: Color(0xff5edab5), width: width * 0.009)),
+                      color: const Color(0xff5edab5), width: width * 0.009)),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -229,7 +228,7 @@ class HomeScreen extends StatelessWidget {
                       width: width * 0.45,
                       child: Text(plant.commonName ?? '',
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20)),
                     ),
                     SizedBox(
@@ -239,49 +238,34 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         // Toggle between Plus (add) and Check (added) icons
-                        BlocListener<HomeScreenCubit, HomeScreenState>(
-                          listener: (context, state) {
-                            if (state is ToggeldSuccessState) {
-                              context.read<ProfileCubit>().fetchAllPlants();
-                            }
-                          },
-                          child: BlocBuilder<HomeScreenCubit, HomeScreenState>(
-                            builder: (context, state) {
-                              return InkWell(
-                                onTap: () {
-                                  if (!isAdded) {
-                                    bloc.togglePlant(plant.id ??
-                                        1); // Add the plant only if not added
-                                  } // Toggle add/remove once
-                                  // context.read<ProfileCubit>().fetchAllPlants();
-                                },
-                                child: Container(
-                                  height: height * 0.053,
-                                  width: width * 0.115,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: isAdded
-                                        ? Colors.red
-                                        : Colors.green, // Toggle colors
-                                  ),
-                                  child: Icon(
-                                    isAdded
-                                        ? Icons.delete
-                                        : Icons.add, // Toggle icons
-                                    color: Colors.white,
-                                  ),
+                        BlocBuilder<HomeScreenCubit, HomeScreenState>(
+                          builder: (context, state) {
+                            final isAdded = bloc.addedPlantIds.contains(plant.id); // Check if plant is added
+                            return InkWell(
+                              onTap: () {
+                                bloc.togglePlant(plant.id ?? 1, profileCubit, HomeCubit); // Toggle add/remove
+                              },
+                              child: Container(
+                                height: height * 0.053,
+                                width: width * 0.115,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: isAdded ? Colors.red : Colors.green, // Toggle colors
                                 ),
-                              );
-                            },
-                          ),
+                                child: Icon(
+                                  isAdded ? Icons.delete : Icons.add, // Toggle icons
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         SizedBox(
                           width: width * 0.023,
                         ),
                         InkWell(
                           onTap: () {
-                            Get.to(() =>
-                                PlantDetailScreen(plantId: plant.id ?? 1));
+                            Get.to(() => PlantDetailScreen(plantId: plant.id ?? 1));
                           },
                           child: Container(
                             height: height * 0.053,
@@ -290,7 +274,7 @@ class HomeScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.black,
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.arrow_forward,
                               color: Colors.white,
                             ),
@@ -305,4 +289,5 @@ class HomeScreen extends StatelessWidget {
           );
         });
   }
+
 }

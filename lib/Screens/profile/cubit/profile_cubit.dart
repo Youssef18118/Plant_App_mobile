@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
@@ -14,6 +15,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileModel Profmodel = ProfileModel();
   List<PlantModel> plantList = [];
   List<int> fetchedPlantIds = []; // List to track fetched plant IDs
+  bool isPlantsFetched = false; // Flag to ensure plants are fetched only once
+
 
   void getProfile() async {
     emit(ProfileLoadingState());
@@ -35,44 +38,53 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  // This function is only called once when the app starts
   void fetchAllPlants() async {
-    emit(ProfileLoadingState());
-
-    // Clear plant list to ensure fresh load without duplicates
-    plantList.clear();
-    fetchedPlantIds.clear();
+    if (isPlantsFetched) return; // Prevent multiple fetches
+    isPlantsFetched = true; // Set the flag to true after the first fetch
 
     final plantIds = HiveHelpers.getPlantIds();
-
     for (var plantId in plantIds) {
       if (!fetchedPlantIds.contains(plantId)) {
-        // Check if the plant ID is unique
         await getPlantById(plantId);
-        fetchedPlantIds.add(plantId); // Add to the list of fetched IDs
+        fetchedPlantIds.add(plantId);
       }
     }
 
     emit(ProfileSuccessState());
   }
+  
+  Future<void> addPlantToMyGarden(int plantId) async {
+    if (!fetchedPlantIds.contains(plantId)) {
+      await getPlantById(plantId); 
+      HiveHelpers.addPlantId(plantId); 
+      fetchedPlantIds.add(plantId); 
+    }
+
+    emit(ProfileSuccessState());
+  }
+
+
 
   Future<void> getPlantById(int plantId) async {
-    // Check if the plant is already in the list by its ID
     if (plantList.any((plant) => plant.id == plantId)) {
-      return; // Plant is already in the list, no need to fetch again
+      return;
     }
+
+    print("Fetching plant details from API for plantId = $plantId");
 
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
         queryParameters: {
-          'key': apiKey3,
+          'key': apiKey,
         },
         customBaseUrl: plantBaseUrl,
       );
 
       if (response.statusCode == 200) {
         final plant = PlantModel.fromJson(response.data);
-        plantList.add(plant);
+        plantList.add(plant); // Add plant after successful API call
       } else {
         emit(ProfileErrorState("Failed to fetch plant details"));
       }
@@ -81,10 +93,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void removePlantById(int plantId) {
+  void removePlantById(int plantId, HomeScreenCubit homeCubit) {
     plantList.removeWhere((plant) => plant.id == plantId);
+    
+    fetchedPlantIds.remove(plantId);
+    
     HiveHelpers.removePlantId(plantId);
-    fetchedPlantIds.remove(plantId); // Remove the ID from the fetched list
+    
+    // Notify HomeScreenCubit to remove plant
+    homeCubit.addedPlantIds.remove(plantId);
+    homeCubit.emit(ToggeldSuccessState()); 
+    
     emit(ProfileSuccessState());
   }
+
+
+
 }

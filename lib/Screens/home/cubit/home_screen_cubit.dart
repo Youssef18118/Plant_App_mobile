@@ -22,7 +22,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final response = await PlantsDioHelper.getUrls(
           Url: '/api/species-list',
           params: {
-            'key': apiKey3,
+            'key': apiKey,
             'page': '1',
             if (searchText != null) 'q': searchText
           });
@@ -41,18 +41,24 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     }
   }
 
-  // Toggle plant between added/removed
-  void togglePlant(int plantId) {
-    // Check if plant is already in the list of added plants
+  void togglePlant(int plantId, ProfileCubit profileCubit, HomeScreenCubit homeCubit) async {
     if (addedPlantIds.contains(plantId)) {
-      HiveHelpers.removePlantId(plantId); // Remove from Hive
-      addedPlantIds.remove(plantId); // Update local list
-    } else {
-      HiveHelpers.addPlantId(plantId); // Add to Hive
-      addedPlantIds.add(plantId); // Update local list
-    }
+      HiveHelpers.removePlantId(plantId);
+      addedPlantIds.remove(plantId);
+      
+      profileCubit.removePlantById(plantId, homeCubit);
 
-    // Emit a state to rebuild the UI
-    emit(ToggeldSuccessState());
+      emit(ToggeldSuccessState());
+    } else {
+      HiveHelpers.addPlantId(plantId);
+      addedPlantIds.add(plantId);
+      
+      await profileCubit.addPlantToMyGarden(plantId);
+
+      emit(ToggeldSuccessState());
+    }
   }
+
+
+
 }
