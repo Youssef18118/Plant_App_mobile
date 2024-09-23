@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
@@ -81,6 +82,7 @@ Widget myGardenButton() {
       onTap: () {
         // Navigate to the plant's details page
         print("Details page of index $index");
+        Get.to (()  => PlantDetailScreen(plantId: plant.id!,));
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

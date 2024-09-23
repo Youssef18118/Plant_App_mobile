@@ -22,7 +22,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final response = await PlantsDioHelper.getUrls(
           Url: '/api/species-list',
           params: {
-            'key': apiKey,
+            'key': apiKey4,
             'page': '1',
             if (searchText != null) 'q': searchText
           });

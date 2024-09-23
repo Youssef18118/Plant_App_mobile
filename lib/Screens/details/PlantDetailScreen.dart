@@ -19,6 +19,12 @@ class PlantDetailScreen extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56.0),
           child: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+            ),
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(

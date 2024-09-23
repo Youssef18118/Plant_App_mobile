@@ -58,20 +58,20 @@ class PlantDetailWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0),
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
-                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             // Type Container
             if (type != null)
               Center(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
                     color: themeColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -86,7 +86,7 @@ class PlantDetailWidget extends StatelessWidget {
                   ),
                 ),
               ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
 
             Padding(
@@ -120,7 +120,7 @@ class PlantDetailWidget extends StatelessWidget {
                         ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
 
                   if (origin != null) ...[
@@ -132,7 +132,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       origin!,
                       style: TextStyle(
@@ -140,7 +140,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
 
                   if (growthRate != null) ...[
@@ -152,7 +152,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       growthRate!,
                       style: TextStyle(
@@ -160,7 +160,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
 
                   if (watering != null) ...[
@@ -172,7 +172,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       watering!,
                       style: TextStyle(
@@ -180,7 +180,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
 
                   if (sunlight != null && sunlight!.isNotEmpty) ...[
@@ -192,7 +192,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       sunlight!.join(', '),
                       style: TextStyle(
@@ -200,7 +200,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
 
                   if (pruningMonth != null && pruningMonth!.isNotEmpty) ...[
@@ -212,7 +212,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       pruningMonth!.join(', '),
                       style: TextStyle(
@@ -220,7 +220,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
 
                   if (leafColor != null && leafColor!.isNotEmpty) ...[
@@ -232,7 +232,7 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       leafColor!.join(', '),
                       style: TextStyle(
@@ -240,18 +240,18 @@ class PlantDetailWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                   ],
 
                   // Small Spacer
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Description Label
                   const Text(
                     "Description",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
 
                   Text(
