@@ -63,7 +63,7 @@ class MainApp extends StatelessWidget {
         ),
       ],
       child: const GetMaterialApp(
-        home: SplashScreen(),
+        home: Speciesscreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

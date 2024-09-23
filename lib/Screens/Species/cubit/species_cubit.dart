@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/const.dart';
+
 part 'species_state.dart';
 
 class SpeciesCubit extends Cubit<SpeciesState> {
@@ -24,7 +25,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species-list",
-        queryParameters: {'key': apiKey, 'page': currentPage},
+        queryParameters: {'key': apiKey4, 'page': currentPage},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -33,9 +34,11 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
       if (response.statusCode == 200 && currentPageModel.data != null) {
         if (currentPage == 1) {
-          filteredSpecies = currentPageModel.data; // Initialize with first page
+          model.data = currentPageModel.data; // Update model data
+          filteredSpecies = model.data; // Initialize with first page
         } else {
-          filteredSpecies!.addAll(currentPageModel.data!); // Append more data
+          model.data!.addAll(currentPageModel.data!); // Append more data
+          filteredSpecies = model.data; // Update filtered species
         }
 
         // If no more data, stop loading
@@ -65,8 +68,10 @@ class SpeciesCubit extends Cubit<SpeciesState> {
   // Search functionality to filter species based on query
   void searchSpecies(String query) {
     if (query.isEmpty) {
-      filteredSpecies = model.data;
+      // Reset filteredSpecies to the full list after fetching all pages
+      filteredSpecies = model.data; 
     } else {
+      // Filter species based on the search query
       filteredSpecies = model.data?.where((species) {
         final commonName = species.commonName?.toLowerCase() ?? '';
         return commonName.contains(query.toLowerCase());
