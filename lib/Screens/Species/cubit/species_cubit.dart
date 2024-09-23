@@ -25,7 +25,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species-list",
-        queryParameters: {'key': apiKey4, 'page': currentPage},
+        queryParameters: {'key': apiKeyW, 'page': currentPage},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -69,7 +69,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
   void searchSpecies(String query) {
     if (query.isEmpty) {
       // Reset filteredSpecies to the full list after fetching all pages
-      filteredSpecies = model.data; 
+      filteredSpecies = model.data;
     } else {
       // Filter species based on the search query
       filteredSpecies = model.data?.where((species) {
