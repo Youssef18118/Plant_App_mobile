@@ -57,34 +57,40 @@ class _SpeciesscreenState extends State<Speciesscreen> {
               children: [
                 Container(
                   height: height * 0.30,
-                  child: Stack(children: [
-                    Container(
-                      width: double.infinity,
-                      height: height * 0.28,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image:
-                              AssetImage("assets/images/ProfileBackground.png"),
-                          fit: BoxFit.cover,
-                        ),
+                  child: Stack(
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: height * 0.28,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image:
+                                    AssetImage("assets/images/ProfileBackground.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Species",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 30),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: -height * 0.25,
+                            left: width * 0.05,
+                            right: width * 0.05,
+                            child: _searchField(context, height, width),
+                          ),
+                        ]
                       ),
-                      child: Center(
-                        child: Text(
-                          "Species",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 30),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: -height * 0.25,
-                      left: width * 0.05,
-                      right: width * 0.05,
-                      child: _searchField(context, height, width),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -120,7 +126,7 @@ class _SpeciesscreenState extends State<Speciesscreen> {
           onTapOutside: (event) {
             FocusScope.of(context).unfocus();
           },
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: InputBorder.none,
             prefixIcon: Icon(
               Icons.search,

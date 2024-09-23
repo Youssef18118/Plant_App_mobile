@@ -26,6 +26,12 @@ class _GuideScreenState extends State<GuideScreen> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop(); 
+          },
+        ),
         title: const Text('Plant Guide'),
       ),
       body: BlocListener<GuideCubit, GuideState>(
