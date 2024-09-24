@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
+import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/const.dart';
 
@@ -10,7 +10,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
   SpeciesCubit() : super(SpeciesInitial());
 
   PlantSpeciesModel model = PlantSpeciesModel();
-  List<Plantalldata>? filteredSpecies;
+  List<PlantSpeciesData>? filteredSpecies;
   int currentPage = 1; // Keep track of the current page
   bool isLoadingMore = false; // Flag to check if more data is being loaded
 

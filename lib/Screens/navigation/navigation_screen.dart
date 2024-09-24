@@ -1,6 +1,6 @@
 import "package:flashy_tab_bar2/flashy_tab_bar2.dart";
 import 'package:flutter/material.dart';
-import 'package:plant_app/Screens/home/home.dart';
+import 'package:plant_app/Screens/home/home_screen.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
 
 class NavigationScreen extends StatefulWidget {

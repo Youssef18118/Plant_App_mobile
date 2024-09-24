@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
-import 'package:plant_app/Screens/navigation/navigation.dart';
+import 'package:plant_app/Screens/navigation/navigation_screen.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
 import 'package:plant_app/const.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';

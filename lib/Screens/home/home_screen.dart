@@ -1,16 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
-import 'package:plant_app/Screens/Login/model/loginModel.dart';
+
 import 'package:plant_app/Screens/Species/speciesScreen.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
-import 'package:plant_app/Screens/guide/guideScreen.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
-import 'package:plant_app/Screens/home/model/plant_species.dart';
+import 'package:plant_app/Screens/home/model/plant_species_model.dart';
+
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
-import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
+
 import 'package:plant_app/const.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -124,7 +124,7 @@ class HomeScreen extends StatelessWidget {
                       Spacer(),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => Speciesscreen());
+                          Get.to(() => const Speciesscreen());
                         },
                         child: const Text(
                           'View All',
@@ -156,7 +156,10 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(
                           height: height * 0.29,
                           child: containerBuilder(height, width,
-                              isFirstHalf: true, context: context, profileCubit: profileCubit, HomeCubit: cubit),
+                              isFirstHalf: true,
+                              context: context,
+                              profileCubit: profileCubit,
+                              HomeCubit: cubit),
                         ),
                         SizedBox(
                           height: height * 0.02,
@@ -164,7 +167,10 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(
                           height: height * 0.29,
                           child: containerBuilder(height, width,
-                              isFirstHalf: false, context: context, profileCubit: profileCubit, HomeCubit: cubit),
+                              isFirstHalf: false,
+                              context: context,
+                              profileCubit: profileCubit,
+                              HomeCubit: cubit),
                         ),
                       ],
                     );
@@ -177,9 +183,12 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget containerBuilder(double height, double width,
-      {required bool isFirstHalf, required BuildContext context, required ProfileCubit profileCubit, required HomeScreenCubit HomeCubit}) {
+      {required bool isFirstHalf,
+      required BuildContext context,
+      required ProfileCubit profileCubit,
+      required HomeScreenCubit HomeCubit}) {
     final bloc = context.read<HomeScreenCubit>();
-    final List<PlantSpeciesModel> allData = bloc.plantsSpecies;
+    final List<PlantSpeciesData> allData = bloc.plantsSpecies;
     int midindex = (allData.length / 2).ceil();
     final plants =
         isFirstHalf ? allData.sublist(0, midindex) : allData.sublist(midindex);
@@ -193,7 +202,6 @@ class HomeScreen extends StatelessWidget {
         itemCount: plants.length,
         itemBuilder: (context, index) {
           final plant = plants[index];
-          final isAdded = bloc.addedPlantIds.contains(plant.id); // Check if plant is added
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -203,96 +211,102 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: const Color(0xff5edab5), width: width * 0.009)),
+                      color: const Color(0xff5edab5), width: width * 0.008)),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: GestureDetector(
-                  onTap: (){
-                    Get.to (() => PlantDetailScreen(plantId: plant.id!,));
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: height * 0.128,
-                        width: width * 0.4,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            plant.defaultImage?.smallUrl ??
-                                'https://st4.depositphotos.com/14953852/22772/v/450/depositphotos_227724992-stock-illustration-image-available-icon-flat-vector.jpg',
-                            fit: BoxFit.fill,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height * 0.128,
+                      width: width * 0.4,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: CachedNetworkImage(
+                          imageUrl: plant.defaultImage?.smallUrl ?? '',
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.error,
+                            size: 30,
                           ),
+                          fit: BoxFit.fill,
                         ),
                       ),
-                      SizedBox(
-                        height: height * 0.013,
-                      ),
-                      SizedBox(
-                        width: width * 0.45,
-                        child: Text(plant.commonName ?? '',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
-                      ),
-                      SizedBox(
-                        height: height * 0.008,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // Toggle between Plus (add) and Check (added) icons
-                          BlocBuilder<HomeScreenCubit, HomeScreenState>(
-                            builder: (context, state) {
-                              final isAdded = bloc.addedPlantIds.contains(plant.id); // Check if plant is added
-                              return InkWell(
-                                onTap: () {
-                                  bloc.togglePlant(plant.id ?? 1, profileCubit, HomeCubit); // Toggle add/remove
-                                },
-                                child: Container(
-                                  height: height * 0.053,
-                                  width: width * 0.115,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: isAdded ? Colors.red : Colors.green, // Toggle colors
-                                  ),
-                                  child: Icon(
-                                    isAdded ? Icons.delete : Icons.add, // Toggle icons
-                                    color: Colors.white,
-                                  ),
+                    ),
+                    SizedBox(
+                      height: height * 0.013,
+                    ),
+                    SizedBox(
+                      width: width * 0.45,
+                      child: Text(plant.commonName ?? 'name isnt available',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                    ),
+                    SizedBox(
+                      height: height * 0.008,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Toggle between Plus (add) and Check (added) icons
+                        BlocBuilder<HomeScreenCubit, HomeScreenState>(
+                          builder: (context, state) {
+                            final isAdded = bloc.addedPlantIds
+                                .contains(plant.id); // Check if plant is added
+                            return InkWell(
+                              onTap: () {
+                                bloc.togglePlant(plant.id ?? 1, profileCubit,
+                                    HomeCubit); // Toggle add/remove
+                              },
+                              child: Container(
+                                height: height * 0.053,
+                                width: width * 0.115,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: isAdded
+                                      ? Colors.red
+                                      : Colors.green, // Toggle colors
                                 ),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            width: width * 0.023,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Get.to(() => PlantDetailScreen(plantId: plant.id ?? 1));
-                            },
-                            child: Container(
-                              height: height * 0.053,
-                              width: width * 0.115,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.black,
+                                child: Icon(
+                                  isAdded
+                                      ? Icons.delete
+                                      : Icons.add, // Toggle icons
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: const Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          width: width * 0.023,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(() =>
+                                PlantDetailScreen(plantId: plant.id ?? 1));
+                          },
+                          child: Container(
+                            height: height * 0.053,
+                            width: width * 0.115,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.black,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
           );
         });
   }
-
 }

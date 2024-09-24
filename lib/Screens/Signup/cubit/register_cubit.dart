@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
-import 'package:plant_app/Screens/navigation/navigation.dart';
+import 'package:plant_app/Screens/navigation/navigation_screen.dart';
 import 'package:plant_app/const.dart';
 
 part 'register_state.dart';

@@ -1,4 +1,38 @@
 class PlantSpeciesModel {
+  List<PlantSpeciesData>? data;
+  int? to;
+  int? perPage;
+  int? currentPage;
+  int? from;
+  int? lastPage;
+  int? total;
+
+  PlantSpeciesModel(
+      {this.data,
+      this.to,
+      this.perPage,
+      this.currentPage,
+      this.from,
+      this.lastPage,
+      this.total});
+
+  PlantSpeciesModel.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      data = <PlantSpeciesData>[];
+      json['data'].forEach((v) {
+        data!.add(new PlantSpeciesData.fromJson(v));
+      });
+    }
+    to = json['to'];
+    perPage = json['per_page'];
+    currentPage = json['current_page'];
+    from = json['from'];
+    lastPage = json['last_page'];
+    total = json['total'];
+  }
+}
+
+class PlantSpeciesData {
   int? id;
   String? commonName;
   List<String>? scientificName;
@@ -8,7 +42,7 @@ class PlantSpeciesModel {
   List<String>? sunlight;
   DefaultImage? defaultImage;
 
-  PlantSpeciesModel(
+  PlantSpeciesData(
       {this.id,
       this.commonName,
       this.scientificName,
@@ -18,7 +52,7 @@ class PlantSpeciesModel {
       this.sunlight,
       this.defaultImage});
 
-  PlantSpeciesModel.fromJson(Map<String, dynamic> json) {
+  PlantSpeciesData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     commonName = json['common_name'];
     scientificName = json['scientific_name'].cast<String>();

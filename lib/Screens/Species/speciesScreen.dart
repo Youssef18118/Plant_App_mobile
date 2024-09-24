@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
-import 'package:plant_app/Screens/Species/model/PlantAllModel.dart';
+import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 
@@ -59,36 +59,34 @@ class _SpeciesscreenState extends State<Speciesscreen> {
                   height: height * 0.30,
                   child: Stack(
                     children: [
-                      Stack(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: height * 0.28,
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/ProfileBackground.png"),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Species",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 30),
-                              ),
+                      Stack(children: [
+                        Container(
+                          width: double.infinity,
+                          height: height * 0.28,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  "assets/images/ProfileBackground.png"),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          Positioned(
-                            bottom: -height * 0.25,
-                            left: width * 0.05,
-                            right: width * 0.05,
-                            child: _searchField(context, height, width),
+                          child: const Center(
+                            child: Text(
+                              "Species",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 30),
+                            ),
                           ),
-                        ]
-                      ),
+                        ),
+                        Positioned(
+                          bottom: -height * 0.25,
+                          left: width * 0.05,
+                          right: width * 0.05,
+                          child: _searchField(context, height, width),
+                        ),
+                      ]),
                     ],
                   ),
                 ),
@@ -140,7 +138,7 @@ class _SpeciesscreenState extends State<Speciesscreen> {
     );
   }
 
-  Widget PlantCard(Plantalldata? plantdata, double width, double height) {
+  Widget PlantCard(PlantSpeciesData? plantdata, double width, double height) {
     return InkWell(
       onTap: () {
         // Navigate to details screen
