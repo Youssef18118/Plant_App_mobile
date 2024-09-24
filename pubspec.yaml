@@ -21,6 +21,7 @@ dependencies:
   cached_network_image: ^3.2.3
   path_provider_android: ^2.2.10
   flashy_tab_bar2: ^0.0.10
+  firebase_core: ^3.5.0
 
 dev_dependencies:
   flutter_test:
