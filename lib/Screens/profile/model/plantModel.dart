@@ -200,16 +200,16 @@ class PlantModel {
 
 class Dimensions {
   String? type;
-  int? minValue;
-  int? maxValue;
+  double? minValue; // Change to double
+  double? maxValue; // Change to double
   String? unit;
 
   Dimensions({this.type, this.minValue, this.maxValue, this.unit});
 
   Dimensions.fromJson(Map<String, dynamic> json) {
     type = json['type'];
-    minValue = json['min_value'];
-    maxValue = json['max_value'];
+    minValue = (json['min_value'] as num?)?.toDouble(); // Ensure it is cast to double
+    maxValue = (json['max_value'] as num?)?.toDouble(); // Ensure it is cast to double
     unit = json['unit'];
   }
 
@@ -222,6 +222,7 @@ class Dimensions {
     return data;
   }
 }
+
 
 class Hardiness {
   String? min;
