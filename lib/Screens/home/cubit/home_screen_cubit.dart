@@ -19,15 +19,33 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   // Fetch plants from API
   void gettingPlants({String? searchText}) async {
     emit(GettingPlantsLoading());
+    
+    if (searchText != null && searchText.isNotEmpty) {
+      searchText = searchText.toLowerCase(); // Ensure search is case-insensitive
+      
+      // Perform local search on common names
+      List<PlantSpeciesData> filteredPlants = plantsSpecies.where((plant) {
+        return plant.commonName != null && plant.commonName!.toLowerCase().contains(searchText!);
+      }).toList();
+      
+      if (filteredPlants.isNotEmpty) {
+        plantsSpecies = filteredPlants;
+        emit(GettingPlantsSuccess());
+        return; 
+      }
+    }
+
+    // If no local matches, or no searchText provided, proceed to fetch from API
     try {
       final response = await DioHelpers.getData(
-          path: '/api/species-list',
-          queryParameters: {
-            'key': apiKey3,
-            'page': '1',
-            if (searchText != null) 'q': searchText
-          },
-          customBaseUrl: plantBaseUrl);
+        path: '/api/species-list',
+        queryParameters: {
+          'key': apiKey4,
+          'page': '1',
+          if (searchText != null && searchText.isNotEmpty) 'q': searchText
+        },
+        customBaseUrl: plantBaseUrl,
+      );
 
       if (response.statusCode == 200) {
         plantsSpecies = (response.data['data'] as List)
@@ -42,6 +60,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       emit(GettingPlantsFailed(msg: 'Couldn’t find plants'));
     }
   }
+
 
   void togglePlant(
       int plantId, ProfileCubit profileCubit, HomeScreenCubit homeCubit) async {
