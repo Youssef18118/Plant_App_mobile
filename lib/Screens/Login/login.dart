@@ -29,12 +29,6 @@ class _LoginState extends State<Login> {
             // Show success message and navigate to HomeScreen
             Get.snackbar("Success", "Login Success",
                 backgroundColor: Colors.green, colorText: Colors.white);
-
-            // Navigate to HomeScreen
-            Future.delayed(Duration(seconds: 1), () {
-              Get.offAll(() =>
-                  HomeScreen()); // Clears the back stack and navigates to HomeScreen
-            });
           }
 
           if (state is LogineErrorState) {

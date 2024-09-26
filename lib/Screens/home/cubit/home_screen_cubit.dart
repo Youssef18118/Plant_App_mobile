@@ -43,7 +43,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final response = await DioHelpers.getData(
         path: '/api/species-list',
         queryParameters: {
-          'key': apiKey4,
+          'key': apiKey3,
           'page': '1',
           if (searchText != null && searchText.isNotEmpty) 'q': searchText
         },
