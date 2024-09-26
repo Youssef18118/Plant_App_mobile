@@ -480,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  plant_icons:
+    dependency: "direct main"
+    description:
+      name: plant_icons
+      sha256: b47b8ad61680dc7adbb27e82222060a9c89c0c77d332d42f38b4535b63259e8b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   platform:
     dependency: transitive
     description:
