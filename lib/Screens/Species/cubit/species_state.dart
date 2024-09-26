@@ -17,3 +17,4 @@ final class speciesErrorState extends SpeciesState {
 class SpeciesFiltered extends SpeciesState {}
 
 final class ToggePlantldSuccessState extends SpeciesState {}
+final class SpeciesUpdatedState extends SpeciesState {}

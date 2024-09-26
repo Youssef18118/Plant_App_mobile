@@ -67,19 +67,29 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   void togglePlant(int plantId, ProfileCubit profileCubit,
       HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) async {
     if (addedPlantIds.contains(plantId)) {
+      // Remove the plant from the list and notify both screens
       HiveHelpers.removePlantId(plantId);
       addedPlantIds.remove(plantId);
 
       profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
 
+      // Emit success in HomeScreenCubit
       emit(ToggeldSuccessState());
+
+      // Notify SpeciesCubit to update the species list
+      speciesCubit.notifyPlantChanged(plantId, false); // Remove from species list
     } else {
+      // Add the plant to the list and notify both screens
       HiveHelpers.addPlantId(plantId);
       addedPlantIds.add(plantId);
 
       await profileCubit.addPlantToMyGarden(plantId);
 
+      // Emit success in HomeScreenCubit
       emit(ToggeldSuccessState());
+
+      // Notify SpeciesCubit to update the species list
+      speciesCubit.notifyPlantChanged(plantId, true); // Add to species list
     }
   }
 }

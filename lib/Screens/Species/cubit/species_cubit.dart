@@ -91,6 +91,10 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
       profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
 
+      // Notify home screen to remove the plant
+      homeCubit.addedPlantIds.remove(plantId);
+      homeCubit.emit(ToggeldSuccessState());
+
       emit(ToggePlantldSuccessState());
     } else {
       HiveHelpers.addPlantId(plantId);
@@ -98,7 +102,31 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
       await profileCubit.addPlantToMyGarden(plantId);
 
+      // Notify home screen to add the plant
+      homeCubit.addedPlantIds.add(plantId);
+      homeCubit.emit(ToggeldSuccessState());
+
       emit(ToggePlantldSuccessState());
     }
   }
+
+  // New function to notify the species screen when a plant is added/removed
+  void notifyPlantChanged(int plantId, bool isAdded) {
+    // If the plant was added or removed, update the filteredSpecies accordingly
+    if (filteredSpecies != null) {
+      for (var plant in filteredSpecies!) {
+        if (plant.id == plantId) {
+          // Update the local plant data to reflect the change
+          if (isAdded) {
+            addedPlantIds.add(plantId);
+          } else {
+            addedPlantIds.remove(plantId);
+          }
+        }
+      }
+    }
+
+    emit(SpeciesUpdatedState()); // Notify that species have been updated
+  }
+
 }
