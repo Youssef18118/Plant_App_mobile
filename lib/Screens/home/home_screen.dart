@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/Species/speciesScreen.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/home_screen_widgets.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final cubit = context.read<HomeScreenCubit>();
     final profileCubit = context.read<ProfileCubit>();
+    final speciesCubit = context.read<SpeciesCubit>();
 
     return BlocListener<HomeScreenCubit, HomeScreenState>(
       listener: (context, state) {
@@ -80,7 +82,8 @@ class HomeScreen extends StatelessWidget {
                               isFirstHalf: true,
                               context: context,
                               profileCubit: profileCubit,
-                              HomeCubit: cubit),
+                              homeCubit: cubit,
+                              speciesCubit: speciesCubit),
                         ),
                         SizedBox(
                           height: height * 0.02,
@@ -91,7 +94,8 @@ class HomeScreen extends StatelessWidget {
                               isFirstHalf: false,
                               context: context,
                               profileCubit: profileCubit,
-                              HomeCubit: cubit),
+                              homeCubit: cubit,
+                              speciesCubit: speciesCubit),
                         ),
                       ],
                     );

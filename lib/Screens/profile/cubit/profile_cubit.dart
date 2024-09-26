@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
@@ -16,7 +17,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   List<PlantModel> plantList = [];
   List<int> fetchedPlantIds = []; // List to track fetched plant IDs
   bool isPlantsFetched = false; // Flag to ensure plants are fetched only once
-
 
   void getProfile() async {
     emit(ProfileLoadingState());
@@ -53,18 +53,16 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(ProfileSuccessState());
   }
-  
+
   Future<void> addPlantToMyGarden(int plantId) async {
     if (!fetchedPlantIds.contains(plantId)) {
-      await getPlantById(plantId); 
-      HiveHelpers.addPlantId(plantId); 
-      fetchedPlantIds.add(plantId); 
+      await getPlantById(plantId);
+      HiveHelpers.addPlantId(plantId);
+      fetchedPlantIds.add(plantId);
     }
 
     emit(ProfileSuccessState());
   }
-
-
 
   Future<void> getPlantById(int plantId) async {
     if (plantList.any((plant) => plant.id == plantId)) {
@@ -93,20 +91,19 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void removePlantById(int plantId, HomeScreenCubit homeCubit) {
+  void removePlantById(
+      int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
     plantList.removeWhere((plant) => plant.id == plantId);
-    
+
     fetchedPlantIds.remove(plantId);
-    
+
     HiveHelpers.removePlantId(plantId);
-    
+
     // Notify HomeScreenCubit to remove plant
     homeCubit.addedPlantIds.remove(plantId);
-    homeCubit.emit(ToggeldSuccessState()); 
-    
+    homeCubit.emit(ToggeldSuccessState());
+    speciesCubit.emit(ToggePlantldSuccessState());
+
     emit(ProfileSuccessState());
   }
-
-
-
 }

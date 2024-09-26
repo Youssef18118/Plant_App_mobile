@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
@@ -18,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final profileCubit = context.read<ProfileCubit>();
     final homeCubit = context.read<HomeScreenCubit>();
+    final speciesCubit = context.read<SpeciesCubit>();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -54,8 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     myGardenButton(),
                     plantList.isEmpty
                         ? Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: height * 0.25),
+                            padding:
+                                EdgeInsets.symmetric(vertical: height * 0.25),
                             child: Text(
                               "My Garden is empty.",
                               style: TextStyle(
@@ -79,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 profileCubit,
                                 onRemove: () {
                                   profileCubit.removePlantById(
-                                      plant.id!, homeCubit);
+                                      plant.id!, homeCubit, speciesCubit);
                                 },
                               );
                             },

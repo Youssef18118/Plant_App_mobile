@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
@@ -19,19 +20,21 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   // Fetch plants from API
   void gettingPlants({String? searchText}) async {
     emit(GettingPlantsLoading());
-    
+
     if (searchText != null && searchText.isNotEmpty) {
-      searchText = searchText.toLowerCase(); // Ensure search is case-insensitive
-      
+      searchText =
+          searchText.toLowerCase(); // Ensure search is case-insensitive
+
       // Perform local search on common names
       List<PlantSpeciesData> filteredPlants = plantsSpecies.where((plant) {
-        return plant.commonName != null && plant.commonName!.toLowerCase().contains(searchText!);
+        return plant.commonName != null &&
+            plant.commonName!.toLowerCase().contains(searchText!);
       }).toList();
-      
+
       if (filteredPlants.isNotEmpty) {
         plantsSpecies = filteredPlants;
         emit(GettingPlantsSuccess());
-        return; 
+        return;
       }
     }
 
@@ -61,14 +64,13 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     }
   }
 
-
-  void togglePlant(
-      int plantId, ProfileCubit profileCubit, HomeScreenCubit homeCubit) async {
+  void togglePlant(int plantId, ProfileCubit profileCubit,
+      HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) async {
     if (addedPlantIds.contains(plantId)) {
       HiveHelpers.removePlantId(plantId);
       addedPlantIds.remove(plantId);
 
-      profileCubit.removePlantById(plantId, homeCubit);
+      profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
 
       emit(ToggeldSuccessState());
     } else {

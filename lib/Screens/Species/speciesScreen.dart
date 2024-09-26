@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
+import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
+import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 
 class Speciesscreen extends StatefulWidget {
   const Speciesscreen({super.key});
@@ -138,7 +140,14 @@ class _SpeciesscreenState extends State<Speciesscreen> {
     );
   }
 
-  Widget PlantCard(PlantSpeciesData? plantdata, double width, double height) {
+  Widget PlantCard(
+    PlantSpeciesData? plantdata,
+    double width,
+    double height,
+  ) {
+    final cubit = context.read<SpeciesCubit>();
+    final profileCubit = context.read<ProfileCubit>();
+    final homeCubit = context.read<HomeScreenCubit>();
     return InkWell(
       onTap: () {
         // Navigate to details screen
@@ -197,9 +206,24 @@ class _SpeciesscreenState extends State<Speciesscreen> {
                           onPressed: () {
                             // Handle Garden Action
                           },
-                          child: Text(
-                            'Garden',
-                            style: TextStyle(fontSize: width * 0.04),
+                          child: BlocBuilder<SpeciesCubit, SpeciesState>(
+                            builder: (context, state) {
+                              final isAdded = cubit.addedPlantIds
+                                  .contains(plantdata?.id ?? 1);
+                              return InkWell(
+                                onTap: () {
+                                  cubit.togglePlant(
+                                      plantdata?.id ?? 1,
+                                      profileCubit,
+                                      homeCubit,
+                                      cubit); // Toggle add/remove
+                                },
+                                child: Text(
+                                  isAdded ? 'Remove' : 'Garden',
+                                  style: TextStyle(fontSize: width * 0.04),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         SizedBox(width: width * 0.02),

@@ -12,5 +12,8 @@ final class speciesSuccessState extends SpeciesState {}
 final class speciesErrorState extends SpeciesState {
   String? message;
   speciesErrorState(this.message);
-  }
-  class SpeciesFiltered extends SpeciesState {}
+}
+
+class SpeciesFiltered extends SpeciesState {}
+
+final class ToggePlantldSuccessState extends SpeciesState {}

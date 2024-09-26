@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
+import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/const.dart';
 
 part 'species_state.dart';
@@ -13,7 +16,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
   List<PlantSpeciesData>? filteredSpecies;
   int currentPage = 1; // Keep track of the current page
   bool isLoadingMore = false; // Flag to check if more data is being loaded
-
+  List<int> addedPlantIds = HiveHelpers.getPlantIds();
   // get plant model for the first page
   void getAllSpecies() async {
     emit(speciesloadingState());
@@ -78,5 +81,24 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       }).toList();
     }
     emit(SpeciesFiltered()); // Emit new state after filtering
+  }
+
+  void togglePlant(int plantId, ProfileCubit profileCubit,
+      HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) async {
+    if (addedPlantIds.contains(plantId)) {
+      HiveHelpers.removePlantId(plantId);
+      addedPlantIds.remove(plantId);
+
+      profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
+
+      emit(ToggePlantldSuccessState());
+    } else {
+      HiveHelpers.addPlantId(plantId);
+      addedPlantIds.add(plantId);
+
+      await profileCubit.addPlantToMyGarden(plantId);
+
+      emit(ToggePlantldSuccessState());
+    }
   }
 }
