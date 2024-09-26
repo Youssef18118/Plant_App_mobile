@@ -23,12 +23,12 @@ class _LoginState extends State<Login> {
     final cubit = context.read<LoginCubit>();
 
     return Scaffold(
-      body: BlocListener<LoginCubit, LoginState>(
-        listener: (context, state) {
-          if (state is LoginSucessState) {
-            // Show success message and navigate to HomeScreen
-            Get.snackbar("Success", "Login Success",
-                backgroundColor: Colors.green, colorText: Colors.white);
+      body: BlocBuilder<LoginCubit, LoginState>(
+        builder: (context, state) {
+          if (state is LoginLoadingState) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
           }
           return SingleChildScrollView(
             child: Center(

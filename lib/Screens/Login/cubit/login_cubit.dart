@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/home/home_screen.dart';
 import 'package:plant_app/Screens/navigation/navigation_screen.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
 import 'package:plant_app/const.dart';
@@ -57,7 +58,9 @@ class LoginCubit extends Cubit<LoginState> {
 
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
       if (googleUser == null) {
+        // If the user cancels the Google Sign-In flow
         emit(LogineErrorState("Sign in aborted by user"));
         return;
       }
@@ -73,13 +76,22 @@ class LoginCubit extends Cubit<LoginState> {
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
+      // Logging user info to ensure it's correct
+      print('User Credential: $userCredential');
+      print('User: $user');
 
       if (user != null) {
+        // If sign-in is successful, navigate to the HomeScreen
+        print('Sign in successful, navigating to HomeScreen...');
+        Get.off(() => const HomeScreen());
         emit(LoginSucessState());
       } else {
+        // If the user is null after signing in, which is unlikely
+        print('User is null after Google sign-in.');
         emit(LogineErrorState("Google sign-in failed"));
       }
     } catch (e) {
+      print('Error during Google sign-in: $e');
       emit(LogineErrorState(e.toString()));
     }
   }
