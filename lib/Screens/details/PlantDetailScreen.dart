@@ -7,22 +7,25 @@ class PlantDetailScreen extends StatelessWidget {
   final int plantId;
   final String appBarImagePath = 'assets/images/ProfileBackground.png';
 
-  final Color titleTextColor = Colors.white70;
+  final Color titleTextColor = Colors.white;
 
   PlantDetailScreen({Key? key, required this.plantId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Get screen height and width
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => PlantDetailsCubit()..getPlantById(plantId),
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56.0),
+          preferredSize: Size.fromHeight(screenHeight * 0.07),
           child: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
             ),
             flexibleSpace: Container(
@@ -40,7 +43,7 @@ class PlantDetailScreen extends StatelessWidget {
               style: TextStyle(
                 color: titleTextColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: screenWidth * 0.06,
                 fontFamily: 'Roboto',
               ),
             ),
@@ -56,7 +59,7 @@ class PlantDetailScreen extends StatelessWidget {
             } else if (state is PlantDetailsSuccessState) {
               final plant = context.read<PlantDetailsCubit>().plantModel;
 
-              // Generate a random rating
+
               final rating = (plantId % 5 + 1).toDouble();
 
               return PlantDetailWidget(
