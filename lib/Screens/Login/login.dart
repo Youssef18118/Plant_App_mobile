@@ -5,6 +5,7 @@ import 'package:plant_app/Screens/Login/LoginForm/LoginForm.dart';
 import 'package:plant_app/Screens/Login/LoginWidgets.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Signup/register.dart';
+import 'package:plant_app/Screens/home/home_screen.dart';
 import 'package:plant_app/const.dart';
 
 class Login extends StatefulWidget {
@@ -24,16 +25,25 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
-          if(state is LoginSucessState){
-            Get.snackbar("Success", "Login Success", backgroundColor: Colors.green, colorText: Colors.white);
+          if (state is LoginSucessState) {
+            // Show success message and navigate to HomeScreen
+            Get.snackbar("Success", "Login Success",
+                backgroundColor: Colors.green, colorText: Colors.white);
+
+            // Navigate to HomeScreen
+            Future.delayed(Duration(seconds: 1), () {
+              Get.offAll(() =>
+                  HomeScreen()); // Clears the back stack and navigates to HomeScreen
+            });
           }
-          if(state is LogineErrorState){
-            Get.snackbar("Error", state.message, backgroundColor: Colors.red, colorText: Colors.black); 
+
+          if (state is LogineErrorState) {
+            Get.snackbar("Error", state.message,
+                backgroundColor: Colors.red, colorText: Colors.black);
           }
         },
         child: BlocBuilder<LoginCubit, LoginState>(
           builder: (context, state) {
-
             if (state is LoginLoadingState) {
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
@@ -51,11 +61,8 @@ class _LoginState extends State<Login> {
                         Container(
                           width: 100,
                           height: 100,
-                          child: Image.asset(imagePath +"logoWithoutText.png"),
+                          child: Image.asset(imagePath + "logoWithoutText.png"),
                         ),
-                        // SizedBox(
-                        //   height: height * 0.005,
-                        // ),
                         const Text(
                           "Welcome Back",
                           style: TextStyle(
@@ -72,11 +79,15 @@ class _LoginState extends State<Login> {
                         SizedBox(
                           height: height * 0.02,
                         ),
-                        LoginButton(height, "Apple", chosenIcon: Icons.apple),
+                        LoginButton(height, "Apple",
+                            chosenIcon: Icons.apple, onTap: () {}),
                         SizedBox(
                           height: height * 0.02,
                         ),
-                        LoginButton(height, "Google", image: "google.png"),
+                        LoginButton(height, "Google", image: "google.png",
+                            onTap: () {
+                          context.read<LoginCubit>().signInWithGoogle();
+                        }),
                         SizedBox(
                           height: height * 0.02,
                         ),
