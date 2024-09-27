@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
@@ -9,6 +10,7 @@ import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 part 'profile_state.dart';
 
@@ -57,11 +59,12 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> addPlantToMyGarden(int plantId, BuildContext context) async {
-    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     if (!fetchedPlantIds.contains(plantId)) {
       await getPlantById(plantId);
       HiveHelpers.addPlantId(plantId);
       fetchedPlantIds.add(plantId);
+
+      await scheduleWateringNotification(plantId);
     }
 
     emit(ProfileSuccessState());
@@ -108,6 +111,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void removePlantById(
       int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
+    cancelWateringNotification(plantId);
+
     plantList.removeWhere((plant) => plant.id == plantId);
 
     fetchedPlantIds.remove(plantId);
@@ -123,5 +128,68 @@ class ProfileCubit extends Cubit<ProfileState> {
         plantId, false); // false indicates the plant is removed
 
     emit(ProfileSuccessState());
+  }
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> scheduleLocalNotification({
+    required int plantId,
+    required String plantName,
+    required DateTime scheduledTime,
+  }) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      plantId,
+      "Water Reminder",
+      "It's time to water your $plantName!",
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your_channel_id',
+          'your_channel_name',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  Future<void> scheduleWateringNotification(int plantId) async {
+    final plant = plantList.firstWhere(
+      (plant) => plant.id == plantId,
+      orElse: () => PlantModel(id: 1, commonName: "Unknown Plant"),
+    );
+    if (plant != null && plant.wateringGeneralBenchmark != null) {
+      final benchmark = plant.wateringGeneralBenchmark!.value;
+
+      int daysToNotify;
+
+      if (benchmark == null) {
+        daysToNotify = 7;
+      } else {
+        final regex = RegExp(r'(\d+)-?(\d+)?');
+        final match = regex.firstMatch(benchmark);
+
+        if (match != null) {
+          daysToNotify = int.parse(match.group(1)!);
+        } else {
+          daysToNotify = 7;
+        }
+      }
+
+      DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
+
+      await scheduleLocalNotification(
+        plantId: plantId,
+        plantName: plant.commonName ?? "Your plant",
+        scheduledTime: notifyTime,
+      );
+    }
+  }
+
+  Future<void> cancelWateringNotification(int plantId) async {
+    await flutterLocalNotificationsPlugin.cancel(plantId);
   }
 }

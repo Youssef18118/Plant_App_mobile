@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -16,6 +17,7 @@ import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/splash/splash.dart';
 import 'package:plant_app/firebase_options.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -27,7 +29,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   // Request permission for notifications on Android 13+
   NotificationSettings settings =
       await FirebaseMessaging.instance.requestPermission(
@@ -50,7 +51,6 @@ void main() async {
   final fcmToken = await FirebaseMessaging.instance.getToken();
   print("fcm Token is $fcmToken");
 
-  // Handle messages when the app is in the foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message while in the foreground!');
 
@@ -60,10 +60,8 @@ void main() async {
       print(
           'Message also contained a notification body: ${message.notification!.body}');
 
-      // Display the AwesomeDialog with the notification details
       AwesomeDialog(
-        context: navigatorKey
-            .currentContext!, // Use the GlobalKey to get the current context
+        context: navigatorKey.currentContext!,
         dialogType: DialogType.info,
         headerAnimationLoop: false,
         animType: AnimType.bottomSlide,
@@ -76,7 +74,6 @@ void main() async {
     }
   });
 
-  // Set the background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   final token = HiveHelpers.getToken();
@@ -84,10 +81,24 @@ void main() async {
     DioHelpers.setToken(token);
   }
 
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  () async {
+    tz.initializeTimeZones();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  };
+
   runApp(const MainApp());
 }
 
-// Background message handler should be a top-level function
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
