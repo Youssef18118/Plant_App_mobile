@@ -91,8 +91,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void removePlantById(
-      int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
+  void removePlantById(int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
     plantList.removeWhere((plant) => plant.id == plantId);
 
     fetchedPlantIds.remove(plantId);
@@ -102,8 +101,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     // Notify HomeScreenCubit to remove plant
     homeCubit.addedPlantIds.remove(plantId);
     homeCubit.emit(ToggeldSuccessState());
-    speciesCubit.emit(ToggePlantldSuccessState());
+
+    // Notify SpeciesCubit to remove plant
+    speciesCubit.notifyPlantChanged(plantId, false);  // false indicates the plant is removed
 
     emit(ProfileSuccessState());
   }
+
 }
