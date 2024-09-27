@@ -13,8 +13,8 @@ Widget searchField(BuildContext context, double height, double width) {
   final cubit = context.read<SpeciesCubit>();
 
   return Padding(
-    padding: EdgeInsets.symmetric(
-        vertical: height * 0.25, horizontal: width * 0.10),
+    padding:
+        EdgeInsets.symmetric(vertical: height * 0.25, horizontal: width * 0.10),
     child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -41,12 +41,8 @@ Widget searchField(BuildContext context, double height, double width) {
   );
 }
 
-Widget PlantCard(
-  PlantSpeciesData? plantdata,
-  double width,
-  double height,
-  BuildContext context
-) {
+Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
+    BuildContext context) {
   final cubit = context.read<SpeciesCubit>();
   final profileCubit = context.read<ProfileCubit>();
   final homeCubit = context.read<HomeScreenCubit>();
@@ -107,22 +103,27 @@ Widget PlantCard(
                     children: [
                       BlocBuilder<SpeciesCubit, SpeciesState>(
                         builder: (context, state) {
-                          final isAdded = cubit.addedPlantIds
-                              .contains(plantdata?.id ?? 1);
+                          final isAdded =
+                              cubit.addedPlantIds.contains(plantdata?.id ?? 1);
                           return ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isAdded ? Colors.red : Colors.green, // Red for Remove, Green for Garden
+                              backgroundColor: isAdded
+                                  ? Colors.red
+                                  : Colors
+                                      .green, // Red for Remove, Green for Garden
                             ),
                             onPressed: () {
                               cubit.togglePlant(
                                   plantdata?.id ?? 1,
                                   profileCubit,
                                   homeCubit,
-                                  cubit); // Toggle add/remove
+                                  cubit,
+                                  context); // Toggle add/remove
                             },
                             child: Text(
                               isAdded ? 'Remove' : 'Garden',
-                              style: TextStyle(fontSize: width * 0.04, color:  Colors.white),
+                              style: TextStyle(
+                                  fontSize: width * 0.04, color: Colors.white),
                             ),
                           );
                         },
@@ -150,4 +151,3 @@ Widget PlantCard(
     ),
   );
 }
-

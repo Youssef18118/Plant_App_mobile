@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
@@ -64,8 +65,12 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     }
   }
 
-  void togglePlant(int plantId, ProfileCubit profileCubit,
-      HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) async {
+  void togglePlant(
+      int plantId,
+      ProfileCubit profileCubit,
+      HomeScreenCubit homeCubit,
+      SpeciesCubit speciesCubit,
+      BuildContext context) async {
     if (addedPlantIds.contains(plantId)) {
       // Remove the plant from the list and notify both screens
       HiveHelpers.removePlantId(plantId);
@@ -77,13 +82,14 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       emit(ToggeldSuccessState());
 
       // Notify SpeciesCubit to update the species list
-      speciesCubit.notifyPlantChanged(plantId, false); // Remove from species list
+      speciesCubit.notifyPlantChanged(
+          plantId, false); // Remove from species list
     } else {
       // Add the plant to the list and notify both screens
       HiveHelpers.addPlantId(plantId);
       addedPlantIds.add(plantId);
 
-      await profileCubit.addPlantToMyGarden(plantId);
+      await profileCubit.addPlantToMyGarden(plantId, context);
 
       // Emit success in HomeScreenCubit
       emit(ToggeldSuccessState());

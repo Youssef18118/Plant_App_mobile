@@ -1,4 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
@@ -54,7 +56,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileSuccessState());
   }
 
-  Future<void> addPlantToMyGarden(int plantId) async {
+  Future<void> addPlantToMyGarden(int plantId, BuildContext context) async {
+    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     if (!fetchedPlantIds.contains(plantId)) {
       await getPlantById(plantId);
       HiveHelpers.addPlantId(plantId);
@@ -62,6 +65,18 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
 
     emit(ProfileSuccessState());
+
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Success',
+      desc: 'Plant is added succefully to garden',
+      btnOkOnPress: () {},
+      btnOkText: 'Okay',
+      btnOkColor: Colors.blue,
+    ).show();
   }
 
   Future<void> getPlantById(int plantId) async {
@@ -91,7 +106,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void removePlantById(int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
+  void removePlantById(
+      int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
     plantList.removeWhere((plant) => plant.id == plantId);
 
     fetchedPlantIds.remove(plantId);
@@ -103,9 +119,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     homeCubit.emit(ToggeldSuccessState());
 
     // Notify SpeciesCubit to remove plant
-    speciesCubit.notifyPlantChanged(plantId, false);  // false indicates the plant is removed
+    speciesCubit.notifyPlantChanged(
+        plantId, false); // false indicates the plant is removed
 
     emit(ProfileSuccessState());
   }
-
 }

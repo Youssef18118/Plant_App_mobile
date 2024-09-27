@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
@@ -83,8 +84,12 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     emit(SpeciesFiltered()); // Emit new state after filtering
   }
 
-  void togglePlant(int plantId, ProfileCubit profileCubit,
-      HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) async {
+  void togglePlant(
+      int plantId,
+      ProfileCubit profileCubit,
+      HomeScreenCubit homeCubit,
+      SpeciesCubit speciesCubit,
+      BuildContext context) async {
     if (addedPlantIds.contains(plantId)) {
       HiveHelpers.removePlantId(plantId);
       addedPlantIds.remove(plantId);
@@ -100,7 +105,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       HiveHelpers.addPlantId(plantId);
       addedPlantIds.add(plantId);
 
-      await profileCubit.addPlantToMyGarden(plantId);
+      await profileCubit.addPlantToMyGarden(plantId, context);
 
       // Notify home screen to add the plant
       homeCubit.addedPlantIds.add(plantId);
@@ -128,5 +133,4 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
     emit(SpeciesUpdatedState()); // Notify that species have been updated
   }
-
 }

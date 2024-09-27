@@ -29,7 +29,8 @@ void main() async {
   );
 
   // Request permission for notifications on Android 13+
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+  NotificationSettings settings =
+      await FirebaseMessaging.instance.requestPermission(
     alert: true,
     badge: true,
     sound: true,
@@ -54,19 +55,22 @@ void main() async {
     print('Got a message while in the foreground!');
 
     if (message.notification != null) {
-      print('Message also contained a notification title: ${message.notification!.title}');
-      print('Message also contained a notification body: ${message.notification!.body}');
+      print(
+          'Message also contained a notification title: ${message.notification!.title}');
+      print(
+          'Message also contained a notification body: ${message.notification!.body}');
 
       // Display the AwesomeDialog with the notification details
       AwesomeDialog(
-        context: navigatorKey.currentContext!, // Use the GlobalKey to get the current context
+        context: navigatorKey
+            .currentContext!, // Use the GlobalKey to get the current context
         dialogType: DialogType.info,
         headerAnimationLoop: false,
         animType: AnimType.bottomSlide,
         title: message.notification!.title ?? 'Notification',
         desc: message.notification!.body ?? 'You have received a new message',
         btnOkOnPress: () {},
-        btnOkText: 'Dismiss',
+        btnOkText: 'Okay',
         btnOkColor: Colors.blue,
       ).show();
     }
