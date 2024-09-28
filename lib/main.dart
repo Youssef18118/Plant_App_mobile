@@ -23,15 +23,17 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Hive and Firebase
   await Hive.initFlutter();
   await Hive.openBox(HiveHelpers.tokenBox);
   await Hive.openBox(HiveHelpers.gardenBox);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // Request permission for notifications on Android 13+
-  NotificationSettings settings =
-      await FirebaseMessaging.instance.requestPermission(
+
+  // Request notification permissions
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
     alert: true,
     badge: true,
     sound: true,
@@ -45,20 +47,20 @@ void main() async {
     print('User declined or has not accepted permission');
   }
 
+  // Initialize Dio helpers and subscribe to FCM topic
   DioHelpers.init();
   await FirebaseMessaging.instance.subscribeToTopic("plant");
 
   final fcmToken = await FirebaseMessaging.instance.getToken();
-  print("fcm Token is $fcmToken");
+  print("FCM Token: $fcmToken");
 
+  // Handle foreground FCM messages
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message while in the foreground!');
 
     if (message.notification != null) {
-      print(
-          'Message also contained a notification title: ${message.notification!.title}');
-      print(
-          'Message also contained a notification body: ${message.notification!.body}');
+      print('Message also contained a notification title: ${message.notification!.title}');
+      print('Message also contained a notification body: ${message.notification!.body}');
 
       AwesomeDialog(
         context: navigatorKey.currentContext!,
@@ -74,27 +76,26 @@ void main() async {
     }
   });
 
+  // Handle background FCM messages
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  // Get stored token from Hive and set it in Dio
   final token = HiveHelpers.getToken();
   if (token != null && token.isNotEmpty) {
     DioHelpers.setToken(token);
   }
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // Initialize timezone and notifications
+  tz.initializeTimeZones();
+  
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  () async {
-    tz.initializeTimeZones();
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
 
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  };
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   runApp(const MainApp());
 }
@@ -110,27 +111,18 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => LoginCubit(),
-        ),
-        BlocProvider(
-          create: (context) => RegisterCubit(),
-        ),
+        BlocProvider(create: (context) => LoginCubit()),
+        BlocProvider(create: (context) => RegisterCubit()),
         BlocProvider(create: (context) => HomeScreenCubit()..gettingPlants()),
-        BlocProvider(
-          create: (context) => ProfileCubit()
-            ..getProfile()
-            ..fetchAllPlants(),
+        BlocProvider(create: (context) => ProfileCubit()
+          ..getProfile()
+          ..fetchAllPlants(),
         ),
-        BlocProvider(
-          create: (context) => GuideCubit(),
-        ),
-        BlocProvider(
-          create: (context) => SpeciesCubit()..getAllSpecies(),
-        ),
+        BlocProvider(create: (context) => GuideCubit()),
+        BlocProvider(create: (context) => SpeciesCubit()..getAllSpecies()),
       ],
       child: GetMaterialApp(
-        navigatorKey: navigatorKey, // Assign the GlobalKey here
+        navigatorKey: navigatorKey,
         home: const SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),

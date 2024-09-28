@@ -29,6 +29,8 @@ dependencies:
   awesome_dialog: ^3.2.1
   flutter_local_notifications: ^17.2.3
   timezone: ^0.9.4
+  permission_handler: ^10.2.0
+  cloud_firestore: ^5.4.3
 
 dev_dependencies:
   flutter_test:
