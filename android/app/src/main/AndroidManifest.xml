@@ -38,6 +38,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+             
+        <!-- Add meta-data for Google Play services version -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <!-- FCM default notification icon and channel -->
         <meta-data

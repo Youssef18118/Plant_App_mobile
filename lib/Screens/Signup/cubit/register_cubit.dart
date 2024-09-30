@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
@@ -40,6 +41,15 @@ class RegisterCubit extends Cubit<RegisterState> {
       if (model.status ?? false) {
         HiveHelpers.setToken(model.data?.token);
         DioHelpers.setToken(model.data?.token ?? '');
+
+        // Save user to Firestore
+        await FirebaseFirestore.instance.collection('users').doc(email).set({
+          'email': email,
+          'name': name,
+          'phone': phoneNumber,
+          'token': model.data?.token,
+        });
+
         Get.offAll(() => const NavigationScreen());
         emit(RegisterSuccessState());
       } else {
@@ -49,4 +59,5 @@ class RegisterCubit extends Cubit<RegisterState> {
       emit(RegisterErrorState(e.toString()));
     }
   }
+
 }

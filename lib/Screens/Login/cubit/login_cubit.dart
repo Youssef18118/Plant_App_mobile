@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -62,25 +63,37 @@ class LoginCubit extends Cubit<LoginState> {
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
 
       if (user != null) {
-        emit(LoginSucessState());
+        // Check if user exists in Firestore
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.email)
+            .get();
+
+        if (userDoc.exists) {
+          emit(LoginSucessState());
+          // Navigate to your app's home screen
+          Get.offAll(() => const NavigationScreen());
+        } else {
+          emit(LogineErrorState("No account found for this email."));
+        }
       } else {
         emit(LogineErrorState("Google sign-in failed"));
       }
     } catch (e) {
+      print(e); // For debugging
       emit(LogineErrorState(e.toString()));
     }
   }
+
 }
