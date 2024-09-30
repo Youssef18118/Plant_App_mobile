@@ -81,9 +81,20 @@ class LoginCubit extends Cubit<LoginState> {
             .get();
 
         if (userDoc.exists) {
-          emit(LoginSucessState());
-          // Navigate to your app's home screen
-          Get.offAll(() => const NavigationScreen());
+          // Retrieve token from Firestore
+          String? token = userDoc['token'];
+
+          // Check if token is not null and set it in Hive and Dio
+          if (token != null) {
+            HiveHelpers.setToken(token);
+            DioHelpers.setToken(token);
+
+            emit(LoginSucessState());
+            // Navigate to your app's home screen
+            Get.offAll(() => const NavigationScreen());
+          } else {
+            emit(LogineErrorState("Token not found for the user"));
+          }
         } else {
           emit(LogineErrorState("No account found for this email."));
         }
@@ -95,5 +106,6 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LogineErrorState(e.toString()));
     }
   }
+
 
 }
