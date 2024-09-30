@@ -11,7 +11,7 @@ import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:plant_app/main.dart';
+import 'package:plant_app/fcm_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -37,14 +37,17 @@ class ProfileCubit extends Cubit<ProfileState> {
         path: ProfilePath,
       );
 
+      // print("respose data : ${response.data}"); 
       Profmodel = ProfileModel.fromJson(response.data);
 
       if (Profmodel.status ?? false) {
         emit(ProfileSuccessState());
       } else {
+        // print("failed to get profile");
         emit(ProfileErrorState("Failed to get Profile"));
       }
     } catch (e) {
+      print("profile error: $e");
       emit(ProfileErrorState(e.toString()));
     }
   }
@@ -94,7 +97,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey3},
+        queryParameters: {'key': apiKey},
         customBaseUrl: plantBaseUrl,
       );
 
