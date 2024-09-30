@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_app/Screens/Species/speciesScreen.dart';
 import 'package:plant_app/Screens/home/home_screen.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
-import 'package:plant_icons/plant_icons_data.dart';
+
 
 class NavigationScreen extends StatefulWidget {
   final int selectedIndex;
