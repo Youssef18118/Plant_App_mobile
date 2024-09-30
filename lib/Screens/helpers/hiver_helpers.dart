@@ -5,6 +5,9 @@ class HiveHelpers {
   static const String tokenBox = 'TOKEN';
   static const String gardenBox = 'GARDEN';
   static const String plantIdsKey = 'plant_ids';
+  static const String profileBox = 'PROFILE';
+  static const String profileNameKey = 'profile_name';
+  static const String profileEmailKey = 'profile_email';
 
   static void setToken(String? token) {
     Hive.box(tokenBox).put(tokenBox, token);

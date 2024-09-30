@@ -13,6 +13,7 @@ Future<void> initApp() async {
   await Hive.initFlutter();
   await Hive.openBox(HiveHelpers.tokenBox);
   await Hive.openBox(HiveHelpers.gardenBox);
+  await Hive.openBox(HiveHelpers.profileBox);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

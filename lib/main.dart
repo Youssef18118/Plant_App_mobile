@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => RegisterCubit()),
         BlocProvider(create: (context) => HomeScreenCubit()..gettingPlants()),
         BlocProvider(create: (context) => ProfileCubit()
-          ..getProfile()
+          ..init()
           ..fetchAllPlants(),
         ),
         BlocProvider(create: (context) => GuideCubit()),

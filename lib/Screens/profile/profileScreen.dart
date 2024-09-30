@@ -15,6 +15,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    final profileCubit = context.read<ProfileCubit>();
+    profileCubit.init(); 
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final profileCubit = context.read<ProfileCubit>();
