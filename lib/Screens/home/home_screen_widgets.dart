@@ -97,7 +97,8 @@ Widget containerBuilder(
                                     plant.id ?? 1,
                                     profileCubit,
                                     homeCubit,
-                                    speciesCubit); // Toggle add/remove
+                                    speciesCubit,
+                                    context); // Toggle add/remove
                               },
                               child: Container(
                                 height: height * 0.053,

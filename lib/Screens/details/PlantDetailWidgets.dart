@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 class PlantDetailWidget extends StatelessWidget {
   final String imageUrl;
   final String plantName;
@@ -32,16 +34,21 @@ class PlantDetailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenHeight * 0.02,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Center(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: screenHeight * 0.25,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
@@ -67,11 +74,13 @@ class PlantDetailWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Type Container
             if (type != null)
               Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.03,
+                      vertical: screenHeight * 0.01
+                  ),
                   decoration: BoxDecoration(
                     color: themeColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -79,7 +88,7 @@ class PlantDetailWidget extends StatelessWidget {
                   child: Text(
                     type!,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: screenWidth * 0.04,
                       color: themeColor,
                       fontWeight: FontWeight.w600,
                     ),
@@ -88,13 +97,11 @@ class PlantDetailWidget extends StatelessWidget {
               ),
             const SizedBox(height: 16),
 
-
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -102,7 +109,7 @@ class PlantDetailWidget extends StatelessWidget {
                         child: Text(
                           plantName,
                           style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width > 600 ? 28 : 22,
+                            fontSize: screenWidth > 600 ? 28 : screenWidth * 0.06,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.left,
@@ -114,149 +121,40 @@ class PlantDetailWidget extends StatelessWidget {
                             return Icon(
                               index < rating! ? Icons.star : Icons.star_border,
                               color: themeColor,
-                              size: 24,
+                              size: screenWidth * 0.05,
                             );
                           }),
                         ),
                     ],
                   ),
                   const SizedBox(height: 16),
-
-
                   if (origin != null) ...[
-                    Text(
-                      "Origin:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      origin!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    _buildDetailText("Origin:", origin!, screenWidth, screenHeight),
                   ],
-
                   if (growthRate != null) ...[
-                    Text(
-                      "Growth Rate:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      growthRate!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    _buildDetailText("Growth Rate:", growthRate!, screenWidth, screenHeight),
                   ],
-
                   if (watering != null) ...[
-                    Text(
-                      "Watering:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      watering!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    _buildDetailText("Watering:", watering!, screenWidth, screenHeight),
                   ],
-
                   if (sunlight != null && sunlight!.isNotEmpty) ...[
-                    Text(
-                      "Sunlight:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      sunlight!.join(', '),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    _buildDetailText("Sunlight:", sunlight!.join(', '), screenWidth, screenHeight),
                   ],
-
                   if (pruningMonth != null && pruningMonth!.isNotEmpty) ...[
-                    Text(
-                      "Pruning Month:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      pruningMonth!.join(', '),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    _buildDetailText("Pruning Month:", pruningMonth!.join(', '), screenWidth, screenHeight),
                   ],
-
                   if (leafColor != null && leafColor!.isNotEmpty) ...[
-                    Text(
-                      "Leaf Color:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      leafColor!.join(', '),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                    _buildDetailText("Leaf Color:", leafColor!.join(', '), screenWidth, screenHeight),
                   ],
-
-                  // Small Spacer
                   const SizedBox(height: 12),
-
-                  // Description Label
                   const Text(
                     "Description",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-
-
                   Text(
                     details,
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: screenWidth * 0.045, color: Colors.grey[700]),
                     textAlign: TextAlign.justify,
                   ),
                 ],
@@ -267,7 +165,31 @@ class PlantDetailWidget extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildDetailText(String label, String text, double screenWidth, double screenHeight) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: screenWidth * 0.04,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: screenWidth * 0.035,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
-
-
-

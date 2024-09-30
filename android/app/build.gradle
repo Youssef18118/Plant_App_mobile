@@ -29,7 +29,7 @@ if (flutterVersionName == null) {
 android {
     namespace = "com.example.plant_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -56,13 +56,18 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
-    // implementation 'com.google.firebase:firebase-analytics' // Example Firebase dependency
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0"
+    implementation "androidx.fragment:fragment:1.7.0" // Ensure the latest version
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0" // Ensure the latest version
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0" // Ensure the latest version
+    implementation 'com.google.android.gms:play-services-auth:20.5.0' // Latest version
+    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0' // Latest version of Firebase
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2" // Latest Coroutines version
 }
 
 configurations.all {
-    resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-    resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+    resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
+    resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0'
 }
 android {                                                                                     
     defaultConfig {                                                                             
