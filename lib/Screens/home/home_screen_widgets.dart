@@ -20,135 +20,130 @@ Widget containerBuilder(
 }) {
   final bloc = context.read<HomeScreenCubit>();
   final List<PlantSpeciesData> allData = bloc.plantsSpecies;
-  int midindex = (allData.length / 2).ceil();
-  final plants =
-      isFirstHalf ? allData.sublist(0, midindex) : allData.sublist(midindex);
 
-  return ListView.separated(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      separatorBuilder: (context, index) => SizedBox(
-            height: height * 0.015,
-          ),
-      itemCount: plants.length,
-      itemBuilder: (context, index) {
-        final plant = plants[index];
+  final plants = allData;
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: GestureDetector(
-            onTap: () {
-              print("plant id to details is ${plant.id}");
-              Get.to(() => PlantDetailScreen(plantId: plant.id!));
-            },
-            child: Container(
-              height: height * 0.4,
-              width: width * 0.62,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                      color: const Color(0xff5edab5), width: width * 0.008)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: height * 0.128,
-                      width: width * 0.4,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: CachedNetworkImage(
-                          imageUrl: plant.defaultImage?.smallUrl ?? '',
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.error,
-                            size: 30,
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    child: GridView.builder(
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: width * 0.056,
+          mainAxisSpacing: height * 0.045,
+          childAspectRatio: height * 0.00099,
+        ),
+        itemCount: plants.length,
+        itemBuilder: (context, index) {
+          final plant = plants[index];
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: GestureDetector(
+              onTap: () {
+                print("plant id to details is ${plant.id}");
+                Get.to(() => PlantDetailScreen(plantId: plant.id!));
+              },
+              child: Container(
+                width: width * 0.38,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5), // Shadow color
+                        spreadRadius: 5, // Spread radius
+                        blurRadius: 5, // Blur radius for soft shadow
+                        offset: Offset(0, 3), // Offset to move shadow down
+                      ),
+                    ],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.grey)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: height * 0.128,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15)),
+                          child: CachedNetworkImage(
+                            imageUrl: plant.defaultImage?.smallUrl ?? '',
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.error,
+                              size: 30,
+                            ),
+                            fit: BoxFit.fill,
                           ),
-                          fit: BoxFit.fill,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.013,
-                    ),
-                    SizedBox(
-                      width: width * 0.45,
-                      child: Text(plant.commonName ?? 'name isnt available',
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20)),
-                    ),
-                    SizedBox(
-                      height: height * 0.008,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // Toggle between Plus (add) and Check (added) icons
-                        BlocBuilder<HomeScreenCubit, HomeScreenState>(
-                          builder: (context, state) {
-                            final isAdded = bloc.addedPlantIds
-                                .contains(plant.id); // Check if plant is added
-                            return InkWell(
-                              onTap: () {
-                                bloc.togglePlant(
-                                    plant.id ?? 1,
-                                    profileCubit,
-                                    homeCubit,
-                                    speciesCubit,
-                                    context); // Toggle add/remove
-                              },
+                      SizedBox(
+                        height: height * 0.013,
+                      ),
+                      SizedBox(
+                        width: width * 0.45,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(plant.commonName ?? 'name isnt available',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.020,
+                      ),
+                      BlocBuilder<HomeScreenCubit, HomeScreenState>(
+                        builder: (context, state) {
+                          final isAdded = bloc.addedPlantIds
+                              .contains(plant.id); // Check if plant is added
+                          return InkWell(
+                            onTap: () {
+                              bloc.togglePlant(
+                                  plant.id ?? 1,
+                                  profileCubit,
+                                  homeCubit,
+                                  speciesCubit,
+                                  context); // Toggle add/remove
+                            },
+                            child: Center(
                               child: Container(
-                                height: height * 0.053,
-                                width: width * 0.115,
+                                height: height * 0.045,
+                                width: width * 0.16,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(18),
                                   color: isAdded
                                       ? Colors.red
-                                      : Colors.green, // Toggle colors
+                                      : Color.fromARGB(
+                                          255, 26, 173, 129), // Toggle colors
                                 ),
                                 child: Icon(
                                   isAdded
                                       ? Icons.delete
                                       : Icons.add, // Toggle icons
-                                  color: Colors.white,
+                                  color: Colors.white, size: 32,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          width: width * 0.023,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Get.to(() =>
-                                PlantDetailScreen(plantId: plant.id ?? 1));
-                          },
-                          child: Container(
-                            height: height * 0.053,
-                            width: width * 0.115,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.black,
                             ),
-                            child: const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        width: width * 0.023,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      });
+          );
+        }),
+  );
 }
 
 Widget home_search(double height, ProfileCubit profileCubit,
@@ -174,14 +169,16 @@ Widget home_search(double height, ProfileCubit profileCubit,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: height * 0.07,
+                    height: height * 0.059,
                   ),
                   BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
                       return Text(
                           'Hello ${profileCubit.Profmodel.data?.name ?? "N/A"} ',
                           style: const TextStyle(
-                              fontSize: 22, color: Colors.white));
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold));
                     },
                   ),
                   SizedBox(
@@ -189,7 +186,7 @@ Widget home_search(double height, ProfileCubit profileCubit,
                   ),
                   const Text(
                     'Lets learn more about plants',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 19),
                   )
                 ],
               ),
