@@ -42,18 +42,22 @@ class HomeScreen extends StatelessWidget {
                     const Text(
                       'Plants Species',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
                       ),
                     ),
                     Spacer(),
                     InkWell(
                       onTap: () {
                         // Always navigate to NavigationScreen with the Plants tab (index 1)
-                        Get.offAll(() => const NavigationScreen(selectedIndex: 1));
+                        Get.offAll(
+                            () => const NavigationScreen(selectedIndex: 1));
                       },
                       child: const Text(
                         'View All',
-                        style: TextStyle(color: Colors.green, fontSize: 18),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 26, 173, 129),
+                            fontSize: 18),
                       ),
                     )
                   ],
@@ -76,32 +80,16 @@ class HomeScreen extends StatelessWidget {
                   return Column(
                     children: [
                       SizedBox(
-                        height: height * 0.02,
+                        height: height * 0.004,
                       ),
-                      SizedBox(
-                        height: height * 0.29,
-                        child: containerBuilder(
-                          height, width,
-                          isFirstHalf: true,
-                          context: context,
-                          profileCubit: profileCubit,
-                          homeCubit: cubit,
-                          speciesCubit: speciesCubit,
-                        ),
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      SizedBox(
-                        height: height * 0.29,
-                        child: containerBuilder(
-                          height, width,
-                          isFirstHalf: false,
-                          context: context,
-                          profileCubit: profileCubit,
-                          homeCubit: cubit,
-                          speciesCubit: speciesCubit,
-                        ),
+                      containerBuilder(
+                        height,
+                        width,
+                        isFirstHalf: true,
+                        context: context,
+                        profileCubit: profileCubit,
+                        homeCubit: cubit,
+                        speciesCubit: speciesCubit,
                       ),
                     ],
                   );
