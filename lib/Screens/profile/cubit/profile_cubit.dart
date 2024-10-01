@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
@@ -11,7 +12,7 @@ import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:plant_app/fcm_handler.dart';
+import 'package:plant_app/Screens/main%20helpers/fcm_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,11 +26,37 @@ class ProfileCubit extends Cubit<ProfileState> {
   List<PlantModel> plantList = [];
   List<int> fetchedPlantIds = [];
   bool isPlantsFetched = false;
+  
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  void getProfile() async {
+
+
+  void init() async {
+    var box = Hive.box(HiveHelpers.profileBox);
+
+    if (box.isNotEmpty) {
+      // Initialize Profmodel.data if it's null
+      if (Profmodel.data == null) {
+        Profmodel.data = ProfileData(); // Assuming ProfileData is your data class
+      }
+
+      // Load profile data from Hive
+      Profmodel.data?.name = box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
+      Profmodel.data?.email = box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
+      print("name in init ${Profmodel.data?.name}");
+      print("email in init ${Profmodel.data?.email}");
+
+      // Emit success state with stored data
+      emit(ProfileSuccessState());
+    } else {
+      // Fetch profile data from API if not stored locally
+      getProfile();
+    }
+  }
+
+   void getProfile() async {
     emit(ProfileLoadingState());
 
     try {
@@ -37,19 +64,31 @@ class ProfileCubit extends Cubit<ProfileState> {
         path: ProfilePath,
       );
 
-      // print("respose data : ${response.data}"); 
+      print("response data : ${response.data}"); 
       Profmodel = ProfileModel.fromJson(response.data);
 
       if (Profmodel.status ?? false) {
+        print("profile data: ${Profmodel}");
+
+        // Store profile data in Hive
+        storeProfileInHive(Profmodel);
+
+        
         emit(ProfileSuccessState());
       } else {
-        // print("failed to get profile");
         emit(ProfileErrorState("Failed to get Profile"));
       }
     } catch (e) {
       print("profile error: $e");
       emit(ProfileErrorState(e.toString()));
     }
+  }
+
+  // Function to store profile data in Hive
+  void storeProfileInHive(ProfileModel profile) async {
+    var box = Hive.box(HiveHelpers.profileBox);
+    box.put(HiveHelpers.profileNameKey, profile.data?.name);
+    box.put(HiveHelpers.profileEmailKey, profile.data?.email);
   }
 
   void fetchAllPlants() async {
