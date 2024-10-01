@@ -12,7 +12,7 @@ import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:plant_app/fcm_handler.dart';
+import 'package:plant_app/Screens/main%20helpers/fcm_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:cloud_firestore/cloud_firestore.dart';
 

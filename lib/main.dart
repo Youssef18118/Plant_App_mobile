@@ -1,5 +1,3 @@
-// main.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -10,8 +8,8 @@ import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/splash/splash.dart';
-import 'init.dart'; 
-import 'fcm_handler.dart'; 
+import 'Screens/main helpers/init.dart'; 
+import 'Screens/main helpers/fcm_handler.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -8,7 +8,7 @@ class GuideScreen extends StatefulWidget {
   final int plantId;
   final String URL;
 
-  GuideScreen({required this.plantId, required this. URL});
+  GuideScreen({required this.plantId, required this.URL});
 
   @override
   _GuideScreenState createState() => _GuideScreenState();
@@ -25,11 +25,13 @@ class _GuideScreenState extends State<GuideScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Color(0xfffef7ff),
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
           },
         ),
         title: const Text('Plant Guide'),
@@ -78,6 +80,5 @@ class _GuideScreenState extends State<GuideScreen> {
       ),
     );
   }
-
-  
 }
+

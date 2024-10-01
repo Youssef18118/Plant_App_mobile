@@ -15,14 +15,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   @override
   void initState() {
     super.initState();
     final profileCubit = context.read<ProfileCubit>();
-    profileCubit.init(); 
+    profileCubit.init();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,44 +56,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
             final plantList = profileCubit.plantList;
 
             return Scaffold(
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ProfileInfo(height, context, width, profile),
-                    myGardenButton(),
-                    plantList.isEmpty
-                        ? Padding(
-                            padding:
-                                EdgeInsets.symmetric(vertical: height * 0.25),
-                            child: Text(
-                              "My Garden is empty.",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[600],
+              // Background with white-grey gradient
+              body: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100]
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ProfileInfo(height, context, width, profile),
+                      myGardenButton(width),
+                      plantList.isEmpty
+                          ? Padding(
+                              padding:
+                                  EdgeInsets.symmetric(vertical: height * 0.25),
+                              child: Text(
+                                "My Garden is empty.",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600],
+                                ),
                               ),
+                            )
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemCount: plantList.length,
+                              separatorBuilder: (context, index) => SizedBox(height: 10,),
+                              itemBuilder: (context, index) {
+                                final plant = plantList[index];
+                                return PlantCard(
+                                  plant,
+                                  plantList,
+                                  index,
+                                  profileCubit,
+                                  onRemove: () {
+                                    profileCubit.removePlantById(
+                                        plant.id!, homeCubit, speciesCubit);
+                                  },
+                                );
+                              },
                             ),
-                          )
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            itemCount: plantList.length,
-                            itemBuilder: (context, index) {
-                              final plant = plantList[index];
-                              return PlantCard(
-                                plant,
-                                plantList,
-                                index,
-                                profileCubit,
-                                onRemove: () {
-                                  profileCubit.removePlantById(
-                                      plant.id!, homeCubit, speciesCubit);
-                                },
-                              );
-                            },
-                          ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
