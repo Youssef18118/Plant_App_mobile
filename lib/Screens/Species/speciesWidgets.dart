@@ -97,38 +97,50 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: height * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        BlocBuilder<SpeciesCubit, SpeciesState>(
-                          builder: (context, state) {
-                            final isAdded = cubit.addedPlantIds
-                                .contains(plantdata?.id ?? 1);
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isAdded
-                                    ? Colors.red
-                                    : Color.fromARGB(255, 26, 173,
-                                        129), // Red for Remove, Green for Garden
-                              ),
-                              onPressed: () {
-                                cubit.togglePlant(
-                                    plantdata?.id ?? 1,
-                                    profileCubit,
-                                    homeCubit,
-                                    cubit,
-                                    context); // Toggle add/remove
-                              },
-                              child: Text(
-                                isAdded ? 'Remove' : 'Garden',
-                                style: TextStyle(
-                                    fontSize: width * 0.04,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            );
-                          },
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: height * 0.02),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BlocBuilder<SpeciesCubit, SpeciesState>(
+                        builder: (context, state) {
+                          final isAdded =
+                              cubit.addedPlantIds.contains(plantdata?.id ?? 1);
+                          return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isAdded
+                                  ? Colors.red
+                                  : Colors
+                                      .green, // Red for Remove, Green for Garden
+                            ),
+                            onPressed: () {
+                              cubit.togglePlant(
+                                  plantdata?.id ?? 1,
+                                  profileCubit,
+                                  homeCubit,
+                                  cubit,
+                                  context); // Toggle add/remove
+                            },
+                            child: Text(
+                              isAdded ? 'Remove' : 'Garden',
+                              style: TextStyle(
+                                  fontSize: width * 0.04, color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(width: width * 0.02),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.to(() => GuideScreen(
+                              plantId: plantdata!.id!,
+                              URL: plantdata.defaultImage!.mediumUrl!));
+                        },
+                        child: Text(
+                          'Guides',
+                          style: TextStyle(fontSize: width * 0.04),
                         ),
                         SizedBox(width: width * 0.02),
                         ElevatedButton(

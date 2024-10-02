@@ -6,30 +6,54 @@ import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
+import 'package:plant_app/const.dart';
 
 
-Widget myGardenButton(double width) {
-    return Container(
-      width: double.infinity, 
-      padding: const EdgeInsets.symmetric(vertical: 15), 
-      child: Center( 
-        child: Container(
-          width: width *0.7,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+Widget myGardenTitle(double width, double height) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(vertical: 15),
+    child: Row(
+      children: [
+        // Left dashed line
+        Expanded(
+          child: Divider(
+            color: Colors.green,
+            thickness: 2,
+            endIndent: 0,
+          ),
+        ),
+        // Title in the center
+        Container(
+          width: width *0.4,
+          height: height* 0.07,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.blue, 
+            color: mainColor,
+            borderRadius: BorderRadius.circular(20)
           ),
           child: Center(
-            child: const Text(
+            child: Text(
               "My Garden",
-              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+        // Right dashed line
+        Expanded(
+          child: Divider(
+            color: Colors.green,
+            thickness: 2,
+            indent: 0,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
 
   Widget ProfileInfo(double height, BuildContext context, double width, ProfileData? profile) {
@@ -59,7 +83,7 @@ Widget myGardenButton(double width) {
                 child: Image.asset("assets/images/logoCircle.png")
               ),
               Text(
-                '${profile?.name ?? 'N/A'}',
+                '${profile?.name ?? 'Undefined Name'}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -68,7 +92,7 @@ Widget myGardenButton(double width) {
               ),
               const SizedBox(height: 5),
               Text(
-                '${profile?.email ?? 'N/A'}',
+                '${profile?.email ?? 'Undefined Email'}',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -148,7 +172,7 @@ Widget myGardenButton(double width) {
                               ));
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green[400],
+                          backgroundColor: mainColor,
                         ),
                         child: const Text(
                           "Show Guides",

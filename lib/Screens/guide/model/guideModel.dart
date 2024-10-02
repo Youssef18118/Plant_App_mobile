@@ -20,7 +20,7 @@ class GuideModel {
     if (json['data'] != null) {
       data = <GuideData>[];
       json['data'].forEach((v) {
-        data!.add(new GuideData.fromJson(v));
+        data!.add(GuideData.fromJson(v));
       });
     }
     to = json['to'];
@@ -56,7 +56,7 @@ class GuideData {
     if (json['section'] != null) {
       section = <Section>[];
       json['section'].forEach((v) {
-        section!.add(new Section.fromJson(v));
+        section!.add(Section.fromJson(v));
       });
     }
   }

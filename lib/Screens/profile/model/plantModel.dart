@@ -214,11 +214,11 @@ class Dimensions {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['min_value'] = this.minValue;
-    data['max_value'] = this.maxValue;
-    data['unit'] = this.unit;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['type'] = type;
+    data['min_value'] = minValue;
+    data['max_value'] = maxValue;
+    data['unit'] = unit;
     return data;
   }
 }
@@ -236,9 +236,9 @@ class Hardiness {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['min'] = this.min;
-    data['max'] = this.max;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['min'] = min;
+    data['max'] = max;
     return data;
   }
 }
@@ -255,9 +255,9 @@ class HardinessLocation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['full_url'] = this.fullUrl;
-    data['full_iframe'] = this.fullIframe;
+    final Map<String, dynamic> data =  Map<String, dynamic>();
+    data['full_url'] = fullUrl;
+    data['full_iframe'] = fullIframe;
     return data;
   }
 }
@@ -274,9 +274,9 @@ class WateringGeneralBenchmark {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
-    data['unit'] = this.unit;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['value'] = value;
+    data['unit'] = unit;
     return data;
   }
 }
@@ -293,9 +293,9 @@ class PlantAnatomy {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['part'] = this.part;
-    data['color'] = this.color;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['part'] = part;
+    data['color'] = color;
     return data;
   }
 }

@@ -8,7 +8,7 @@ class AuthenticationModel {
   AuthenticationModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new AuthenticationData.fromJson(json['data']) : null;
+    data = json['data'] != null ? AuthenticationData.fromJson(json['data']) : null;
   }
 }
 

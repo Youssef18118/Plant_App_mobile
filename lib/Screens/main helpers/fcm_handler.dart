@@ -7,11 +7,11 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> handleFCMMessages() async {
   // Handle foreground FCM messages
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message while in the foreground!');
+    // print('Got a message while in the foreground!');
 
     if (message.notification != null) {
-      print('Message also contained a notification title: ${message.notification!.title}');
-      print('Message also contained a notification body: ${message.notification!.body}');
+      // print('Message also contained a notification title: ${message.notification!.title}');
+      // print('Message also contained a notification body: ${message.notification!.body}');
 
       AwesomeDialog(
         context: navigatorKey.currentContext!,

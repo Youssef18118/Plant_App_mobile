@@ -20,7 +20,7 @@ class PlantSpeciesModel {
     if (json['data'] != null) {
       data = <PlantSpeciesData>[];
       json['data'].forEach((v) {
-        data!.add(new PlantSpeciesData.fromJson(v));
+        data!.add(PlantSpeciesData.fromJson(v));
       });
     }
     to = json['to'];
@@ -61,7 +61,7 @@ class PlantSpeciesData {
     watering = json['watering'];
     sunlight = json['sunlight'].cast<String>();
     defaultImage = json['default_image'] != null
-        ? new DefaultImage.fromJson(json['default_image'])
+        ? DefaultImage.fromJson(json['default_image'])
         : null;
   }
 }

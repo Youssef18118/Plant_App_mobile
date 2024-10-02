@@ -5,7 +5,6 @@ import 'package:plant_app/Screens/Login/LoginForm/LoginForm.dart';
 import 'package:plant_app/Screens/Login/LoginWidgets.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Signup/register.dart';
-import 'package:plant_app/Screens/home/home_screen.dart';
 import 'package:plant_app/const.dart';
 
 class Login extends StatefulWidget {

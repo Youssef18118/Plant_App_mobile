@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const baseUrl = "https://student.valuxapps.com/api/";
 
 const RegisterPath = "register";
@@ -10,3 +12,5 @@ const apiKey3 = "sk-aide66eda49d3f4a66923";
 const apiKey4 = "sk-UCoG66f13466ee2b76964";
 const apiKeyW = "sk-QUOi66f169b0857026967";
 const plantBaseUrl = "https://perenual.com";
+
+const Color mainColor = Color(0xffFF1AAD81);
