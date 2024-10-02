@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: [
                       ProfileInfo(height, context, width, profile),
-                      myGardenButton(width),
+                      myGardenTitle(width, height),
                       plantList.isEmpty
                           ? Padding(
                               padding:

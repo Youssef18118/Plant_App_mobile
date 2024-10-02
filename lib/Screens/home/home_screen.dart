@@ -6,6 +6,7 @@ import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/home_screen_widgets.dart';
 import 'package:plant_app/Screens/navigation/navigation_screen.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
+import 'package:plant_app/const.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -56,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                       child: const Text(
                         'View All',
                         style: TextStyle(
-                            color: Color.fromARGB(255, 26, 173, 129),
+                            color: mainColor,
                             fontSize: 18),
                       ),
                     )

@@ -119,8 +119,7 @@ Widget containerBuilder(
                                   borderRadius: BorderRadius.circular(18),
                                   color: isAdded
                                       ? Colors.red
-                                      : Color.fromARGB(
-                                          255, 26, 173, 129), // Toggle colors
+                                      : mainColor, // Toggle colors
                                 ),
                                 child: Icon(
                                   isAdded

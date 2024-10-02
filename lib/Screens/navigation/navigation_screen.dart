@@ -57,7 +57,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ),
           FlashyTabBarItem(
             icon: const Icon(
-              Icons.local_florist,
+              Icons.grid_view_rounded,
               color: Colors.black,
             ),
             title: const Text('Plants'),
