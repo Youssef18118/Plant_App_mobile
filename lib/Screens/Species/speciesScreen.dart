@@ -23,7 +23,7 @@ class _SpeciesscreenState extends State<Speciesscreen> {
   @override
   void initState() {
     super.initState();
-    
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -54,6 +54,7 @@ class _SpeciesscreenState extends State<Speciesscreen> {
       child: BlocBuilder<SpeciesCubit, SpeciesState>(
         builder: (context, state) {
           return Scaffold(
+            backgroundColor: Color.fromARGB(255, 218, 214, 214),
             body: Column(
               children: [
                 Container(
@@ -63,7 +64,7 @@ class _SpeciesscreenState extends State<Speciesscreen> {
                       Stack(children: [
                         Container(
                           width: double.infinity,
-                          height: height * 0.28,
+                          height: height * 0.32,
                           decoration: const BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage(
@@ -82,9 +83,9 @@ class _SpeciesscreenState extends State<Speciesscreen> {
                           ),
                         ),
                         Positioned(
-                          bottom: -height * 0.25,
-                          left: width * 0.05,
-                          right: width * 0.05,
+                          bottom: -height * 0.21,
+                          left: width * 0.01,
+                          right: width * 0.01,
                           child: searchField(context, height, width),
                         ),
                       ]),
@@ -93,10 +94,10 @@ class _SpeciesscreenState extends State<Speciesscreen> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    controller: _scrollController, 
+                    controller: _scrollController,
                     itemCount: cubit.filteredSpecies?.length,
-                    itemBuilder: (context, index) =>
-                        PlantCard(cubit.filteredSpecies?[index], width, height, context),
+                    itemBuilder: (context, index) => PlantCard(
+                        cubit.filteredSpecies?[index], width, height, context),
                   ),
                 ),
               ],
@@ -106,6 +107,4 @@ class _SpeciesscreenState extends State<Speciesscreen> {
       ),
     );
   }
-
-  
 }

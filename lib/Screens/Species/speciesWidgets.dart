@@ -54,23 +54,24 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
             plantId: plantdata!.id!,
           ));
     },
-    child: Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image section
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Container(
-                width: width * 0.3,
-                height: width * 0.3,
-                child: FittedBox(
-                  fit: BoxFit.cover,
+    child: Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: Card(
+        shadowColor: Color.fromARGB(255, 89, 165, 133),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image section
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Container(
+                  width: width * 0.3,
+                  height: width * 0.3,
                   child: CachedNetworkImage(
                     imageUrl: plantdata?.defaultImage?.mediumUrl ?? "",
                     fit: BoxFit.cover,
@@ -81,71 +82,81 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: width * 0.05),
-            // Text and Buttons section
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    plantdata?.commonName ?? 'Unknown Species',
-                    style: TextStyle(
-                      fontSize: width * 0.05,
-                      fontWeight: FontWeight.bold,
+              SizedBox(width: width * 0.05),
+              // Text and Buttons section
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      plantdata?.commonName ?? 'Unknown Species',
+                      style: TextStyle(
+                        fontSize: width * 0.05,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: height * 0.02),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BlocBuilder<SpeciesCubit, SpeciesState>(
-                        builder: (context, state) {
-                          final isAdded =
-                              cubit.addedPlantIds.contains(plantdata?.id ?? 1);
-                          return ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: isAdded
-                                  ? Colors.red
-                                  : Colors
-                                      .green, // Red for Remove, Green for Garden
-                            ),
-                            onPressed: () {
-                              cubit.togglePlant(
-                                  plantdata?.id ?? 1,
-                                  profileCubit,
-                                  homeCubit,
-                                  cubit,
-                                  context); // Toggle add/remove
-                            },
-                            child: Text(
-                              isAdded ? 'Remove' : 'Garden',
-                              style: TextStyle(
-                                  fontSize: width * 0.04, color: Colors.white),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(width: width * 0.02),
-                      ElevatedButton(
-                        onPressed: () {
-                          Get.to(() => GuideScreen(
-                              plantId: plantdata!.id!,
-                              URL: plantdata!.defaultImage!.mediumUrl!));
-                        },
-                        child: Text(
-                          'Guides',
-                          style: TextStyle(fontSize: width * 0.04),
+                    SizedBox(height: height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BlocBuilder<SpeciesCubit, SpeciesState>(
+                          builder: (context, state) {
+                            final isAdded = cubit.addedPlantIds
+                                .contains(plantdata?.id ?? 1);
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isAdded
+                                    ? Colors.red
+                                    : Color.fromARGB(255, 26, 173,
+                                        129), // Red for Remove, Green for Garden
+                              ),
+                              onPressed: () {
+                                cubit.togglePlant(
+                                    plantdata?.id ?? 1,
+                                    profileCubit,
+                                    homeCubit,
+                                    cubit,
+                                    context); // Toggle add/remove
+                              },
+                              child: Text(
+                                isAdded ? 'Remove' : 'Garden',
+                                style: TextStyle(
+                                    fontSize: width * 0.04,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        SizedBox(width: width * 0.02),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromARGB(255, 26, 173, 129),
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(() => GuideScreen(
+                                plantId: plantdata!.id!,
+                                URL: plantdata!.defaultImage!.mediumUrl!));
+                          },
+                          child: Text(
+                            'Guides',
+                            style: TextStyle(
+                                fontSize: width * 0.04,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
