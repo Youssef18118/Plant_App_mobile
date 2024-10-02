@@ -32,7 +32,7 @@ Widget containerBuilder(
           crossAxisCount: 2,
           crossAxisSpacing: width * 0.056,
           mainAxisSpacing: height * 0.045,
-          childAspectRatio: height * 0.00099,
+          childAspectRatio: 0.8,
         ),
         itemCount: plants.length,
         itemBuilder: (context, index) {
