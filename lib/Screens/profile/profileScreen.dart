@@ -91,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   plantList,
                                   index,
                                   profileCubit,
+                                  width,
                                   onRemove: () {
                                     profileCubit.removePlantById(
                                         plant.id!, homeCubit, speciesCubit);

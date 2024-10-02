@@ -105,7 +105,7 @@ Widget myGardenTitle(double width, double height) {
     );
   }
 
-  Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, ProfileCubit cubit, {required VoidCallback onRemove}) {
+  Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, ProfileCubit cubit, double width ,{required VoidCallback onRemove}) {
     return GestureDetector(
       onTap: () {
         // Navigate to the plant's details page
@@ -142,11 +142,16 @@ Widget myGardenTitle(double width, double height) {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        plant.commonName ?? 'Unknown Plant',
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+                      Container(
+                        width: width * 0.8,
+                        child: Text(
+                          plant.commonName ?? 'Unknown Plant',
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis, // Adds the ellipsis
+                          maxLines: 1, // Ensures the text is limited to one line
                         ),
                       ),
                     ],

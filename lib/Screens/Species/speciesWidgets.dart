@@ -123,7 +123,7 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                               child: Text(
                                 isAdded ? 'Remove' : 'Garden',
                                 style: TextStyle(
-                                    fontSize: width * 0.04,
+                                    fontSize: width * 0.036,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -133,19 +133,19 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                         SizedBox(width: width * 0.02),
                         ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
+                            backgroundColor: WidgetStateProperty.all<Color>(
                               Color.fromARGB(255, 26, 173, 129),
                             ),
                           ),
                           onPressed: () {
                             Get.to(() => GuideScreen(
                                 plantId: plantdata!.id!,
-                                URL: plantdata!.defaultImage!.mediumUrl!));
+                                URL: plantdata.defaultImage!.mediumUrl!));
                           },
                           child: Text(
                             'Guides',
                             style: TextStyle(
-                                fontSize: width * 0.04,
+                                fontSize: width * 0.036,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
