@@ -44,8 +44,8 @@ class ProfileCubit extends Cubit<ProfileState> {
           box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
       Profmodel.data?.email =
           box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
-      print("name in init ${Profmodel.data?.name}");
-      print("email in init ${Profmodel.data?.email}");
+      // print("name in init ${Profmodel.data?.name}");
+      // print("email in init ${Profmodel.data?.email}");
 
       // Emit success state with stored data
       emit(ProfileSuccessState());
@@ -63,11 +63,11 @@ class ProfileCubit extends Cubit<ProfileState> {
         path: ProfilePath,
       );
 
-      print("response data : ${response.data}");
+      // print("response data : ${response.data}");
       Profmodel = ProfileModel.fromJson(response.data);
 
       if (Profmodel.status ?? false) {
-        print("profile data: ${Profmodel}");
+        // print("profile data: ${Profmodel}");
 
         // Store profile data in Hive
         storeProfileInHive(Profmodel);
@@ -77,7 +77,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(ProfileErrorState("Failed to get Profile"));
       }
     } catch (e) {
-      print("profile error: $e");
+      // print("profile error: $e");
       emit(ProfileErrorState(e.toString()));
     }
   }
@@ -170,7 +170,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (await Permission.scheduleExactAlarm.isDenied) {
       final permissionStatus = await Permission.scheduleExactAlarm.request();
       if (!permissionStatus.isGranted) {
-        print('Exact alarms permission not granted.');
+        // print('Exact alarms permission not granted.');
         AwesomeDialog(
           context: navigatorKey.currentContext!,
           dialogType: DialogType.warning,
@@ -261,9 +261,9 @@ class ProfileCubit extends Cubit<ProfileState> {
             .delete();
       }
 
-      print('Notification log for plant $plantId removed from Firebase.');
+      // print('Notification log for plant $plantId removed from Firebase.');
     } catch (e) {
-      print('Error removing notification log from Firebase: $e');
+      // print('Error removing notification log from Firebase: $e');
     }
   }
 }

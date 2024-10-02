@@ -133,7 +133,7 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                         onPressed: () {
                           Get.to(() => GuideScreen(
                               plantId: plantdata!.id!,
-                              URL: plantdata!.defaultImage!.mediumUrl!));
+                              URL: plantdata.defaultImage!.mediumUrl!));
                         },
                         child: Text(
                           'Guides',

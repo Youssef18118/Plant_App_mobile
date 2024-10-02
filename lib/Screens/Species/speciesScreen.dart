@@ -1,14 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/Species/speciesWidgets.dart';
-import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
-import 'package:plant_app/Screens/home/model/plant_species_model.dart';
-import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
-import 'package:plant_app/Screens/guide/guideScreen.dart';
-import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 
 class Speciesscreen extends StatefulWidget {
   const Speciesscreen({super.key});

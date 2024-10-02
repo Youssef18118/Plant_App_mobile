@@ -42,7 +42,7 @@ Widget containerBuilder(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: GestureDetector(
               onTap: () {
-                print("plant id to details is ${plant.id}");
+                // print("plant id to details is ${plant.id}");
                 Get.to(() => PlantDetailScreen(plantId: plant.id!));
               },
               child: Container(

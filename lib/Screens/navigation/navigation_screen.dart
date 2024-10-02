@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:plant_app/Screens/Species/speciesScreen.dart';
 import 'package:plant_app/Screens/home/home_screen.dart';
 import 'package:plant_app/Screens/profile/profileScreen.dart';
-import 'package:plant_icons/plant_icons_data.dart';
 
 class NavigationScreen extends StatefulWidget {
   final int selectedIndex;
@@ -23,7 +22,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     super.initState();
     // Set the selectedIndex to the one passed, or default to 0
     _selectedIndex = widget.selectedIndex;
-    print("Selected Index on Init: $_selectedIndex"); // Debug print
+    // print("Selected Index on Init: $_selectedIndex"); // Debug print
   }
 
   final List<Widget> _screens = [
@@ -43,7 +42,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         selectedIndex: _selectedIndex,
         showElevation: true,
         onItemSelected: (index) => setState(() {
-          print("Tab Changed to: $index"); // Debug print
+          // print("Tab Changed to: $index"); // Debug print
           _selectedIndex = index;
         }),
         items: [

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/authentication/authentication.dart';
 import 'package:plant_app/Screens/onboarding/model/onboardingmodel.dart';
 import 'package:plant_app/const.dart';
@@ -24,7 +23,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,

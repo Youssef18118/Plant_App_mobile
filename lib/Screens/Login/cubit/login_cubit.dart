@@ -1,14 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/navigation/navigation_screen.dart';
-import 'package:plant_app/Screens/profile/profileScreen.dart';
 import 'package:plant_app/const.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
 
@@ -102,7 +100,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LogineErrorState("Google sign-in failed"));
       }
     } catch (e) {
-      print(e); // For debugging
+      // print(e); // For debugging
       emit(LogineErrorState(e.toString()));
     }
   }

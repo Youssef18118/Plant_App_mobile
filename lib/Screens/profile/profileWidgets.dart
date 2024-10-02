@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
@@ -84,7 +83,7 @@ Widget myGardenTitle(double width, double height) {
                 child: Image.asset("assets/images/logoCircle.png")
               ),
               Text(
-                '${profile?.name ?? 'N/A'}',
+                '${profile?.name ?? 'Undefined Name'}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -93,7 +92,7 @@ Widget myGardenTitle(double width, double height) {
               ),
               const SizedBox(height: 5),
               Text(
-                '${profile?.email ?? 'N/A'}',
+                '${profile?.email ?? 'Undefined Email'}',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.white,

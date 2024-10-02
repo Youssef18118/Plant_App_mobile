@@ -27,12 +27,12 @@ class HiveHelpers {
   static void addPlantId(int plantId) {
     final box = Hive.box(gardenBox);
     List<int> plantIds = box.get(plantIdsKey, defaultValue: <int>[]);
-    print("plantIds");
-    print(plantIds);
+    // print("plantIds");
+    // print(plantIds);
     if (!plantIds.contains(plantId)) {
       plantIds.add(plantId);
       box.put(plantIdsKey, plantIds);
-      print("add ${plantId}");
+      // print("add ${plantId}");
     }
   }
 
