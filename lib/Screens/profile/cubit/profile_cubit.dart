@@ -16,7 +16,6 @@ import 'package:plant_app/Screens/main%20helpers/fcm_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
@@ -26,12 +25,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   List<PlantModel> plantList = [];
   List<int> fetchedPlantIds = [];
   bool isPlantsFetched = false;
-  
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
-
 
   void init() async {
     var box = Hive.box(HiveHelpers.profileBox);
@@ -39,12 +35,15 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (box.isNotEmpty) {
       // Initialize Profmodel.data if it's null
       if (Profmodel.data == null) {
-        Profmodel.data = ProfileData(); // Assuming ProfileData is your data class
+        Profmodel.data =
+            ProfileData(); // Assuming ProfileData is your data class
       }
 
       // Load profile data from Hive
-      Profmodel.data?.name = box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
-      Profmodel.data?.email = box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
+      Profmodel.data?.name =
+          box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
+      Profmodel.data?.email =
+          box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
       print("name in init ${Profmodel.data?.name}");
       print("email in init ${Profmodel.data?.email}");
 
@@ -56,7 +55,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-   void getProfile() async {
+  void getProfile() async {
     emit(ProfileLoadingState());
 
     try {
@@ -64,7 +63,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         path: ProfilePath,
       );
 
-      print("response data : ${response.data}"); 
+      print("response data : ${response.data}");
       Profmodel = ProfileModel.fromJson(response.data);
 
       if (Profmodel.status ?? false) {
@@ -73,7 +72,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         // Store profile data in Hive
         storeProfileInHive(Profmodel);
 
-        
         emit(ProfileSuccessState());
       } else {
         emit(ProfileErrorState("Failed to get Profile"));
@@ -136,7 +134,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey},
+        queryParameters: {'key': apiKeyW},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -179,7 +177,8 @@ class ProfileCubit extends Cubit<ProfileState> {
           headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Permission Needed',
-          desc: 'To schedule watering notifications, we need permission to set exact alarms.',
+          desc:
+              'To schedule watering notifications, we need permission to set exact alarms.',
           btnOkOnPress: () {},
           btnOkText: 'Okay',
           btnOkColor: Colors.blue,
@@ -225,7 +224,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
 
       // Log the scheduled notification to Firestore
-      await FirebaseFirestore.instance.collection('scheduled_notifications').add({
+      await FirebaseFirestore.instance
+          .collection('scheduled_notifications')
+          .add({
         'user_id': HiveHelpers.getToken(), // Add user identification
         'plant_id': plantId,
         'plant_name': plant.commonName,
@@ -243,5 +244,26 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> cancelWateringNotification(int plantId) async {
     await flutterLocalNotificationsPlugin.cancel(plantId);
+
+    try {
+      String userId = HiveHelpers.getToken()!;
+      var snapshot = await FirebaseFirestore.instance
+          .collection('scheduled_notifications')
+          .where('user_id', isEqualTo: userId)
+          .where('plant_id', isEqualTo: plantId)
+          .get();
+
+      // Delete the document(s) from Firebase
+      for (var doc in snapshot.docs) {
+        await FirebaseFirestore.instance
+            .collection('scheduled_notifications')
+            .doc(doc.id)
+            .delete();
+      }
+
+      print('Notification log for plant $plantId removed from Firebase.');
+    } catch (e) {
+      print('Error removing notification log from Firebase: $e');
+    }
   }
 }
