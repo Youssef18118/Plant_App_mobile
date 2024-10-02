@@ -55,7 +55,7 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
           ));
     },
     child: Padding(
-      padding: const EdgeInsets.all(6.0),
+      padding: const EdgeInsets.only(left: 6.0, right: 6.0, bottom: 6.0),
       child: Card(
         shadowColor: Color.fromARGB(255, 89, 165, 133),
         shape: RoundedRectangleBorder(
@@ -97,7 +97,7 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: height * 0.02),
+                    SizedBox(height: height * 0.055),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

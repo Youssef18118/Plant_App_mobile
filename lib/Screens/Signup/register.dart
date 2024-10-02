@@ -40,7 +40,7 @@ class register extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     vertical: height * 0.09, horizontal: width * 0.05),
                 child: Form(
-                  key: cubit.key,
+                  key: cubit.registerkey,
                   child: Column(children: [
                     Container(
                       width: 70,
@@ -123,7 +123,7 @@ class register extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        if (cubit.key.currentState!.validate()) {
+                        if (cubit.registerkey.currentState!.validate()) {
                           cubit.register(
                               email: cubit.emailController.text,
                               password: cubit.passwordController.text,

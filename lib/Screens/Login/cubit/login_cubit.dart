@@ -19,7 +19,7 @@ class LoginCubit extends Cubit<LoginState> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final key = GlobalKey<FormState>();
+  final loginkey = GlobalKey<FormState>();
   bool isPasswordVisible = false;
 
   void togglePasswordVisibility() {
