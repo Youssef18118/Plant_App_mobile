@@ -24,15 +24,15 @@ class AuthenticationScreen extends StatelessWidget {
                   )
                 ],
               ),
-              width: 397,
-              height: 570,
+              width:double.infinity,
+              height: 700,
               child: Image.asset(
                 imagePath + 'auth_background.jpeg',
                 fit: BoxFit.fill,
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(bottom: 30, left: 17),
+              padding: EdgeInsets.only(bottom: 20, left: 17),
               child: Column(
                 children: [
                   Text(
@@ -57,7 +57,7 @@ class AuthenticationScreen extends StatelessWidget {
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
-                        imagePath + 'Rectangle 45.png',
+                        imagePath + 'Rectangle1.png',
                       ),
                       fit: BoxFit.fill)),
               child: Column(
@@ -72,14 +72,14 @@ class AuthenticationScreen extends StatelessWidget {
                           borderRadius: BorderRadius.all(
                             Radius.circular(20),
                           ),
-                          color: Color(0xff2DDA93)),
+                          color: Color(0xffe6e6e6)),
                       width: 300,
                       height: 69,
                       child: const Center(
                           child: Text(
-                        'Log in',
-                        style: TextStyle(color: Colors.white, fontSize: 21),
-                      )),
+                            'Log in',
+                            style: TextStyle(color: Colors.black, fontSize: 21),
+                          )),
                     ),
                   ),
                   const SizedBox(
@@ -94,15 +94,16 @@ class AuthenticationScreen extends StatelessWidget {
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
-                          border: Border.all(color: const Color(0xff2DDA93)),
-                          color: Colors.transparent),
+                          color: Color(0xffe6e6e6)),
+                      // border: Border.all(color: const Color(0xff2DDA93)),
+
                       width: 300,
                       height: 69,
                       child: const Center(
                           child: Text(
-                        'Sign up',
-                        style: TextStyle(color: Colors.white, fontSize: 21),
-                      )),
+                            'Sign up',
+                            style: TextStyle(color: Colors.black, fontSize: 21),
+                          )),
                     ),
                   )
                 ],

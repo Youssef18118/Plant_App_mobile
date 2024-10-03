@@ -13,7 +13,6 @@ class PlantDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen height and width
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
@@ -58,8 +57,6 @@ class PlantDetailScreen extends StatelessWidget {
               );
             } else if (state is PlantDetailsSuccessState) {
               final plant = context.read<PlantDetailsCubit>().plantModel;
-
-
               final rating = (plantId % 5 + 1).toDouble();
 
               return PlantDetailWidget(
@@ -77,10 +74,14 @@ class PlantDetailScreen extends StatelessWidget {
                 themeColor: const Color(0xFF3DADA0),
               );
             } else if (state is PlantDetailsErrorState) {
-              return Center(
+              return const Center(
                 child: Text(
-                  state.message ?? 'An error occurred',
-                  style: const TextStyle(color: Colors.red),
+                  "ERROR",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
                 ),
               );
             } else {
