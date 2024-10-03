@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/login.dart';
+import 'package:plant_app/Screens/Login/login.dart';
+import 'package:plant_app/Screens/Login/login.dart';
+import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Signup/register.dart';
+import 'package:plant_app/Screens/authentication/authenticationWidgets.dart';
 import 'package:plant_app/const.dart';
 
 class AuthenticationScreen extends StatelessWidget {
@@ -9,6 +13,9 @@ class AuthenticationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    
     return Scaffold(
       body: Column(
         children: [
@@ -25,7 +32,7 @@ class AuthenticationScreen extends StatelessWidget {
                 ],
               ),
               width:double.infinity,
-              height: 700,
+              height: height * 0.65,
               child: Image.asset(
                 imagePath + 'auth_background.jpeg',
                 fit: BoxFit.fill,
@@ -34,15 +41,16 @@ class AuthenticationScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.only(bottom: 20, left: 17),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Buy your Favorite',
+                    'Buy your Favorite plants',
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text('plants, Only Here!',
+                  Text('Only Here!',
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -63,49 +71,11 @@ class AuthenticationScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Get.to(() =>const Login());
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color(0xffe6e6e6)),
-                      width: 300,
-                      height: 69,
-                      child: const Center(
-                          child: Text(
-                            'Log in',
-                            style: TextStyle(color: Colors.black, fontSize: 21),
-                          )),
-                    ),
+                  btn_auth(width, height, true),
+                  SizedBox(
+                    height: height * 0.025,
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Get.to(() => const register());
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color(0xffe6e6e6)),
-                      // border: Border.all(color: const Color(0xff2DDA93)),
-
-                      width: 300,
-                      height: 69,
-                      child: const Center(
-                          child: Text(
-                            'Sign up',
-                            style: TextStyle(color: Colors.black, fontSize: 21),
-                          )),
-                    ),
-                  )
+                  btn_auth(width, height, false)
                 ],
               ),
             ),
@@ -114,4 +84,6 @@ class AuthenticationScreen extends StatelessWidget {
       ),
     );
   }
+
+  
 }
