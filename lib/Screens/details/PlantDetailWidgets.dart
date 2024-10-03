@@ -44,7 +44,7 @@ class PlantDetailWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Plant Image
+
             Center(
               child: Container(
                 height: screenHeight * 0.25,
@@ -74,38 +74,30 @@ class PlantDetailWidget extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: List.generate(5, (index) {
-                  return Icon(
-                    index < rating! ? Icons.star : Icons.star_border,
-                    color: Colors.yellow,
-                    size: screenWidth * 0.05,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4.0,
-                        color: Colors.black.withOpacity(0.5),
-                        offset: const Offset(2, 2),
-                      ),
-                    ],
-                  );
-                }),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                Text(
+                  plantName,
+                  style: TextStyle(
+                    fontSize: screenWidth > 600 ? 28 : screenWidth * 0.06,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                Row(
+                  children: List.generate(5, (index) {
+                    return Icon(
+                      index < rating! ? Icons.star : Icons.star_border,
+                      color: Colors.green,
+                      size: screenWidth * 0.05,
+                    );
+                  }),
+                ),
+              ],
             ),
 
-            const SizedBox(height: 16),
-
-            // Plant Name
-            Text(
-              plantName,
-              style: TextStyle(
-                fontSize: screenWidth > 600 ? 28 : screenWidth * 0.06,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.left,
-            ),
             const SizedBox(height: 16),
 
             if (type != null) ...[
@@ -131,36 +123,33 @@ class PlantDetailWidget extends StatelessWidget {
             ],
 
             const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(screenWidth * 0.04),
-              decoration: BoxDecoration(
-                color: Color(0xfffef7ff),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 5,
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
+                  child: const Text(
                     "Description",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    details,
-                    style: TextStyle(fontSize: screenWidth * 0.045, color: Colors.grey[700]),
-                    textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 4),
+
+                Text(
+                  details,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.035,
+                    color: Colors.grey[600],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -170,28 +159,36 @@ class PlantDetailWidget extends StatelessWidget {
 
   Widget _buildDetailText(String label, String text, double screenWidth, double screenHeight) {
     return Padding(
-        padding: EdgeInsets.only(bottom: screenHeight * 0.01),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text(
-    label,
-    style: TextStyle(
-    fontSize: screenWidth * 0.04,
-    fontWeight: FontWeight.w500,
-    color: Colors.grey[800],
-    ),
-    ),
-    const SizedBox(height: 4),
-    Text(
-    text,
-    style: TextStyle(
-    fontSize: screenWidth * 0.035,
-    color: Colors.grey[600],
-    ),
-    ),
-    ],
-    ));
+      padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: screenWidth * 0.05,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[800],
+              ),
+            ),
+          ),
+          SizedBox(height: 4),
+
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: screenWidth * 0.035,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
-

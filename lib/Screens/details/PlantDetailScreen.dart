@@ -95,3 +95,4 @@ class PlantDetailScreen extends StatelessWidget {
     );
   }
 }
+
