@@ -51,4 +51,16 @@ class HiveHelpers {
     plantIds.remove(plantId);
     box.put(plantIdsKey, plantIds);
   }
+
+  static String getProfileName(){
+    final box = Hive.box(profileBox);
+    return box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
+  }
+
+  static String getProfileEmail(){
+    final box = Hive.box(profileBox);
+    return box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
+  }
+
+
 }

@@ -41,9 +41,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       // Load profile data from Hive
       Profmodel.data?.name =
-          box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
+          HiveHelpers.getProfileName();
       Profmodel.data?.email =
-          box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
+          HiveHelpers.getProfileEmail();
       // print("name in init ${Profmodel.data?.name}");
       // print("email in init ${Profmodel.data?.email}");
 
@@ -87,6 +87,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     var box = Hive.box(HiveHelpers.profileBox);
     box.put(HiveHelpers.profileNameKey, profile.data?.name);
     box.put(HiveHelpers.profileEmailKey, profile.data?.email);
+  }
+
+  // remove profile data from Hive
+  void removeProfileInHive() async {
+    Hive.box(HiveHelpers.profileBox).clear();
   }
 
   void fetchAllPlants() async {

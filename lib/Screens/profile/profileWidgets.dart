@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
@@ -144,6 +145,9 @@ void _showLogoutDialog(BuildContext context) {
               Navigator.of(context).pop(); // Dismiss dialog
               // Logout logic from the ElevButton function
               HiveHelpers.clearToken();
+
+              // remove Hive PROFILE DATA
+              context.read<ProfileCubit>().removeProfileInHive();
               // context.read<HomeCubit>().resetNavigationIndex();
               Get.offAll(() => const Login());
             },

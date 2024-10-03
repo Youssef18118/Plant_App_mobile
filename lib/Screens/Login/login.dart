@@ -108,7 +108,8 @@ class _LoginState extends State<Login> {
                             if (cubit.loginkey.currentState!.validate()) {
                               cubit.login(
                                   email: cubit.emailController.text,
-                                  password: cubit.passwordController.text);
+                                  password: cubit.passwordController.text,
+                                  context: context);
                             }
                           },
                           child: Container(

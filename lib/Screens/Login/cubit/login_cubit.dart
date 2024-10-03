@@ -2,12 +2,15 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/home_screen.dart';
+import 'package:plant_app/Screens/main%20helpers/fcm_handler.dart';
 import 'package:plant_app/Screens/navigation/navigation_screen.dart';
+import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/const.dart';
 import 'package:plant_app/Screens/Login/model/loginModel.dart';
 
@@ -27,7 +30,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginPasswordVisibilityChanged(isPasswordVisible));
   }
 
-  void login({required String email, required String password}) async {
+  void login({required String email, required String password, required BuildContext context}) async {
     emit(LoginLoadingState());
 
     AuthenticationModel model = AuthenticationModel();
@@ -41,6 +44,7 @@ class LoginCubit extends Cubit<LoginState> {
       if (model.status ?? false) {
         HiveHelpers.setToken(model.data?.token);
         DioHelpers.setToken(model.data?.token ?? '');
+        context.read<ProfileCubit>().init();
         Get.offAll(() => const NavigationScreen());
         emit(LoginSucessState());
       } else {
