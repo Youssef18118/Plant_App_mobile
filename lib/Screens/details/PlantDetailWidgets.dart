@@ -101,25 +101,25 @@ class PlantDetailWidget extends StatelessWidget {
             const SizedBox(height: 16),
 
             if (type != null) ...[
-              _buildDetailText("Type:", type!, screenWidth, screenHeight),
+              _buildDetailText("Type", type!, screenWidth, screenHeight),
             ],
             if (origin != null) ...[
-              _buildDetailText("Origin:", origin!, screenWidth, screenHeight),
+              _buildDetailText("Origin", origin!, screenWidth, screenHeight),
             ],
             if (growthRate != null) ...[
-              _buildDetailText("Growth Rate:", growthRate!, screenWidth, screenHeight),
+              _buildDetailText("Growth Rate", growthRate!, screenWidth, screenHeight),
             ],
             if (watering != null) ...[
-              _buildDetailText("Watering:", watering!, screenWidth, screenHeight),
+              _buildDetailText("Watering", watering!, screenWidth, screenHeight),
             ],
             if (sunlight != null && sunlight!.isNotEmpty) ...[
-              _buildDetailText("Sunlight:", sunlight!.join(', '), screenWidth, screenHeight),
+              _buildDetailText("Sunlight", sunlight!.join(', '), screenWidth, screenHeight),
             ],
             if (pruningMonth != null && pruningMonth!.isNotEmpty) ...[
-              _buildDetailText("Pruning Month:", pruningMonth!.join(', '), screenWidth, screenHeight),
+              _buildDetailText("Pruning Month", pruningMonth!.join(', '), screenWidth, screenHeight),
             ],
             if (leafColor != null && leafColor!.isNotEmpty) ...[
-              _buildDetailText("Leaf Color:", leafColor!.join(', '), screenWidth, screenHeight),
+              _buildDetailText("Leaf Color", leafColor!.join(', '), screenWidth, screenHeight),
             ],
 
             const SizedBox(height: 16),
@@ -133,20 +133,24 @@ class PlantDetailWidget extends StatelessWidget {
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Description",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
+                      fontSize: screenWidth * 0.05
                     ),
                   ),
                 ),
                 SizedBox(height: 4),
 
-                Text(
-                  details,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.035,
-                    color: Colors.grey[600],
+                Padding(
+                  padding: const EdgeInsets.only(left:2.0),
+                  child: Text(
+                    details,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.035,
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ),
               ],
@@ -180,11 +184,14 @@ class PlantDetailWidget extends StatelessWidget {
           ),
           SizedBox(height: 4),
 
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: screenWidth * 0.035,
-              color: Colors.grey[600],
+          Padding(
+            padding: const EdgeInsets.only(left:3.0),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: screenWidth * 0.035,
+                color: Colors.grey[600],
+              ),
             ),
           ),
         ],
