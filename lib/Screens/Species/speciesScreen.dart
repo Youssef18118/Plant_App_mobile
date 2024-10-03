@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/Species/speciesWidgets.dart';
+import 'package:plant_app/const.dart';
 
 class Speciesscreen extends StatefulWidget {
   const Speciesscreen({super.key});
@@ -48,7 +49,7 @@ class _SpeciesscreenState extends State<Speciesscreen> {
       child: BlocBuilder<SpeciesCubit, SpeciesState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: Color.fromARGB(255, 218, 214, 214),
+            backgroundColor: greyColor,
             body: Column(
               children: [
                 Container(

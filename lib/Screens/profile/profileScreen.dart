@@ -5,6 +5,7 @@ import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/profileWidgets.dart';
+import 'package:plant_app/const.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -56,10 +57,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             return Scaffold(
               // Background with white-grey gradient
+
               body: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[100]
-                ),
+                    color: const Color.fromARGB(255, 229, 229, 229)),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -83,7 +84,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
                               itemCount: plantList.length,
-                              separatorBuilder: (context, index) => SizedBox(height: 10,),
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 10,
+                              ),
                               itemBuilder: (context, index) {
                                 final plant = plantList[index];
                                 return PlantCard(

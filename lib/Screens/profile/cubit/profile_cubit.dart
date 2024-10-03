@@ -40,10 +40,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
 
       // Load profile data from Hive
-      Profmodel.data?.name =
-          HiveHelpers.getProfileName();
-      Profmodel.data?.email =
-          HiveHelpers.getProfileEmail();
+      Profmodel.data?.name = HiveHelpers.getProfileName();
+      Profmodel.data?.email = HiveHelpers.getProfileEmail();
       // print("name in init ${Profmodel.data?.name}");
       // print("email in init ${Profmodel.data?.email}");
 
@@ -226,7 +224,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         daysToNotify = int.parse(match.group(1)!);
       }
 
-      DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
+      // DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
+      DateTime notifyTime = DateTime.now().add(Duration(seconds: 40));
 
       // Log the scheduled notification to Firestore
       await FirebaseFirestore.instance

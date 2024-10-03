@@ -12,5 +12,7 @@ const apiKey3 = "sk-aide66eda49d3f4a66923";
 const apiKey4 = "sk-UCoG66f13466ee2b76964";
 const apiKeyW = "sk-QUOi66f169b0857026967";
 const plantBaseUrl = "https://perenual.com";
+const String appBarImagePath = 'assets/images/ProfileBackground.png';
+const Color greyColor = Color.fromARGB(255, 224, 221, 221);
 
 const Color mainColor = Color(0xffFF1AAD81);

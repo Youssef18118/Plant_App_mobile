@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_app/Screens/guide/model/guideModel.dart';
+
 Widget imageAndContent(double height, List<Section> sections, String Url) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 18),
         child: ClipRRect(
-          borderRadius:  BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(15),
           child: CachedNetworkImage(
             imageUrl: Url,
             height: height * 0.25,

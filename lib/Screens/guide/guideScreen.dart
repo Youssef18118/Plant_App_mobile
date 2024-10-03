@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/guide/guideWidgets.dart';
+import 'package:plant_app/const.dart';
 
 class GuideScreen extends StatefulWidget {
   final int plantId;
@@ -25,16 +26,30 @@ class _GuideScreenState extends State<GuideScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Color(0xfffef7ff),
+      backgroundColor: greyColor,
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text('Plant Guide'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(appBarImagePath),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Plant Guide',
+          style: TextStyle(
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+        ),
       ),
       body: BlocListener<GuideCubit, GuideState>(
         listener: (context, state) {
@@ -81,4 +96,3 @@ class _GuideScreenState extends State<GuideScreen> {
     );
   }
 }
-
