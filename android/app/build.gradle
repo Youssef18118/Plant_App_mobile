@@ -63,13 +63,15 @@ dependencies {
     implementation "androidx.fragment:fragment:1.7.0" // Ensure the latest version
     implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0" // Ensure the latest version
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0" // Ensure the latest version
-    implementation 'com.google.android.gms:play-services-auth:20.7.0' // Latest version
+    implementation 'com.google.android.gms:play-services-auth:21.2.0' // Latest version
     implementation 'com.google.firebase:firebase-auth-ktx:22.0.0' // Latest version of Firebase
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2" // Latest Coroutines version
-    implementation 'com.google.android.gms:play-services-base:18.2.0'
+    implementation 'com.google.android.gms:play-services-base:18.5.0'
     implementation 'com.google.firebase:firebase-messaging:23.0.0'
 
 }
+apply plugin: 'com.google.gms.google-services'
+
 
 configurations.all {
     resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'

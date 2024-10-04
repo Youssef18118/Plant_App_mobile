@@ -165,48 +165,49 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> scheduleLocalNotification({
-    required int plantId,
-    required String plantName,
-    required DateTime scheduledTime,
-  }) async {
-    // Check for exact alarm permission for Android 12+ (API level 31+)
-    if (await Permission.scheduleExactAlarm.isDenied) {
-      final permissionStatus = await Permission.scheduleExactAlarm.request();
-      if (!permissionStatus.isGranted) {
-        // print('Exact alarms permission not granted.');
-        AwesomeDialog(
-          context: navigatorKey.currentContext!,
-          dialogType: DialogType.warning,
-          headerAnimationLoop: false,
-          animType: AnimType.bottomSlide,
-          title: 'Permission Needed',
-          desc:
-              'To schedule watering notifications, we need permission to set exact alarms.',
-          btnOkOnPress: () {},
-          btnOkText: 'Okay',
-          btnOkColor: Colors.blue,
-        ).show();
-        return; // Stop if permission is not granted
-      }
+  required int plantId,
+  required String plantName,
+  required DateTime scheduledTime,
+}) async {
+  // Check for exact alarm permission for Android 12+ (API level 31+)
+  if (await Permission.scheduleExactAlarm.isDenied) {
+    final permissionStatus = await Permission.scheduleExactAlarm.request();
+    if (!permissionStatus.isGranted) {
+      AwesomeDialog(
+        context: navigatorKey.currentContext!,
+        dialogType: DialogType.warning,
+        headerAnimationLoop: false,
+        animType: AnimType.bottomSlide,
+        title: 'Permission Needed',
+        desc:
+            'To schedule watering notifications, we need permission to set exact alarms.',
+        btnOkOnPress: () {},
+        btnOkText: 'Okay',
+        btnOkColor: Colors.blue,
+      ).show();
+      return; // Stop if permission is not granted
     }
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      plantId,
-      "Water Reminder",
-      "It's time to water your $plantName!",
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'your_channel_id',
-          'your_channel_name',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-      ),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
   }
+
+  // Now it's safe to schedule the notification
+  await flutterLocalNotificationsPlugin.zonedSchedule(
+    plantId,
+    "Water Reminder",
+    "It's time to water your $plantName!",
+    tz.TZDateTime.from(scheduledTime, tz.local),
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'your_channel_id',
+        'your_channel_name',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    ),
+    uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+  );
+}
+
 
   Future<void> scheduleWateringNotification(int plantId) async {
     final plant = plantList.firstWhere(

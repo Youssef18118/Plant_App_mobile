@@ -16,6 +16,8 @@ Future<void> initApp() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  DioHelpers.init();
+
 
   // Request notification permissions
   NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
@@ -24,19 +26,20 @@ Future<void> initApp() async {
     sound: true,
   );
 
-  // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //   print('User granted permission');
-  // } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-  //   print('User granted provisional permission');
-  // } else {
-  //   print('User declined or has not accepted permission');
-  // }
+  // Only proceed with notification setup if permission is granted
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    await setupNotifications();
+  } else {
+    print('Notification permission not granted, skipping notification setup.');
+  }
+}
 
+Future<void> setupNotifications() async {
   // Initialize Dio helpers and subscribe to FCM topic
-  DioHelpers.init();
 
+  // Get FCM Token
   final fcmToken = await FirebaseMessaging.instance.getToken();
-  // print("FCM Token: $fcmToken");
+  print("FCM Token: $fcmToken");
 
   // Initialize timezone and notifications
   tz.initializeTimeZones();
