@@ -1,10 +1,6 @@
 plugins {
     id "com.android.application"
-    // START: FlutterFire Configuration
-    id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -27,9 +23,9 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.plant_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "25.1.8937393"
+    namespace "com.example.plant_app"
+    compileSdk 34
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -37,14 +33,17 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.plant_app"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        applicationId  "com.example.plant_app"
+        minSdk 23
+        targetSdk flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName  flutterVersionName
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     buildTypes {
@@ -60,25 +59,19 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0"
-    implementation "androidx.fragment:fragment:1.7.0" // Ensure the latest version
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0" // Ensure the latest version
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0" // Ensure the latest version
-    implementation 'com.google.android.gms:play-services-auth:21.2.0' // Latest version
-    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0' // Latest version of Firebase
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2" // Latest Coroutines version
-    implementation 'com.google.android.gms:play-services-base:18.5.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation "androidx.fragment:fragment:1.7.0" 
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0" 
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0" 
+    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0' 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2" 
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
 
 }
-apply plugin: 'com.google.gms.google-services'
 
 
 configurations.all {
     resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
     resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0'
 }
-android {                                                                                     
-    defaultConfig {                                                                             
-    minSdkVersion 23                                                                          
-   }                                                                                           
- }      

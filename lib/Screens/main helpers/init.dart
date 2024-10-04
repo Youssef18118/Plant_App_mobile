@@ -1,14 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/notification/notification.dart';
 import 'package:plant_app/firebase_options.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> initApp() async {
-  // Initialize Hive and Firebase
   await Hive.initFlutter();
   await Hive.openBox(HiveHelpers.tokenBox);
   await Hive.openBox(HiveHelpers.gardenBox);
@@ -16,39 +14,8 @@ Future<void> initApp() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  DioHelpers.init();
-
-
-  // Request notification permissions
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  // Only proceed with notification setup if permission is granted
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    await setupNotifications();
-  } else {
-    print('Notification permission not granted, skipping notification setup.');
-  }
-}
-
-Future<void> setupNotifications() async {
-  // Initialize Dio helpers and subscribe to FCM topic
-
-  // Get FCM Token
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  print("FCM Token: $fcmToken");
-
-  // Initialize timezone and notifications
+  await NotificationService.init();
   tz.initializeTimeZones();
-
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-  
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  DioHelpers.init();
 }
+

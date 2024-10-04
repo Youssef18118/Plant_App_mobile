@@ -9,17 +9,12 @@ import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/splash/splash.dart';
 import 'Screens/main helpers/init.dart'; 
-import 'Screens/main helpers/fcm_handler.dart'; 
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialization logic
-  await initApp();
-
-  // FCM message handling
-  await handleFCMMessages();
-
+  await initApp(); 
   runApp(const MainApp());
 }
 

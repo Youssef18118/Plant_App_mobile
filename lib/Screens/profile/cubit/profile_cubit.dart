@@ -8,12 +8,10 @@ import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
+import 'package:plant_app/Screens/notification/notification.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:plant_app/Screens/main%20helpers/fcm_handler.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'profile_state.dart';
@@ -137,7 +135,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey3},
+        queryParameters: {'key': apiKey4},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -164,51 +162,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileSuccessState());
   }
 
-  Future<void> scheduleLocalNotification({
-  required int plantId,
-  required String plantName,
-  required DateTime scheduledTime,
-}) async {
-  // Check for exact alarm permission for Android 12+ (API level 31+)
-  if (await Permission.scheduleExactAlarm.isDenied) {
-    final permissionStatus = await Permission.scheduleExactAlarm.request();
-    if (!permissionStatus.isGranted) {
-      AwesomeDialog(
-        context: navigatorKey.currentContext!,
-        dialogType: DialogType.warning,
-        headerAnimationLoop: false,
-        animType: AnimType.bottomSlide,
-        title: 'Permission Needed',
-        desc:
-            'To schedule watering notifications, we need permission to set exact alarms.',
-        btnOkOnPress: () {},
-        btnOkText: 'Okay',
-        btnOkColor: Colors.blue,
-      ).show();
-      return; // Stop if permission is not granted
-    }
-  }
-
-  // Now it's safe to schedule the notification
-  await flutterLocalNotificationsPlugin.zonedSchedule(
-    plantId,
-    "Water Reminder",
-    "It's time to water your $plantName!",
-    tz.TZDateTime.from(scheduledTime, tz.local),
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'your_channel_id',
-        'your_channel_name',
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-    ),
-    uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-  );
-}
-
-
   Future<void> scheduleWateringNotification(int plantId) async {
     final plant = plantList.firstWhere(
       (plant) => plant.id == plantId,
@@ -225,8 +178,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         daysToNotify = int.parse(match.group(1)!);
       }
 
-      // DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
-      DateTime notifyTime = DateTime.now().add(Duration(seconds: 40));
+      DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
+      // DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
 
       // Log the scheduled notification to Firestore
       await FirebaseFirestore.instance
@@ -239,11 +192,13 @@ class ProfileCubit extends Cubit<ProfileState> {
         'created_at': DateTime.now().toIso8601String(),
       });
 
-      await scheduleLocalNotification(
-        plantId: plantId,
-        plantName: plant.commonName ?? "Your plant",
-        scheduledTime: notifyTime,
+      NotificationService.scheduleNotification(
+          plantId,
+          "Water Reminder",
+          "It's time to water your ${plant.commonName}",
+          notifyTime,
       );
+      print("notification has been sent at $notifyTime");
     }
   }
 

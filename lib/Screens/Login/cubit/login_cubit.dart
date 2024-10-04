@@ -7,8 +7,6 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
 import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
-import 'package:plant_app/Screens/home/home_screen.dart';
-import 'package:plant_app/Screens/main%20helpers/fcm_handler.dart';
 import 'package:plant_app/Screens/navigation/navigation_screen.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/const.dart';
