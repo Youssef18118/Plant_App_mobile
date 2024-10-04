@@ -91,16 +91,43 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       SpeciesCubit speciesCubit,
       BuildContext context) async {
     if (addedPlantIds.contains(plantId)) {
-      HiveHelpers.removePlantId(plantId);
-      addedPlantIds.remove(plantId);
+      // Show the confirmation dialog
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Remove Plant"),
+            content: Text(
+                "Are you sure you want to remove this plant from the garden?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                },
+                child: Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                  // Remove plant from Hive and update state
+                  HiveHelpers.removePlantId(plantId);
+                  addedPlantIds.remove(plantId);
 
-      profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
+                  profileCubit.removePlantById(
+                      plantId, homeCubit, speciesCubit);
 
-      // Notify home screen to remove the plant
-      homeCubit.addedPlantIds.remove(plantId);
-      homeCubit.emit(ToggeldSuccessState());
+                  // Notify home screen to remove the plant
+                  homeCubit.addedPlantIds.remove(plantId);
+                  homeCubit.emit(ToggeldSuccessState());
 
-      emit(ToggePlantldSuccessState());
+                  emit(ToggePlantldSuccessState());
+                },
+                child: Text("Delete"),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       HiveHelpers.addPlantId(plantId);
       addedPlantIds.add(plantId);

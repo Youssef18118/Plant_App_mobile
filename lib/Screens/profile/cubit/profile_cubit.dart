@@ -193,10 +193,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       });
 
       NotificationService.scheduleNotification(
-          plantId,
-          "Water Reminder",
-          "It's time to water your ${plant.commonName}",
-          notifyTime,
+        plantId,
+        "Water Reminder",
+        "It's time to water your ${plant.commonName}",
+        notifyTime,
       );
       print("notification has been sent at $notifyTime");
     }
