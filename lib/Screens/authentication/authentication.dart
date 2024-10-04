@@ -15,7 +15,7 @@ class AuthenticationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    
+
     return Scaffold(
       body: Column(
         children: [
@@ -31,7 +31,7 @@ class AuthenticationScreen extends StatelessWidget {
                   )
                 ],
               ),
-              width:double.infinity,
+              width: double.infinity,
               height: height * 0.65,
               child: Image.asset(
                 imagePath + 'auth_background.jpeg',
@@ -63,11 +63,12 @@ class AuthenticationScreen extends StatelessWidget {
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                        imagePath + 'Rectangle1.png',
-                      ),
-                      fit: BoxFit.fill)),
+                //color: Color.fromARGB(255, 113, 136, 92),
+                 image: DecorationImage(
+                     image: AssetImage(
+                      imagePath + 'Rectangle _W.png',
+              ),
+               fit: BoxFit.fill)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -84,6 +85,4 @@ class AuthenticationScreen extends StatelessWidget {
       ),
     );
   }
-
-  
 }
