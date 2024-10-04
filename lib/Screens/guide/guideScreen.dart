@@ -25,44 +25,47 @@ class _GuideScreenState extends State<GuideScreen> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      backgroundColor: greyColor,
-      appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(appBarImagePath),
-              fit: BoxFit.cover,
+    return BlocListener<GuideCubit, GuideState>(
+      listener: (context, state) {
+        if (state is GuideErrorState) {
+          Get.snackbar(
+            "Error",
+            state.message ?? "An error occurred",
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: greyColor,
+        appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(appBarImagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const Text(
+            'Plant Guide',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Plant Guide',
-          style: TextStyle(
-              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: BlocListener<GuideCubit, GuideState>(
-        listener: (context, state) {
-          if (state is GuideErrorState) {
-            Get.snackbar(
-              "Error",
-              state.message ?? "",
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
-            );
-          }
-        },
-        child: BlocBuilder<GuideCubit, GuideState>(
+        body: BlocBuilder<GuideCubit, GuideState>(
           builder: (context, state) {
             if (state is GuideLoadingState) {
               return const Center(child: CircularProgressIndicator());
@@ -86,7 +89,15 @@ class _GuideScreenState extends State<GuideScreen> {
                 child: imageAndContent(height, sections, widget.URL),
               );
             } else if (state is GuideErrorState) {
-              return Center(child: Text(state.message!));
+              return Center(
+                child: Text("Error",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  )
+                );
             } else {
               return const Center(child: Text('Something went wrong'));
             }

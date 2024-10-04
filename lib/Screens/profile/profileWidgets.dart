@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/login.dart';
+import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/helpers/hive_helpers.dart';
+import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
@@ -142,13 +144,11 @@ void _showLogoutDialog(BuildContext context) {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Dismiss dialog
-              // Logout logic from the ElevButton function
-              HiveHelpers.clearToken();
-
-              // remove Hive PROFILE DATA
-              context.read<ProfileCubit>().removeProfileInHive();
-              // context.read<HomeCubit>().resetNavigationIndex();
+              Navigator.of(context).pop();
+              HiveHelpers.clearAll();
+              context.read<HomeScreenCubit>().clearAddedPlants();
+              context.read<ProfileCubit>().clearAddedPlants();
+              context.read<SpeciesCubit>().clearAddedPlants();
               Get.offAll(() => const Login());
             },
             child: const Text('Logout'),

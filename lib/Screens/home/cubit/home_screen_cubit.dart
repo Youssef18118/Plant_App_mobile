@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
@@ -44,7 +44,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final response = await DioHelpers.getData(
         path: '/api/species-list',
         queryParameters: {
-          'key': apiKey4,
+          'key': apiKey,
           'page': '1',
           if (searchText != null && searchText.isNotEmpty) 'q': searchText
         },
@@ -97,5 +97,13 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       // Notify SpeciesCubit to update the species list
       speciesCubit.notifyPlantChanged(plantId, true); // Add to species list
     }
+  }
+
+  void clearAddedPlants() {
+    addedPlantIds.clear();
+    HiveHelpers.clearPlantIds(); 
+
+    // Emit a state update to refresh the UI
+    emit(GettingPlantsSuccess()); 
   }
 }

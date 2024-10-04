@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 import 'package:plant_app/Screens/helpers/dio_helpers.dart';
@@ -29,7 +29,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species-list",
-        queryParameters: {'key': apiKey4, 'page': currentPage},
+        queryParameters: {'key': apiKey, 'page': currentPage},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -132,5 +132,13 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     }
 
     emit(SpeciesUpdatedState()); // Notify that species have been updated
+  }
+
+  void clearAddedPlants() {
+    addedPlantIds.clear();
+    HiveHelpers.clearPlantIds(); 
+
+    // Emit a state update to refresh the UI
+    emit(SpeciesUpdatedState()); 
   }
 }

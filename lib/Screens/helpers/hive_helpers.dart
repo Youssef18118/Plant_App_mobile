@@ -62,5 +62,11 @@ class HiveHelpers {
     return box.get(HiveHelpers.profileEmailKey, defaultValue: "Unknown Email");
   }
 
+  static void clearAll() async{
+    await Hive.box(tokenBox).clear();
+    await Hive.box(gardenBox).clear();
+    await Hive.box(profileBox).clear();
+  }
+
 
 }

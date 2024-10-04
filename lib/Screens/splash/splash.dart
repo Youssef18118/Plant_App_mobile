@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:plant_app/Screens/helpers/hiver_helpers.dart';
+import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/navigation/navigation_screen.dart';
 import 'package:plant_app/Screens/onboarding/Onboarding.dart';
 

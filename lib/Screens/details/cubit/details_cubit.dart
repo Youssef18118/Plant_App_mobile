@@ -17,7 +17,7 @@ class PlantDetailsCubit extends Cubit<PlantDetailsState> {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
         queryParameters: {
-          'key': apiKey5,
+          'key': apiKey,
         },
         customBaseUrl: plantBaseUrl,
       );
