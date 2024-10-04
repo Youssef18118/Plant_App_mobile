@@ -60,7 +60,11 @@ class PlantDetailScreen extends StatelessWidget {
               final rating = (plantId % 5 + 1).toDouble();
 
               return PlantDetailWidget(
-                imageUrl: plant?.defaultImage?.mediumUrl ?? '',
+                imageUrl: (plant?.defaultImage?.mediumUrl?.isNotEmpty == true)
+                    ? plant!.defaultImage!.mediumUrl!
+                    : (plant?.defaultImage?.originalUrl?.isNotEmpty == true)
+                        ? plant!.defaultImage!.originalUrl!
+                        : 'assets/images/logoWithoutText.png',  
                 plantName: plant?.commonName ?? 'Unknown Plant',
                 type: plant?.type ?? 'Unknown Type',
                 details: plant?.description ?? 'No description available.',
