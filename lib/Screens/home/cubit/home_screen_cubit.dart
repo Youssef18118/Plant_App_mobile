@@ -44,7 +44,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final response = await DioHelpers.getData(
         path: '/api/species-list',
         queryParameters: {
-          'key': apiKey4,
+          'key': apiKeyW,
           'page': '1',
           if (searchText != null && searchText.isNotEmpty) 'q': searchText
         },
@@ -72,30 +72,47 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       SpeciesCubit speciesCubit,
       BuildContext context) async {
     if (addedPlantIds.contains(plantId)) {
-      // Remove the plant from the list and notify both screens
-      HiveHelpers.removePlantId(plantId);
-      addedPlantIds.remove(plantId);
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Remove Plant"),
+              content: Text(
+                  "Are you sure you want to remove this plant from the garden?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    HiveHelpers.removePlantId(plantId);
+                    addedPlantIds.remove(plantId);
 
-      profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
+                    profileCubit.removePlantById(
+                        plantId, homeCubit, speciesCubit);
 
-      // Emit success in HomeScreenCubit
-      emit(ToggeldSuccessState());
+                    emit(ToggeldSuccessState());
 
-      // Notify SpeciesCubit to update the species list
-      speciesCubit.notifyPlantChanged(
-          plantId, false); // Remove from species list
+                    speciesCubit.notifyPlantChanged(plantId, false);
+                  },
+                  child: Text("Delete"),
+                ),
+              ],
+            );
+          });
     } else {
-      // Add the plant to the list and notify both screens
       HiveHelpers.addPlantId(plantId);
       addedPlantIds.add(plantId);
 
       await profileCubit.addPlantToMyGarden(plantId, context);
 
-      // Emit success in HomeScreenCubit
       emit(ToggeldSuccessState());
 
-      // Notify SpeciesCubit to update the species list
-      speciesCubit.notifyPlantChanged(plantId, true); // Add to species list
+      speciesCubit.notifyPlantChanged(plantId, true);
     }
   }
 }

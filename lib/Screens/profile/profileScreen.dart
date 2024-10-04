@@ -96,8 +96,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   profileCubit,
                                   width,
                                   onRemove: () {
-                                    profileCubit.removePlantById(
-                                        plant.id!, homeCubit, speciesCubit);
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text("Remove Plant"),
+                                            content: Text(
+                                                "Are you sure you want to remove this plant from the garden?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text("Cancel"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  profileCubit.removePlantById(
+                                                      plant.id!,
+                                                      homeCubit,
+                                                      speciesCubit);
+                                                },
+                                                child: Text("Delete"),
+                                              ),
+                                            ],
+                                          );
+                                        });
                                   },
                                 );
                               },
