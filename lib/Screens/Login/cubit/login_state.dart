@@ -17,6 +17,11 @@ final class LoginSucessState extends LoginState {}
 final class LogineErrorState extends LoginState {
  final String message;
  LogineErrorState(this.message);
-
-
 }
+
+final class LogOutSucessState extends LoginState {}
+final class LogOutErrorState extends LoginState {
+ final String message;
+ LogOutErrorState(this.message);
+}
+

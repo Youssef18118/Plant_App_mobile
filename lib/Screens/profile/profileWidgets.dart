@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
@@ -78,7 +79,7 @@ Widget ProfileInfo(double height, BuildContext context, double width, ProfileDat
       // Positioned Profile Image and Info
       Positioned(
         top: height * 0.08,
-        left: MediaQuery.of(context).size.width / 2 - (width * 0.25),
+        left: (profile?.email?.length ?? 0) >= 30 ?  MediaQuery.of(context).size.width / 5: MediaQuery.of(context).size.width / 4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -143,7 +144,9 @@ void _showLogoutDialog(BuildContext context) {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async{
+              // Sign out from Google Sign-In
+              await context.read<LoginCubit>().signOut();
               Navigator.of(context).pop();
               HiveHelpers.clearAll();
               context.read<HomeScreenCubit>().clearAddedPlants();
