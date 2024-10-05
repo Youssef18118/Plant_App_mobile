@@ -124,11 +124,4 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     emit(GettingPlantsSuccess()); 
   }
 
-  void clearAddedPlants() {
-    addedPlantIds.clear();
-    HiveHelpers.clearPlantIds(); 
-
-    // Emit a state update to refresh the UI
-    emit(GettingPlantsSuccess()); 
-  }
 }
