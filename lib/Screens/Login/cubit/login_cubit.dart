@@ -103,15 +103,28 @@ class LoginCubit extends Cubit<LoginState> {
           }
         } else {
           emit(LogineErrorState("No account found for this email."));
+          await signOut();
         }
       } else {
         // If the user is null after signing in, which is unlikely
         print('User is null after Google sign-in.');
+        await signOut();
         emit(LogineErrorState("Google sign-in failed"));
       }
     } catch (e) {
       // print(e); // For debugging
       emit(LogineErrorState(e.toString()));
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      await googleSignIn.signOut();
+
+      emit(LogOutSucessState());
+    } catch (e) {
+      emit(LogOutErrorState(e.toString()));
     }
   }
 
