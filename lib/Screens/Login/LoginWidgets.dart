@@ -20,7 +20,7 @@ Text smallText(String text) {
     
     }) {
     return GestureDetector(
-       onTap: onTap, // Trigger the passed callback on tap
+       onTap: onTap, 
       child: Container(
         width: double.infinity,
         height: height * 0.06,

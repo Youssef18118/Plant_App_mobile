@@ -16,8 +16,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   // Function to request exact alarm permission for Android 12+
-Future<void> requestAlarmPermission() async {
-  if (await Permission.scheduleExactAlarm.isDenied) {
+  Future<void> requestAlarmPermission() async {
+    if (await Permission.scheduleExactAlarm.isDenied) {
       final permissionStatus = await Permission.scheduleExactAlarm.request();
       if (!permissionStatus.isGranted) {
         // Handle the case where permission is denied
@@ -25,18 +25,17 @@ Future<void> requestAlarmPermission() async {
         return;
       }
     }
-  }  
+  }
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      
-      await requestAlarmPermission(); 
 
+      await requestAlarmPermission();
 
       if (HiveHelpers.getToken() != null) {
-        Get.offAll(() => const NavigationScreen()); // should be HomeScreen
+        Get.offAll(() => const NavigationScreen());
         return;
       }
 

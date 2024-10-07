@@ -56,8 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             final plantList = profileCubit.plantList;
 
             return Scaffold(
-              // Background with white-grey gradient
-
               body: Container(
                 decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 229, 229, 229)),

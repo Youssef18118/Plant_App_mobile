@@ -15,21 +15,20 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
   PlantSpeciesModel model = PlantSpeciesModel();
   List<PlantSpeciesData>? filteredSpecies;
-  int currentPage = 1; // Keep track of the current page
-  bool isLoadingMore = false; // Flag to check if more data is being loaded
+  int currentPage = 1;
+  bool isLoadingMore = false;
   List<int> addedPlantIds = HiveHelpers.getPlantIds();
-  // get plant model for the first page
+
   void getAllSpecies() async {
     emit(speciesloadingState());
-    await _fetchSpecies(); // Fetch the first page
+    await _fetchSpecies();
   }
 
-  // Function to fetch species data for the current page
   Future<void> _fetchSpecies() async {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species-list",
-        queryParameters: {'key': apiKey, 'page': currentPage},
+        queryParameters: {'key': apiKeyW, 'page': currentPage},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -38,11 +37,11 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
       if (response.statusCode == 200 && currentPageModel.data != null) {
         if (currentPage == 1) {
-          model.data = currentPageModel.data; // Update model data
-          filteredSpecies = model.data; // Initialize with first page
+          model.data = currentPageModel.data;
+          filteredSpecies = model.data;
         } else {
-          model.data!.addAll(currentPageModel.data!); // Append more data
-          filteredSpecies = model.data; // Update filtered species
+          model.data!.addAll(currentPageModel.data!);
+          filteredSpecies = model.data;
         }
 
         // If no more data, stop loading
@@ -59,7 +58,6 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     }
   }
 
-  // Function to load the next page
   void loadMoreSpecies() async {
     if (isLoadingMore) return; // Prevent multiple loads at the same time
 
@@ -69,19 +67,16 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     isLoadingMore = false;
   }
 
-  // Search functionality to filter species based on query
   void searchSpecies(String query) {
     if (query.isEmpty) {
-      // Reset filteredSpecies to the full list after fetching all pages
       filteredSpecies = model.data;
     } else {
-      // Filter species based on the search query
       filteredSpecies = model.data?.where((species) {
         final commonName = species.commonName?.toLowerCase() ?? '';
         return commonName.contains(query.toLowerCase());
       }).toList();
     }
-    emit(SpeciesFiltered()); // Emit new state after filtering
+    emit(SpeciesFiltered());
   }
 
   void togglePlant(
@@ -91,7 +86,6 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       SpeciesCubit speciesCubit,
       BuildContext context) async {
     if (addedPlantIds.contains(plantId)) {
-      // Show the confirmation dialog
       await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -102,13 +96,13 @@ class SpeciesCubit extends Cubit<SpeciesState> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Dismiss the dialog
+                  Navigator.of(context).pop();
                 },
                 child: Text("Cancel"),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Dismiss the dialog
+                  Navigator.of(context).pop();
                   // Remove plant from Hive and update state
                   HiveHelpers.removePlantId(plantId);
                   addedPlantIds.remove(plantId);
@@ -158,14 +152,13 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       }
     }
 
-    emit(SpeciesUpdatedState()); // Notify that species have been updated
+    emit(SpeciesUpdatedState());
   }
 
   void clearAddedPlants() {
     addedPlantIds.clear();
-    HiveHelpers.clearPlantIds(); 
+    HiveHelpers.clearPlantIds();
 
-    // Emit a state update to refresh the UI
-    emit(SpeciesUpdatedState()); 
+    emit(SpeciesUpdatedState());
   }
 }

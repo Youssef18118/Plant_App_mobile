@@ -31,19 +31,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     var box = Hive.box(HiveHelpers.profileBox);
 
     if (box.isNotEmpty) {
-      // Initialize Profmodel.data if it's null
       if (Profmodel.data == null) {
-        Profmodel.data =
-            ProfileData(); // Assuming ProfileData is your data class
+        Profmodel.data = ProfileData();
       }
 
-      // Load profile data from Hive
       Profmodel.data?.name = HiveHelpers.getProfileName();
       Profmodel.data?.email = HiveHelpers.getProfileEmail();
-      // print("name in init ${Profmodel.data?.name}");
-      // print("email in init ${Profmodel.data?.email}");
 
-      // Emit success state with stored data
       emit(ProfileSuccessState());
     } else {
       // Fetch profile data from API if not stored locally
@@ -59,13 +53,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         path: ProfilePath,
       );
 
-      // print("response data : ${response.data}");
       Profmodel = ProfileModel.fromJson(response.data);
 
       if (Profmodel.status ?? false) {
-        // print("profile data: ${Profmodel}");
-
-        // Store profile data in Hive
         storeProfileInHive(Profmodel);
 
         emit(ProfileSuccessState());
@@ -73,19 +63,16 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(ProfileErrorState("Failed to get Profile"));
       }
     } catch (e) {
-      // print("profile error: $e");
       emit(ProfileErrorState(e.toString()));
     }
   }
 
-  // Function to store profile data in Hive
   void storeProfileInHive(ProfileModel profile) async {
     var box = Hive.box(HiveHelpers.profileBox);
     box.put(HiveHelpers.profileNameKey, profile.data?.name);
     box.put(HiveHelpers.profileEmailKey, profile.data?.email);
   }
 
-  // remove profile data from Hive
   void removeProfileInHive() async {
     Hive.box(HiveHelpers.profileBox).clear();
   }
@@ -135,7 +122,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey},
+        queryParameters: {'key': apiKeyW},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -185,7 +172,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       await FirebaseFirestore.instance
           .collection('scheduled_notifications')
           .add({
-        'user_id': HiveHelpers.getToken(), // Add user identification
+        'user_id': HiveHelpers.getToken(),
         'plant_id': plantId,
         'plant_name': plant.commonName,
         'notification_time': notifyTime.toIso8601String(),
@@ -220,8 +207,6 @@ class ProfileCubit extends Cubit<ProfileState> {
             .doc(doc.id)
             .delete();
       }
-
-      // print('Notification log for plant $plantId removed from Firebase.');
     } catch (e) {
       // print('Error removing notification log from Firebase: $e');
     }
@@ -229,11 +214,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void clearAddedPlants() {
     plantList.clear();
-    HiveHelpers.clearPlantIds(); 
+    HiveHelpers.clearPlantIds();
 
-    // Emit a state update to refresh the UI
-    emit(ProfileSuccessState()); 
+    emit(ProfileSuccessState());
   }
-
-
 }

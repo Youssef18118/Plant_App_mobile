@@ -8,6 +8,7 @@ import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/const.dart';
+import 'package:shimmer/shimmer.dart';
 
 Widget containerBuilder(
   double height,
@@ -42,7 +43,6 @@ Widget containerBuilder(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: GestureDetector(
               onTap: () {
-                // print("plant id to details is ${plant.id}");
                 Get.to(() => PlantDetailScreen(plantId: plant.id!));
               },
               child: Container(
@@ -50,10 +50,10 @@ Widget containerBuilder(
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5), // Shadow color
-                        spreadRadius: 5, // Spread radius
-                        blurRadius: 5, // Blur radius for soft shadow
-                        offset: Offset(0, 3), // Offset to move shadow down
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
                     ],
                     color: Colors.white,
@@ -72,8 +72,15 @@ Widget containerBuilder(
                               topRight: Radius.circular(15)),
                           child: CachedNetworkImage(
                             imageUrl: plant.defaultImage?.smallUrl ?? '',
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                color: Colors.white,
+                              ),
+                            ),
                             errorWidget: (context, url, error) => const Icon(
                               Icons.error,
                               size: 30,
@@ -117,15 +124,12 @@ Widget containerBuilder(
                                 width: width * 0.16,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(18),
-                                  color: isAdded
-                                      ? Colors.red
-                                      : mainColor, // Toggle colors
+                                  color: isAdded ? Colors.red : mainColor,
                                 ),
                                 child: Icon(
-                                  isAdded
-                                      ? Icons.delete
-                                      : Icons.add, // Toggle icons
-                                  color: Colors.white, size: 32,
+                                  isAdded ? Icons.delete : Icons.add,
+                                  color: Colors.white,
+                                  size: 32,
                                 ),
                               ),
                             ),

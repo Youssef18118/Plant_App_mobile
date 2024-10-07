@@ -14,7 +14,6 @@ import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
 
-
 Widget myGardenTitle(double width, double height) {
   return Container(
     width: double.infinity,
@@ -29,14 +28,12 @@ Widget myGardenTitle(double width, double height) {
             endIndent: 0,
           ),
         ),
-        // Title in the center
+
         Container(
-          width: width *0.4,
-          height: height* 0.07,
+          width: width * 0.4,
+          height: height * 0.07,
           decoration: BoxDecoration(
-            color: mainColor,
-            borderRadius: BorderRadius.circular(20)
-          ),
+              color: mainColor, borderRadius: BorderRadius.circular(20)),
           child: Center(
             child: Text(
               "My Garden",
@@ -48,7 +45,7 @@ Widget myGardenTitle(double width, double height) {
             ),
           ),
         ),
-        // Right dashed line
+
         Expanded(
           child: Divider(
             color: Colors.green,
@@ -61,11 +58,10 @@ Widget myGardenTitle(double width, double height) {
   );
 }
 
-
-Widget ProfileInfo(double height, BuildContext context, double width, ProfileData? profile) {
+Widget ProfileInfo(
+    double height, BuildContext context, double width, ProfileData? profile) {
   return Stack(
     children: [
-      // Background Image Container
       Container(
         width: double.infinity,
         height: height * 0.32,
@@ -76,10 +72,11 @@ Widget ProfileInfo(double height, BuildContext context, double width, ProfileDat
           ),
         ),
       ),
-      // Positioned Profile Image and Info
       Positioned(
         top: height * 0.08,
-        left: (profile?.email?.length ?? 0) >= 30 ?  MediaQuery.of(context).size.width / 5: MediaQuery.of(context).size.width / 4,
+        left: (profile?.email?.length ?? 0) >= 30
+            ? MediaQuery.of(context).size.width / 5
+            : MediaQuery.of(context).size.width / 4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -96,7 +93,9 @@ Widget ProfileInfo(double height, BuildContext context, double width, ProfileDat
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Text(
               '${profile?.email ?? 'Undefined Email'}',
               style: const TextStyle(
@@ -107,23 +106,24 @@ Widget ProfileInfo(double height, BuildContext context, double width, ProfileDat
           ],
         ),
       ),
-      // Icons at top-right corner
       Positioned(
-        top: 30, // Adjust based on your layout
-        right: 5, // Adjust to position the icons correctly
+        top: 30,
+        right: 5,
         child: Column(
           children: [
-            // Logout Icon with Confirmation Dialog
             IconButton(
-              icon: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 255, 255), size: 30,),
+              icon: const Icon(
+                Icons.logout,
+                color: Color.fromARGB(255, 255, 255, 255),
+                size: 30,
+              ),
               onPressed: () {
                 _showLogoutDialog(context);
               },
-            ),            
+            ),
           ],
         ),
       ),
-      
     ],
   );
 }
@@ -139,12 +139,12 @@ void _showLogoutDialog(BuildContext context) {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Dismiss dialog
+              Navigator.of(context).pop();
             },
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () async{
+            onPressed: () async {
               // Sign out from Google Sign-In
               await context.read<LoginCubit>().signOut();
               Navigator.of(context).pop();
@@ -162,13 +162,15 @@ void _showLogoutDialog(BuildContext context) {
   );
 }
 
-  
-Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, ProfileCubit cubit, double width ,{required VoidCallback onRemove}) {
+Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
+    ProfileCubit cubit, double width,
+    {required VoidCallback onRemove}) {
   return GestureDetector(
     onTap: () {
-      // Navigate to the plant's details page
       print("Details page of index $index");
-      Get.to (()  => PlantDetailScreen(plantId: plant.id!,));
+      Get.to(() => PlantDetailScreen(
+            plantId: plant.id!,
+          ));
     },
     child: Card(
       color: Colors.white,
@@ -179,9 +181,9 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, Profil
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Plant Image
           ClipRRect(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15), topLeft: Radius.circular(15)),
             child: CachedNetworkImage(
               imageUrl: plant.defaultImage?.mediumUrl ?? '',
               height: 150,
@@ -193,10 +195,10 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, Profil
           ),
           const SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.only(top:5.0, left: 15, right: 15, bottom: 15),
+            padding: const EdgeInsets.only(
+                top: 5.0, left: 15, right: 15, bottom: 15),
             child: Column(
               children: [
-                // Plant Name
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -208,27 +210,24 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, Profil
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
-                        overflow: TextOverflow.ellipsis, // Adds the ellipsis
-                        maxLines: 1, // Ensures the text is limited to one line
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 5),
-                // Plant Description
                 Text(
                   plant.description ?? 'No description available.',
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 10),
-                // Buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // Show plant care guides
                         Get.to(() => GuideScreen(
                               plantId: plant.id!,
                               URL: plant.defaultImage?.mediumUrl ?? '',
@@ -239,12 +238,12 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, Profil
                       ),
                       child: const Text(
                         "Show Guides",
-                        style:
-                            TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: onRemove, // Remove the plant
+                      onPressed: onRemove,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                       ),
@@ -255,14 +254,11 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index, Profil
                     ),
                   ],
                 ),
-            
               ],
             ),
           ),
-          
         ],
       ),
     ),
   );
 }
-
