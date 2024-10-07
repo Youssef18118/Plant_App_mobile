@@ -66,4 +66,65 @@ class NotificationService {
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
+
+  static Future<void> scheduleRecurringNotification(
+      int id, String title, String body, DateTime initialNotifyTime, Duration intervalDuration) async {
+    
+    // Schedule the first notification
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(initialNotifyTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'reminder_channel',
+          'Reminder Channel',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+
+    _scheduleNextNotification(id, title, body, initialNotifyTime, intervalDuration, 1);
+  }
+
+  static Future<void> _scheduleNextNotification(
+      int id, String title, String body, DateTime currentNotifyTime, Duration intervalDuration, int repetitionCount) async {
+    
+    if (repetitionCount >= 12) {
+      print("Notification scheduling stopped after 12 repetitions.");
+      return; 
+    }
+
+    DateTime nextNotifyTime = currentNotifyTime.add(intervalDuration);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id + 1,  
+      title,
+      body,
+      tz.TZDateTime.from(nextNotifyTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'reminder_channel',
+          'Reminder Channel',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+
+    _scheduleNextNotification(id + 1, title, body, nextNotifyTime, intervalDuration, repetitionCount + 1);
+  }
+
+
+
 }

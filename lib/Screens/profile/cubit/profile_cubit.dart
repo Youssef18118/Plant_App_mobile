@@ -135,7 +135,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey},
+        queryParameters: {'key': apiKey3},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -178,8 +178,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         daysToNotify = int.parse(match.group(1)!);
       }
 
-      DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
-      // DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
+      // DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
+      DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
 
       // Log the scheduled notification to Firestore
       await FirebaseFirestore.instance
@@ -192,13 +192,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         'created_at': DateTime.now().toIso8601String(),
       });
 
-      NotificationService.scheduleNotification(
+      await NotificationService.scheduleRecurringNotification(
         plantId,
         "Water Reminder",
         "It's time to water your ${plant.commonName}",
         notifyTime,
+        Duration(seconds: 10), 
       );
-      print("notification has been sent at $notifyTime");
+      print("notification has been sent each $notifyTime");
     }
   }
 
