@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
+import 'package:plant_app/Screens/add%20your%20plant/cubit/add_plant_cubit.dart';
 import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
@@ -15,6 +17,13 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initApp();
+
+  // final model = GenerativeModel(model: 'gemini-pro', apiKey: 'AIzaSyDNVjNcPo44bPixymGcJtifeOCz0Olr0K0');
+  // final content = [Content.text('Write a story in 200 words')];
+  // final response = await model.generateContent(content);
+  // print(response.text);
+
+
   runApp(const MainApp());
 }
 
@@ -35,6 +44,7 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => GuideCubit()),
         BlocProvider(create: (context) => SpeciesCubit()..getAllSpecies()),
+        BlocProvider(create: (context) => AddPlantCubit()),
       ],
       child: GetMaterialApp(
         navigatorKey: navigatorKey,

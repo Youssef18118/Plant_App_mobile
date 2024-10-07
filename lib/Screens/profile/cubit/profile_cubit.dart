@@ -122,7 +122,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey3},
+        queryParameters: {'key': apiKey5},
         customBaseUrl: plantBaseUrl,
       );
 

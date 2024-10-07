@@ -17,3 +17,41 @@ const String appBarImagePath = 'assets/images/ProfileBackground.png';
 const Color greyColor = Color.fromARGB(255, 224, 221, 221);
 
 const Color mainColor = Color(0xffFF1AAD81);
+
+final List<String> growthRate = ['Low', 'Medium', 'High'];
+
+final List<int> watering = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+final List<String> sunlight = [
+  'Full sun',
+  'Full shade',
+  'Part shade',
+  'Dappled shade',
+  'Part sun',
+  'Indirect sunlight',
+  'Deep shade',
+  'Bright light',
+  'Dense Shade',
+  'Partial Sunlight'
+];
+
+final List<String> month = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
+List<String> plantTypes = [
+  'Tree', 'Shrub', 'Herb', 'Climber', 'Grass'
+];
+  
+List<String> leafColors = ['Green', 'Light Green', 'Dark Green', 'Yellow', 'Red', 'Purple', 'Orange', 'Brown', 'Variegated', 'Silver', 'Blue-Green', 'Bronze', 'Pink', 'White'];
