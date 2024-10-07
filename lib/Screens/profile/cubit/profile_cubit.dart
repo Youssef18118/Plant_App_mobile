@@ -186,6 +186,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         notifyTime,
         Duration(seconds: 10), 
       );
+      
       print("notification has been sent each $notifyTime");
     }
   }

@@ -102,7 +102,8 @@ class NotificationService {
     }
 
     DateTime nextNotifyTime = currentNotifyTime.add(intervalDuration);
-
+    
+    
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id + 1,  
       title,
