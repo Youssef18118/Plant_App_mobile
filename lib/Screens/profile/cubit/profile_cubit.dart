@@ -165,8 +165,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         daysToNotify = int.parse(match.group(1)!);
       }
 
-      // DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
-      DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
+      DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
+      // DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
 
       // Log the scheduled notification to Firestore
       await FirebaseFirestore.instance
@@ -184,10 +184,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         "Water Reminder",
         "It's time to water your ${plant.commonName}",
         notifyTime,
-        Duration(seconds: 10), 
+        Duration(days: daysToNotify), 
       );
-      
-      print("notification has been sent each $notifyTime");
+
+      print("notification has been sent at $notifyTime");
     }
   }
 
