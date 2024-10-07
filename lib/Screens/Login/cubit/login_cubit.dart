@@ -28,7 +28,10 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginPasswordVisibilityChanged(isPasswordVisible));
   }
 
-  void login({required String email, required String password, required BuildContext context}) async {
+  void login(
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
     emit(LoginLoadingState());
 
     AuthenticationModel model = AuthenticationModel();
@@ -53,7 +56,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  // Google Sign-In method
   Future<void> signInWithGoogle() async {
     emit(LoginLoadingState());
 
@@ -61,21 +63,22 @@ class LoginCubit extends Cubit<LoginState> {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
-        // If the user cancels the Google Sign-In flow
         emit(LogineErrorState("Sign in aborted by user"));
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
-      // Logging user info to ensure it's correct
+
       print('User Credential: $userCredential');
       print('User: $user');
 
@@ -96,7 +99,7 @@ class LoginCubit extends Cubit<LoginState> {
             DioHelpers.setToken(token);
 
             emit(LoginSucessState());
-            // Navigate to your app's home screen
+
             Get.offAll(() => const NavigationScreen());
           } else {
             emit(LogineErrorState("Token not found for the user"));
@@ -106,13 +109,11 @@ class LoginCubit extends Cubit<LoginState> {
           await signOut();
         }
       } else {
-        // If the user is null after signing in, which is unlikely
         print('User is null after Google sign-in.');
         await signOut();
         emit(LogineErrorState("Google sign-in failed"));
       }
     } catch (e) {
-      // print(e); // For debugging
       emit(LogineErrorState(e.toString()));
     }
   }
@@ -127,6 +128,4 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LogOutErrorState(e.toString()));
     }
   }
-
-
 }

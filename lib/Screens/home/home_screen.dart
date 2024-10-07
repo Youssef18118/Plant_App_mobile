@@ -50,15 +50,12 @@ class HomeScreen extends StatelessWidget {
                     Spacer(),
                     InkWell(
                       onTap: () {
-                        // Always navigate to NavigationScreen with the Plants tab (index 1)
                         Get.offAll(
                             () => const NavigationScreen(selectedIndex: 1));
                       },
                       child: const Text(
                         'View All',
-                        style: TextStyle(
-                            color: mainColor,
-                            fontSize: 18),
+                        style: TextStyle(color: mainColor, fontSize: 18),
                       ),
                     )
                   ],

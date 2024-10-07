@@ -8,16 +8,15 @@ import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/splash/splash.dart';
-import 'Screens/main helpers/init.dart'; 
+import 'Screens/main helpers/init.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initApp(); 
+  await initApp();
   runApp(const MainApp());
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -29,9 +28,10 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => RegisterCubit()),
         BlocProvider(create: (context) => HomeScreenCubit()..gettingPlants()),
-        BlocProvider(create: (context) => ProfileCubit()
-          ..init()
-          ..fetchAllPlants(),
+        BlocProvider(
+          create: (context) => ProfileCubit()
+            ..init()
+            ..fetchAllPlants(),
         ),
         BlocProvider(create: (context) => GuideCubit()),
         BlocProvider(create: (context) => SpeciesCubit()..getAllSpecies()),

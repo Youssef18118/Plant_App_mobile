@@ -8,7 +8,6 @@ import 'package:plant_icons/plant_icons_data.dart';
 class NavigationScreen extends StatefulWidget {
   final int selectedIndex;
 
-  // Optional selectedIndex with default value of 0
   const NavigationScreen({Key? key, this.selectedIndex = 0}) : super(key: key);
 
   @override
@@ -21,9 +20,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    // Set the selectedIndex to the one passed, or default to 0
+
     _selectedIndex = widget.selectedIndex;
-    // print("Selected Index on Init: $_selectedIndex"); // Debug print
   }
 
   final List<Widget> _screens = [
@@ -43,7 +41,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
         selectedIndex: _selectedIndex,
         showElevation: true,
         onItemSelected: (index) => setState(() {
-          // print("Tab Changed to: $index"); // Debug print
           _selectedIndex = index;
         }),
         items: [

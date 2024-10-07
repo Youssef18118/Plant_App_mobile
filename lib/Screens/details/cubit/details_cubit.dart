@@ -21,7 +21,7 @@ class PlantDetailsCubit extends Cubit<PlantDetailsState> {
         },
         customBaseUrl: plantBaseUrl,
       );
-      // print(response.data);
+      
       if (response.statusCode == 200) {
         plantModel = PlantModel.fromJson(response.data);
         emit(PlantDetailsSuccessState());

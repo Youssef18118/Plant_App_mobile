@@ -19,10 +19,7 @@ Widget btn_auth(double width, double height, bool Login_state) {
           Radius.circular(20),
         ),
         color: const Color.fromARGB(255, 211, 208, 208),
-        // border: Border.all(color: Colors.black)
       ),
-      // border: Border.all(color: const Color(0xff2DDA93)),
-
       width: width * 0.75,
       height: height * 0.08,
       child: Center(

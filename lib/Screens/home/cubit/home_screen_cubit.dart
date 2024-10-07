@@ -16,9 +16,9 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   PlantSpeciesData plantSpeciesModel = PlantSpeciesData();
   List<PlantSpeciesData> plantsSpecies = [];
   List<int> addedPlantIds =
-      HiveHelpers.getPlantIds(); // Load initial data from Hive
+      HiveHelpers.getPlantIds(); 
 
-  // Fetch plants from API
+  
   void gettingPlants({String? searchText}) async {
     emit(GettingPlantsLoading());
 
@@ -120,8 +120,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     addedPlantIds.clear();
     HiveHelpers.clearPlantIds(); 
 
-    // Emit a state update to refresh the UI
+    
     emit(GettingPlantsSuccess()); 
   }
-
 }

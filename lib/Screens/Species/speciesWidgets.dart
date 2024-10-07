@@ -7,6 +7,7 @@ import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
+import 'package:shimmer/shimmer.dart';
 import '../profile/cubit/profile_cubit.dart';
 
 Widget searchField(BuildContext context, double height, double width) {
@@ -22,7 +23,7 @@ Widget searchField(BuildContext context, double height, double width) {
       ),
       child: TextFormField(
         onChanged: (value) {
-          cubit.searchSpecies(value); // Call search method on input change
+          cubit.searchSpecies(value);
         },
         onTapOutside: (event) {
           FocusScope.of(context).unfocus();
@@ -49,7 +50,6 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
 
   return InkWell(
     onTap: () {
-      // Navigate to details screen
       Get.to(() => PlantDetailScreen(
             plantId: plantdata!.id!,
           ));
@@ -66,7 +66,6 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image section
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Container(
@@ -75,15 +74,21 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                   child: CachedNetworkImage(
                     imageUrl: plantdata?.defaultImage?.mediumUrl ?? "",
                     fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.white,
+                      ),
+                    ),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   ),
                 ),
               ),
               SizedBox(width: width * 0.05),
-              // Text and Buttons section
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,16 +114,11 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: isAdded
                                     ? Colors.red
-                                    : Color.fromARGB(255, 26, 173,
-                                        129), // Red for Remove, Green for Garden
+                                    : Color.fromARGB(255, 26, 173, 129),
                               ),
                               onPressed: () {
-                                cubit.togglePlant(
-                                    plantdata?.id ?? 1,
-                                    profileCubit,
-                                    homeCubit,
-                                    cubit,
-                                    context); // Toggle add/remove
+                                cubit.togglePlant(plantdata?.id ?? 1,
+                                    profileCubit, homeCubit, cubit, context);
                               },
                               child: Text(
                                 isAdded ? 'Remove' : 'Garden',
