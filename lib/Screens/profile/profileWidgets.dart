@@ -13,6 +13,7 @@ import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
+import 'package:shimmer/shimmer.dart';
 
 Widget myGardenTitle(double width, double height) {
   return Container(
@@ -189,7 +190,15 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
-              placeholder: (context, url) => const CircularProgressIndicator(),
+              placeholder: (context, url) => Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
