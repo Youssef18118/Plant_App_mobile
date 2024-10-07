@@ -7,6 +7,8 @@ import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/profileWidgets.dart';
 import 'package:plant_app/const.dart';
 
+import '../add your plant/add_your_plant_screen.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -56,6 +58,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             final plantList = profileCubit.plantList;
 
             return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Get.to(() => AddYourPlantScreen());
+                },
+                // shape: CircleBorder(),
+                backgroundColor: mainColor,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
               body: Container(
                 decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 229, 229, 229)),

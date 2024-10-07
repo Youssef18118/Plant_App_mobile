@@ -38,6 +38,7 @@ android {
         targetSdk flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName  flutterVersionName
+        multiDexEnabled true
     }
     kotlinOptions {
         jvmTarget = "1.8"
