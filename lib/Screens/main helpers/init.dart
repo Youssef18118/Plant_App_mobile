@@ -11,6 +11,7 @@ Future<void> initApp() async {
   await Hive.openBox(HiveHelpers.tokenBox);
   await Hive.openBox(HiveHelpers.gardenBox);
   await Hive.openBox(HiveHelpers.profileBox);
+  await Hive.openBox(HiveHelpers.gardenCreatedBox);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

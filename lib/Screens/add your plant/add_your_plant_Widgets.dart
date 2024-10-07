@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/add%20your%20plant/cubit/add_plant_cubit.dart';
@@ -181,8 +183,16 @@ Widget form(AddPlantCubit cubit, double height, double width, BuildContext conte
           InkWell(
             onTap: () {
               if (cubit.formKey.currentState!.validate()) {
-                cubit.clearTextfields();
+                cubit.addPlantToGarden(
+                  commonName: cubit.plantNameController.text,
+                  description: cubit.descriptionController.text,
+                  growthRate: cubit.selectedGrowthRate!,
+                  leafColor: [cubit.selectedLeafColor ?? ''],
+                  imageFile: cubit.selectedImage!,
+                  context: context
+                );
                 Get.back();
+                cubit.clearTextfields();
               }
             },
             child: addPlantBTN(height),

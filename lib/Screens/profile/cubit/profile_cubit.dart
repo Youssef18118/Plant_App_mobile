@@ -89,8 +89,33 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
 
+    fetchCreatedPlants();
     emit(ProfileSuccessState());
   }
+  
+  void fetchCreatedPlants() async {
+    // Fetch the list of maps from Hive
+    List<Map<String, dynamic>> createdPlantsList = HiveHelpers.getCreatedPlants();
+
+    // Cast the map to PlantModel objects and add to existing plantList
+    List<PlantModel> plantsFromHive = createdPlantsList.map((plantMap) => PlantModel.fromMap(plantMap)).toList();
+
+    // Add to the existing plant list
+    plantList.addAll(plantsFromHive);
+
+    // Loop through each PlantModel and print details
+    for (var plant in plantsFromHive) {
+      print('Plant commonName: ${plant.commonName}');
+      print('Plant description: ${plant.description}');
+      print('Plant growthRate: ${plant.growthRate}');
+      print('Plant leafColor: ${plant.leafColor}');
+      print('Plant imageUrl: ${plant.defaultImage?.mediumUrl}');
+      print('---------------------------');
+    }
+
+    emit(ProfileSuccessState());
+  }
+
 
   Future<void> addPlantToMyGarden(int plantId, BuildContext context) async {
     if (!fetchedPlantIds.contains(plantId)) {
@@ -122,7 +147,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey5},
+        queryParameters: {'key': apiKey},
         customBaseUrl: plantBaseUrl,
       );
 

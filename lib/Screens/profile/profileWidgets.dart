@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
@@ -14,6 +17,7 @@ import 'package:plant_app/Screens/profile/model/ProfileModel.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:path/path.dart' as path;
 
 Widget myGardenTitle(double width, double height) {
   return Container(
@@ -183,23 +187,33 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-            child: CachedNetworkImage(
-              imageUrl: plant.defaultImage?.mediumUrl ?? '',
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.white,
-                ),
-              ),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+            child: FutureBuilder<Widget>(
+              future: _buildImage(plant.defaultImage!.mediumUrl!), // Use FutureBuilder
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 150,
+                    width: double.infinity,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Container(
+                    height: 150,
+                    width: double.infinity,
+                    color: Colors.grey,
+                    child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
+                  );
+                } else {
+                  return snapshot.data ?? Container(
+                    height: 150,
+                    width: double.infinity,
+                    color: Colors.grey,
+                    child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
+                  );
+                }
+              },
             ),
           ),
           const SizedBox(height: 5),
@@ -226,10 +240,17 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
                   ],
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  plant.description ?? 'No description available.',
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    Container(
+                      width: width * 0.85,
+                      child: Text(
+                        plant.description ?? 'No description available.',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -270,4 +291,59 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
       ),
     ),
   );
+}
+
+// Helper function to build image (either network or local file)
+Future<Widget> _buildImage(String imagePath) async {
+  print("Image Path/URL: $imagePath");
+
+  // Check if the path is a URL (contains 'http' or 'https')
+  if (imagePath.startsWith('http')) {
+    print("This is a network URL: $imagePath");
+    return CachedNetworkImage(
+      imageUrl: imagePath,
+      height: 150,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.white,
+        ),
+      ),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
+    );
+  } else {
+    // Construct the local file path
+    String localImagePath = imagePath.contains('/')
+        ? imagePath  // Absolute path
+        : path.join(
+            (await getApplicationDocumentsDirectory()).path, // Local directory
+            imagePath,  // Relative filename
+          );
+
+    print("This is a local file: $localImagePath");
+
+    // Try loading the image as a local file
+    if (File(localImagePath).existsSync()) {
+      return Image.file(
+        File(localImagePath),
+        height: 150,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    } else {
+      // If the file doesn't exist, show a placeholder
+      print("Local file not found: $localImagePath");
+      return Container(
+        height: 150,
+        width: double.infinity,
+        color: Colors.grey,
+        child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
+      );
+    }
+  }
 }
