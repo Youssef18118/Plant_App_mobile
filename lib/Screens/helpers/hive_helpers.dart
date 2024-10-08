@@ -56,13 +56,27 @@ class HiveHelpers {
 
   static void removePlantByCommonName(String commonName) {
     final plantBox = Hive.box(gardenCreatedBox);
-    
-    List<Map<String, dynamic>> plantList = plantBox.get(gardenCreatedKey, defaultValue: []);
 
+    // Safely retrieve and cast the list as a List of Map<String, dynamic>
+    final plantList = List<Map<String, dynamic>>.from(
+      (plantBox.get(gardenCreatedKey, defaultValue: []) as List)
+          .map((item) => Map<String, dynamic>.from(item as Map)),
+      growable: true,
+    );
+
+    print("Before removal, plants: $plantList");
+
+    // Remove the plant with the matching common name
     plantList.removeWhere((plant) => plant['commonName'] == commonName);
 
+    print("After removal, plants: $plantList");
+
+    // Put the updated list back into the Hive box
     plantBox.put(gardenCreatedKey, plantList);
   }
+
+
+
 
   static String getProfileName(){
     final box = Hive.box(profileBox);
@@ -111,6 +125,32 @@ class HiveHelpers {
     await box.put(gardenCreatedKey, plantsList);
   }
 
+  static Map<String, dynamic>? getPlantByCommonName(String commonName) {
+    final plantBox = Hive.box(gardenCreatedBox);
+    final plantList = List<Map<String, dynamic>>.from(
+      (plantBox.get(gardenCreatedKey, defaultValue: []) as List)
+          .map((item) => Map<String, dynamic>.from(item as Map)),
+      growable: true,
+    );
+
+    try {
+      // Find the plant with the matching common name
+      final plant = plantList.firstWhere(
+        (plant) => plant['commonName'] == commonName,
+        orElse: () => <String, dynamic>{}, // Return an empty map if not found
+      );
+      
+      // If the returned plant is empty, return null
+      if (plant.isEmpty) {
+        return null;
+      }
+      
+      return plant;
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
 
 
 }

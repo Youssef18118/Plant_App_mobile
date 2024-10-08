@@ -56,111 +56,7 @@ Widget form(AddPlantCubit cubit, double height, double width, BuildContext conte
           ),
           TextField(height, width, context, 'Write your plant name', cubit.plantNameController),
           SizedBox(
-            height: height * 0.035,
-          ),
-          title_of_field("Plant Type "),
-          SizedBox(
             height: height * 0.013,
-          ),
-          buildDropdownFormField<String>(
-            cubit: cubit,
-            items: plantTypes,
-            selectedValue: cubit.selectedPlantType,
-            hintText: 'Select Plant Type',
-            onChanged: (newValue) {
-              cubit.selectedPlantType = newValue;
-            },
-            validator: (value) => value == null || value.isEmpty ? 'This field cannot be empty' : null,
-            height: height,
-            width: width,
-          ),
-          SizedBox(height: height * 0.035),
-          title_of_field("Growth Rate "),
-          SizedBox(
-            height: height * 0.013,
-          ),
-          buildDropdownFormField<String>(
-            cubit: cubit,
-            items: growthRate,
-            selectedValue: cubit.selectedGrowthRate,
-            hintText: 'Select Growth Rate',
-            onChanged: (newValue) {
-              cubit.selectedGrowthRate = newValue;
-            },
-            validator: (value) => value == null || value.isEmpty ? 'This field cannot be empty' : null,
-            height: height,
-            width: width,
-          ),
-          SizedBox(height: height * 0.035),
-          title_of_field("Watering (In Days) "),
-          SizedBox(
-            height: height * 0.013,
-          ),
-          buildDropdownFormField<int>(
-            cubit: cubit,
-            items: watering,
-            selectedValue: cubit.selectedWatringDays,
-            hintText: 'How many days to water',
-            onChanged: (newValue) {
-              cubit.selectedWatringDays = newValue;
-            },
-            validator: (value) => value == null ? 'This field cannot be empty' : null,
-            height: height,
-            width: width,
-          ),
-          SizedBox(height: height * 0.035),
-          title_of_field("Sunlight "),
-          SizedBox(
-            height: height * 0.013,
-          ),
-          buildDropdownFormField<String>(
-            cubit: cubit,
-            items: sunlight,
-            selectedValue: cubit.selectedSunlight,
-            hintText: 'Select Sunlight type',
-            onChanged: (newValue) {
-              cubit.selectedSunlight = newValue;
-            },
-            validator: (value) => value == null || value.isEmpty ? 'This field cannot be empty' : null,
-            height: height,
-            width: width,
-          ),
-          SizedBox(height: height * 0.035),
-          title_of_field("Pruning Month "),
-          SizedBox(
-            height: height * 0.013,
-          ),
-          buildDropdownFormField<String>(
-            cubit: cubit,
-            items: month,
-            selectedValue: cubit.selectedPruningMonth,
-            hintText: 'Select Pruning month',
-            onChanged: (newValue) {
-              cubit.selectedPruningMonth = newValue;
-            },
-            validator: (value) => value == null || value.isEmpty ? 'This field cannot be empty' : null,
-            height: height,
-            width: width,
-          ),
-          SizedBox(height: height * 0.035),
-          title_of_field("Leaf Color "),
-          SizedBox(
-            height: height * 0.013,
-          ),
-          buildDropdownFormField<String>(
-            cubit: cubit,
-            items: leafColors,
-            selectedValue: cubit.selectedLeafColor,
-            hintText: 'Select Leaf Color',
-            onChanged: (newValue) {
-              cubit.selectedLeafColor = newValue;
-            },
-            validator: (value) => value == null || value.isEmpty ? 'This field cannot be empty' : null,
-            height: height,
-            width: width,
-          ),
-          SizedBox(
-            height: height * 0.035,
           ),
           Text(
             'Image ',
@@ -169,25 +65,11 @@ Widget form(AddPlantCubit cubit, double height, double width, BuildContext conte
           SizedBox(height: height * 0.013),
           UploadImageWidget(cubit, height, width),
           SizedBox(height: height * 0.035),
-          Text(
-            ' Description ',
-            style: TextStyle(color: Colors.black, fontSize: 20),
-          ),
-          SizedBox(
-            height: height * 0.013,
-          ),
-          TextField(height, width, context, 'Write Your Plant description', cubit.descriptionController, validate: false),
-          SizedBox(
-            height: height * 0.075,
-          ),
           InkWell(
             onTap: () {
               if (cubit.formKey.currentState!.validate()) {
                 cubit.addPlantToGarden(
                   commonName: cubit.plantNameController.text,
-                  description: cubit.descriptionController.text,
-                  growthRate: cubit.selectedGrowthRate!,
-                  leafColor: [cubit.selectedLeafColor ?? ''],
                   imageFile: cubit.selectedImage!,
                   context: context
                 );

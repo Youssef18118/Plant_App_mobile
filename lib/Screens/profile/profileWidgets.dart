@@ -8,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
+import 'package:plant_app/Screens/details%20created/cubit/details_created_cubit.dart';
+import 'package:plant_app/Screens/details%20created/detailsCreatedScreen.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide%20Created/guideCreatedScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
@@ -171,132 +173,147 @@ void _showLogoutDialog(BuildContext context) {
 Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
     ProfileCubit cubit, double width,
     {required VoidCallback onRemove}) {
-  return GestureDetector(
-    onTap: () {
-      print("Details page of index $index");
-      Get.to(() => PlantDetailScreen(
-            plantId: plant.id!,
-          ));
-    },
-    child: Card(
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-            child: FutureBuilder<Widget>(
-              future: _buildImage(plant.defaultImage!.mediumUrl!), // Use FutureBuilder
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 150,
-                    width: double.infinity,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  return Container(
-                    height: 150,
-                    width: double.infinity,
-                    color: Colors.grey,
-                    child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
-                  );
-                } else {
-                  return snapshot.data ?? Container(
-                    height: 150,
-                    width: double.infinity,
-                    color: Colors.grey,
-                    child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
-                  );
-                }
-              },
-            ),
+  return BlocBuilder<ProfileCubit, ProfileState>(
+    builder: (context, state) {
+      return GestureDetector(
+        onTap: () {
+          print("Details page of index $index");
+          if (plant.id != -1) {
+            Get.to(() => PlantDetailScreen(
+                  plantId: plant.id!,
+                ));
+          } else {
+            Get.to(() => PlantDetailScreenCreated(
+                  plantModel: plant,
+                ));
+          }
+        },
+        child: Card(
+          color: Colors.white,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
           ),
-          const SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 5.0, left: 15, right: 15, bottom: 15),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15)),
+                child: FutureBuilder<Widget>(
+                  future: _buildImage(plant.defaultImage?.mediumUrl ?? ''), // Use FutureBuilder
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Container(
+                        height: 150,
+                        width: double.infinity,
+                        color: Colors.grey,
+                        child: const Icon(Icons.image_not_supported,
+                            size: 50, color: Colors.white),
+                      );
+                    } else {
+                      return snapshot.data ??
+                          Container(
+                            height: 150,
+                            width: double.infinity,
+                            color: Colors.grey,
+                            child: const Icon(Icons.image_not_supported,
+                                size: 50, color: Colors.white),
+                          );
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 5.0, left: 15, right: 15, bottom: 15),
+                child: Column(
                   children: [
-                    Container(
-                      width: width * 0.8,
-                      child: Text(
-                        plant.commonName ?? 'Unknown Plant',
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: width * 0.8,
+                          child: Text(
+                            plant.commonName ?? 'Unknown Plant',
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Container(
+                          width: width * 0.85,
+                          child: Text(
+                            plant.description ?? 'No description available.',
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            if (plant.id! != -1) {
+                              Get.to(() => GuideScreen(
+                                    plantId: plant.id!,
+                                    URL: plant.defaultImage?.mediumUrl ?? '',
+                                  ));
+                            } else {
+                              Get.to(() => GuideScreenCreated(
+                                    plantModel: plant,
+                                  ));
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainColor,
+                          ),
+                          child: const Text(
+                            "Show Guides",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: onRemove,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text(
+                            "Remove",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Container(
-                      width: width * 0.85,
-                      child: Text(
-                        plant.description ?? 'No description available.',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        if(plant.id! != -1){
-                          Get.to(() => GuideScreen(
-                                plantId: plant.id!,
-                                URL: plant.defaultImage?.mediumUrl ?? '',
-                              ));
-                        }else{
-                          Get.to(() => GuideScreenCreated(
-                                plantModel: plant,
-                              ));
-                        }    
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
-                      ),
-                      child: const Text(
-                        "Show Guides",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: onRemove,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                      ),
-                      child: const Text(
-                        "Remove",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
+        ),
+      );
+    },
   );
 }
 
@@ -326,10 +343,10 @@ Future<Widget> _buildImage(String imagePath) async {
   } else {
     // Construct the local file path
     String localImagePath = imagePath.contains('/')
-        ? imagePath  // Absolute path
+        ? imagePath // Absolute path
         : path.join(
             (await getApplicationDocumentsDirectory()).path, // Local directory
-            imagePath,  // Relative filename
+            imagePath, // Relative filename
           );
 
     print("This is a local file: $localImagePath");
@@ -349,7 +366,8 @@ Future<Widget> _buildImage(String imagePath) async {
         height: 150,
         width: double.infinity,
         color: Colors.grey,
-        child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
+        child: const Icon(Icons.image_not_supported,
+            size: 50, color: Colors.white),
       );
     }
   }

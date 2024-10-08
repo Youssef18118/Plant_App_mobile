@@ -17,17 +17,17 @@ class AddPlantCubit extends Cubit<AddPlantState> {
   AddPlantCubit() : super(AddPlantInitial());
 
   final TextEditingController plantNameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  // final TextEditingController descriptionController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   File? selectedImage;
   String? selectedImagename;
-  String? selectedGrowthRate;
-  int? selectedWatringDays;
-  String? selectedSunlight;
-  String? selectedPruningMonth;
-  String? selectedPlantType;
-  String? selectedLeafColor;
+  // String? selectedGrowthRate;
+  // int? selectedWatringDays;
+  // String? selectedSunlight;
+  // String? selectedPruningMonth;
+  // String? selectedPlantType;
+  // String? selectedLeafColor;
   
   void getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -44,24 +44,25 @@ class AddPlantCubit extends Cubit<AddPlantState> {
   }
 
   void clearTextfields(){
+    // plantNameController.clear();
+    // descriptionController.clear();
+    // _imageController.clear();
+    // selectedGrowthRate = null;
+    // selectedWatringDays = null;
+    // selectedSunlight = null;
+    // selectedPruningMonth = null;
+    // selectedImage = null;
+    // selectedImagename = null;
+    // selectedPlantType = null;
+    // selectedLeafColor = null;
+
     plantNameController.clear();
-    descriptionController.clear();
-    _imageController.clear();
-    selectedGrowthRate = null;
-    selectedWatringDays = null;
-    selectedSunlight = null;
-    selectedPruningMonth = null;
     selectedImage = null;
     selectedImagename = null;
-    selectedPlantType = null;
-    selectedLeafColor = null;
   }
 
   void addPlantToGarden({
     required String commonName,
-    required String description,
-    required String growthRate,
-    required List<String> leafColor,
     required File imageFile,
     required BuildContext context,
   }) async {
@@ -85,9 +86,6 @@ class AddPlantCubit extends Cubit<AddPlantState> {
     Map<String, dynamic> newPlant = {
       'id': newPlantId,
       'commonName': commonName,
-      'description': description,
-      'growthRate': growthRate,
-      'leafColor': leafColor,
       'imageUrl': fullImagePath,
     };
 
