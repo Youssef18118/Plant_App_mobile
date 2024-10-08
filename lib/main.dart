@@ -6,6 +6,7 @@ import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Signup/cubit/register_cubit.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/add%20your%20plant/cubit/add_plant_cubit.dart';
+import 'package:plant_app/Screens/guide%20Created/cubit/guide_created_cubit.dart';
 import 'package:plant_app/Screens/guide/cubit/guide_cubit.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
@@ -45,6 +46,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => GuideCubit()),
         BlocProvider(create: (context) => SpeciesCubit()..getAllSpecies()),
         BlocProvider(create: (context) => AddPlantCubit()),
+        BlocProvider(create: (context) => GuideCreatedCubit()),
       ],
       child: GetMaterialApp(
         navigatorKey: navigatorKey,

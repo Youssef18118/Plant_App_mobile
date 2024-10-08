@@ -9,6 +9,7 @@ import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
+import 'package:plant_app/Screens/guide%20Created/guideCreatedScreen.dart';
 import 'package:plant_app/Screens/guide/guideScreen.dart';
 import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
@@ -258,10 +259,16 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Get.to(() => GuideScreen(
-                              plantId: plant.id!,
-                              URL: plant.defaultImage?.mediumUrl ?? '',
-                            ));
+                        if(plant.id! != -1){
+                          Get.to(() => GuideScreen(
+                                plantId: plant.id!,
+                                URL: plant.defaultImage?.mediumUrl ?? '',
+                              ));
+                        }else{
+                          Get.to(() => GuideScreenCreated(
+                                plantModel: plant,
+                              ));
+                        }    
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
