@@ -3,13 +3,16 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_app/Screens/helpers/hive_helpers.dart';
+import 'package:plant_app/Screens/notification/notification.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
+import 'package:plant_app/const.dart';
 
 part 'add_plant_state.dart';
 
@@ -94,8 +97,36 @@ class AddPlantCubit extends Cubit<AddPlantState> {
     context.read<ProfileCubit>().fetchCreatedPlants();
 
     print('Plant added to garden: $commonName with image path: $fullImagePath');
+
+    
+    final daysToNotify = await generateGeminiContent("How many days we water the $commonName ? Only answer with one number. Example response is 7");
+    print("daysToNotify : $daysToNotify");
+
+    // Schedule recurring notification
+    DateTime notifyTime = DateTime.now().add(Duration(days: int.tryParse(daysToNotify)!));
+    int notificationId = commonName.hashCode;
+
+    await NotificationService.scheduleRecurringNotification(
+      notificationId,
+      "Water Reminder",
+      "It's time to water your $commonName",
+      notifyTime,
+      Duration(days: int.tryParse(daysToNotify)!), 
+    );
+
+    print('Water reminder notification scheduled for $commonName at $notifyTime with id $notificationId');
   }
 
+
+  Future<String> generateGeminiContent(String prompt) async {
+    final model = GenerativeModel(model: 'gemini-pro', apiKey: giminiKey);
+    final content = [Content.text(prompt)];
+    final response = await model.generateContent(content);
+
+    String cleanedText = response.text!.replaceAll(RegExp(r'\s?\*{1,2}\s?'), '');
+
+    return cleanedText.trim();  
+  }
 
 
 }

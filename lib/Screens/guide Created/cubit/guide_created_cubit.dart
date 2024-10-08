@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:meta/meta.dart';
+import 'package:plant_app/const.dart';
 
 part 'guide_created_state.dart';
 
@@ -30,7 +31,7 @@ class GuideCreatedCubit extends Cubit<GuideCreatedState> {
   }
 
   Future<String> generateGeminiContent(String prompt) async {
-    final model = GenerativeModel(model: 'gemini-pro', apiKey: 'AIzaSyDNVjNcPo44bPixymGcJtifeOCz0Olr0K0');
+    final model = GenerativeModel(model: 'gemini-pro', apiKey: giminiKey);
     final content = [Content.text(prompt)];
     final response = await model.generateContent(content);
 

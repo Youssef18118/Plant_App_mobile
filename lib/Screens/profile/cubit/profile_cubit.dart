@@ -199,6 +199,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         // Debug: Plant not found
         print('No plant found with common name: $commonName');
       }
+
+      cancelWateringNotification(commonName.hashCode);  
+
     } else {    
       cancelWateringNotification(plantId);  
       plantList.removeWhere((plant) => plant.id == plantId);  
@@ -209,10 +212,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       speciesCubit.notifyPlantChanged(plantId, false); 
       isPlantRemoved = true;  
     }
-
     emit(ProfileSuccessState());
-
-
   }
 
 
