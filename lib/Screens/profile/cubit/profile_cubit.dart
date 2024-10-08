@@ -105,6 +105,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     // Loop through each PlantModel and print details
     for (var plant in plantsFromHive) {
+      print('Plant ID: ${plant.id}');
       print('Plant commonName: ${plant.commonName}');
       print('Plant description: ${plant.description}');
       print('Plant growthRate: ${plant.growthRate}');

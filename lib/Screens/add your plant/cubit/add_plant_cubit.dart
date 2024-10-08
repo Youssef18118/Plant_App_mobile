@@ -70,6 +70,7 @@ class AddPlantCubit extends Cubit<AddPlantState> {
 
     // Create a new plant as a map
     Map<String, dynamic> newPlant = {
+      'id' : -1,
       'commonName': commonName,
       'description': description,
       'growthRate': growthRate,

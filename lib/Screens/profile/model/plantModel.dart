@@ -198,6 +198,7 @@ class PlantModel {
 
   factory PlantModel.fromMap(Map<String, dynamic> map) {
     return PlantModel(
+      id: map['id'],
       commonName: map['commonName'],  // CamelCase key
       description: map['description'],
       growthRate: map['growthRate'],  // CamelCase key
