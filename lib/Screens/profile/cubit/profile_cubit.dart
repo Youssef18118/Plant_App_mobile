@@ -83,6 +83,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     final plantIds = HiveHelpers.getPlantIds();
     for (var plantId in plantIds) {
+      // if(plantId == -1){
+      //   continue;
+      // }
       if (!fetchedPlantIds.contains(plantId)) {
         await getPlantById(plantId);
         fetchedPlantIds.add(plantId);
@@ -103,9 +106,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     // Loop through the list of plants and add to plantList only if it doesn't already exist
     for (var plant in plantsFromHive) {
       // Check if the plant with the same ID already exists in plantList
-      bool plantExists = plantList.any((existingPlant) => existingPlant.id == plant.id);
+      bool plantExists = plantList.any((existingPlant) => existingPlant.commonName == plant.commonName);
 
       if (!plantExists) {
+        print("added to list");
         plantList.add(plant); // Add only if it doesn't exist
       }
     }
@@ -155,7 +159,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey},
+        queryParameters: {'key': apiKey3},
         customBaseUrl: plantBaseUrl,
       );
 

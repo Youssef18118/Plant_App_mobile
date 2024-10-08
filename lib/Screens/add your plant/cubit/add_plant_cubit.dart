@@ -63,15 +63,14 @@ class AddPlantCubit extends Cubit<AddPlantState> {
     required String growthRate,
     required List<String> leafColor,
     required File imageFile,
-    required BuildContext context
+    required BuildContext context,
   }) async {
-
     String fullImagePath = imageFile.path;
 
     // Fetch all existing plants
     List existingPlants = HiveHelpers.getCreatedPlants();
 
-    // Check if plant already exists based on the commonName or another unique identifier
+    // Check if plant already exists based on the commonName
     bool plantExists = existingPlants.any((plant) => plant['commonName'] == commonName);
 
     if (plantExists) {
@@ -79,7 +78,8 @@ class AddPlantCubit extends Cubit<AddPlantState> {
       return; // Exit the function if the plant exists
     }
 
-    int newPlantId = existingPlants.isNotEmpty ? existingPlants.length : 0;
+    // Set all created plants to have an ID of -1
+    int newPlantId = -1;
 
     // Create a new plant as a map
     Map<String, dynamic> newPlant = {
@@ -94,7 +94,7 @@ class AddPlantCubit extends Cubit<AddPlantState> {
     // Add the new plant to Hive storage
     HiveHelpers.addCreatedPlant(newPlant); 
     context.read<ProfileCubit>().fetchCreatedPlants();
-    
+
     print('Plant added to garden: $commonName with image path: $fullImagePath');
   }
 
