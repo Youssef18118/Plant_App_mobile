@@ -97,13 +97,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     // Fetch the list of maps from Hive
     List<Map<String, dynamic>> createdPlantsList = HiveHelpers.getCreatedPlants();
 
-    // Cast the map to PlantModel objects and add to existing plantList
+    // Cast the map to PlantModel objects
     List<PlantModel> plantsFromHive = createdPlantsList.map((plantMap) => PlantModel.fromMap(plantMap)).toList();
 
-    // Add to the existing plant list
-    plantList.addAll(plantsFromHive);
+    // Loop through the list of plants and add to plantList only if it doesn't already exist
+    for (var plant in plantsFromHive) {
+      // Check if the plant with the same ID already exists in plantList
+      bool plantExists = plantList.any((existingPlant) => existingPlant.id == plant.id);
 
-    // Loop through each PlantModel and print details
+      if (!plantExists) {
+        plantList.add(plant); // Add only if it doesn't exist
+      }
+    }
+
+    // Print the details of all plants from Hive
     for (var plant in plantsFromHive) {
       print('Plant ID: ${plant.id}');
       print('Plant commonName: ${plant.commonName}');
@@ -116,8 +123,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(ProfileSuccessState());
   }
-
-
+ 
+  
   Future<void> addPlantToMyGarden(int plantId, BuildContext context) async {
     if (!fetchedPlantIds.contains(plantId)) {
       await getPlantById(plantId);
@@ -164,15 +171,21 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void removePlantById(
-      int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
-    cancelWateringNotification(plantId);
-    plantList.removeWhere((plant) => plant.id == plantId);
-    fetchedPlantIds.remove(plantId);
-    HiveHelpers.removePlantId(plantId);
-    homeCubit.addedPlantIds.remove(plantId);
-    homeCubit.emit(ToggeldSuccessState());
-    speciesCubit.notifyPlantChanged(plantId, false);
-    emit(ProfileSuccessState());
+      int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit, {String? commonName}) {
+
+    if (plantId == -1 && commonName != null) {
+      // Remove the plant from Hive by its common name if id == -1
+      HiveHelpers.removePlantByCommonName(commonName);
+    }else{    
+      cancelWateringNotification(plantId);
+      plantList.removeWhere((plant) => plant.id == plantId);
+      fetchedPlantIds.remove(plantId);
+      HiveHelpers.removePlantId(plantId);
+      homeCubit.addedPlantIds.remove(plantId);
+      homeCubit.emit(ToggeldSuccessState());
+      speciesCubit.notifyPlantChanged(plantId, false);
+      emit(ProfileSuccessState());
+    }
   }
 
   Future<void> scheduleWateringNotification(int plantId) async {

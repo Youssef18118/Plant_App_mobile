@@ -128,7 +128,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   profileCubit.removePlantById(
                                                       plant.id!,
                                                       homeCubit,
-                                                      speciesCubit);
+                                                      speciesCubit,
+                                                      commonName: plant.commonName
+                                                      );
                                                 },
                                                 child: Text("Delete"),
                                               ),

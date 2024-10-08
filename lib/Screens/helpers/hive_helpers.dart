@@ -54,6 +54,16 @@ class HiveHelpers {
     box.put(plantIdsKey, plantIds);
   }
 
+  static void removePlantByCommonName(String commonName) {
+    final plantBox = Hive.box(gardenCreatedBox);
+    
+    List<Map<String, dynamic>> plantList = plantBox.get(gardenCreatedKey, defaultValue: []);
+
+    plantList.removeWhere((plant) => plant['commonName'] == commonName);
+
+    plantBox.put(gardenCreatedKey, plantList);
+  }
+
   static String getProfileName(){
     final box = Hive.box(profileBox);
     return box.get(HiveHelpers.profileNameKey, defaultValue: "Unknown Name");
