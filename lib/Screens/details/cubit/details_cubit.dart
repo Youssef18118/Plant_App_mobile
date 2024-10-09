@@ -17,11 +17,11 @@ class PlantDetailsCubit extends Cubit<PlantDetailsState> {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
         queryParameters: {
-          'key': apiKey3,
+          'key': apiKeyW,
         },
         customBaseUrl: plantBaseUrl,
       );
-      
+
       if (response.statusCode == 200) {
         plantModel = PlantModel.fromJson(response.data);
         emit(PlantDetailsSuccessState());

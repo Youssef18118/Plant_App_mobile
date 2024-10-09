@@ -15,10 +15,8 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   HomeScreenCubit() : super(HomeScreenInitial());
   PlantSpeciesData plantSpeciesModel = PlantSpeciesData();
   List<PlantSpeciesData> plantsSpecies = [];
-  List<int> addedPlantIds =
-      HiveHelpers.getPlantIds(); 
+  List<int> addedPlantIds = HiveHelpers.getPlantIds();
 
-  
   void gettingPlants({String? searchText}) async {
     emit(GettingPlantsLoading());
 
@@ -44,7 +42,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final response = await DioHelpers.getData(
         path: '/api/species-list',
         queryParameters: {
-          'key': apiKey3,
+          'key': apiKeyW,
           'page': '1',
           if (searchText != null && searchText.isNotEmpty) 'q': searchText
         },
@@ -118,9 +116,8 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
 
   void clearAddedPlants() {
     addedPlantIds.clear();
-    HiveHelpers.clearPlantIds(); 
+    HiveHelpers.clearPlantIds();
 
-    
-    emit(GettingPlantsSuccess()); 
+    emit(GettingPlantsSuccess());
   }
 }

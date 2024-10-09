@@ -122,7 +122,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey3},
+        queryParameters: {'key': apiKeyW},
         customBaseUrl: plantBaseUrl,
       );
 
@@ -184,7 +184,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         "Water Reminder",
         "It's time to water your ${plant.commonName}",
         notifyTime,
-        Duration(days: daysToNotify), 
+        Duration(days: daysToNotify),
       );
 
       print("notification has been sent at $notifyTime");

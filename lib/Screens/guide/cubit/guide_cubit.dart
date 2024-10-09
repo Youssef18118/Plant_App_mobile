@@ -16,7 +16,7 @@ class GuideCubit extends Cubit<GuideState> {
       final response = await DioHelpers.getData(
         path: "/api/species-care-guide-list",
         queryParameters: {
-          'key': apiKey3,
+          'key': apiKeyW,
           'species_id': plantId,
           // 'page' : 1
         },
