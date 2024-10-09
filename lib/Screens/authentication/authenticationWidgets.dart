@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Signup/register.dart';
-import 'package:plant_app/const.dart';
 
 Widget btn_auth(double width, double height, bool Login_state) {
   return InkWell(

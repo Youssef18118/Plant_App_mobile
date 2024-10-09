@@ -8,7 +8,7 @@ import 'package:plant_app/const.dart';
 class GuideScreenCreated extends StatefulWidget {
   final PlantModel plantModel;
 
-  GuideScreenCreated({required this.plantModel});
+  const GuideScreenCreated({required this.plantModel});
 
   @override
   _GuideScreenCreatedState createState() => _GuideScreenCreatedState();

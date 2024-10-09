@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:plant_app/Screens/Login/cubit/login_cubit.dart';
 import 'package:plant_app/Screens/Login/login.dart';
 import 'package:plant_app/Screens/Species/cubit/species_cubit.dart';
-import 'package:plant_app/Screens/details%20created/cubit/details_created_cubit.dart';
 import 'package:plant_app/Screens/details%20created/detailsCreatedScreen.dart';
 import 'package:plant_app/Screens/details/PlantDetailScreen.dart';
 import 'package:plant_app/Screens/guide%20Created/guideCreatedScreen.dart';
@@ -136,7 +134,6 @@ Widget ProfileInfo(
   );
 }
 
-// Logout confirmation dialog function
 void _showLogoutDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -177,7 +174,7 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
     builder: (context, state) {
       return GestureDetector(
         onTap: () {
-          print("Details page of index $index");
+          // print("Details page of index $index");
           if (plant.id != -1) {
             Get.to(() => PlantDetailScreen(
                   plantId: plant.id!,
@@ -317,13 +314,11 @@ Widget PlantCard(PlantModel plant, List<PlantModel> plantList, int index,
   );
 }
 
-// Helper function to build image (either network or local file)
 Future<Widget> _buildImage(String imagePath) async {
-  print("Image Path/URL: $imagePath");
+  // print("Image Path/URL: $imagePath");
 
-  // Check if the path is a URL (contains 'http' or 'https')
   if (imagePath.startsWith('http')) {
-    print("This is a network URL: $imagePath");
+    // print("This is a network URL: $imagePath");
     return CachedNetworkImage(
       imageUrl: imagePath,
       height: 150,
@@ -341,17 +336,15 @@ Future<Widget> _buildImage(String imagePath) async {
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   } else {
-    // Construct the local file path
     String localImagePath = imagePath.contains('/')
-        ? imagePath // Absolute path
+        ? imagePath 
         : path.join(
-            (await getApplicationDocumentsDirectory()).path, // Local directory
-            imagePath, // Relative filename
+            (await getApplicationDocumentsDirectory()).path,
+            imagePath, 
           );
 
-    print("This is a local file: $localImagePath");
+    // print("This is a local file: $localImagePath");
 
-    // Try loading the image as a local file
     if (File(localImagePath).existsSync()) {
       return Image.file(
         File(localImagePath),
@@ -360,8 +353,7 @@ Future<Widget> _buildImage(String imagePath) async {
         fit: BoxFit.cover,
       );
     } else {
-      // If the file doesn't exist, show a placeholder
-      print("Local file not found: $localImagePath");
+      // print("Local file not found: $localImagePath");
       return Container(
         height: 150,
         width: double.infinity,

@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:plant_app/Screens/Login/login.dart';
-import 'package:plant_app/Screens/Login/login.dart';
-import 'package:plant_app/Screens/Login/login.dart';
-import 'package:plant_app/Screens/Login/login.dart';
-import 'package:plant_app/Screens/Signup/register.dart';
 import 'package:plant_app/Screens/authentication/authenticationWidgets.dart';
 import 'package:plant_app/const.dart';
 

@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';

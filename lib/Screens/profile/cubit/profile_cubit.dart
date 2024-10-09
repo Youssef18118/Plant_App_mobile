@@ -40,7 +40,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       emit(ProfileSuccessState());
     } else {
-      // Fetch profile data from API if not stored locally
       getProfile();
     }
   }
@@ -94,33 +93,28 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
   
   void fetchCreatedPlants() async {
-    // Fetch the list of maps from Hive
     List<Map<String, dynamic>> createdPlantsList = HiveHelpers.getCreatedPlants();
 
-    // Cast the map to PlantModel objects
     List<PlantModel> plantsFromHive = createdPlantsList.map((plantMap) => PlantModel.fromMap(plantMap)).toList();
 
-    // Loop through the list of plants and add to plantList only if it doesn't already exist
     for (var plant in plantsFromHive) {
-      // Check if the plant with the same name already exists in plantList
       bool plantExists = plantList.any((existingPlant) => existingPlant.commonName == plant.commonName);
 
       if (!plantExists) {
-        print("added to list");
-        plantList.add(plant); // Add only if it doesn't exist
+        // print("added to list");
+        plantList.add(plant); 
       }
     }
 
-    // Print the details of all plants from Hive
-    for (var plant in plantsFromHive) {
-      print('Plant ID: ${plant.id}');
-      print('Plant commonName: ${plant.commonName}');
-      print('Plant description: ${plant.description}');
-      print('Plant growthRate: ${plant.growthRate}');
-      print('Plant leafColor: ${plant.leafColor}');
-      print('Plant imageUrl: ${plant.defaultImage?.mediumUrl}');
-      print('---------------------------');
-    }
+    // for (var plant in plantsFromHive) {
+    //   print('Plant ID: ${plant.id}');
+    //   print('Plant commonName: ${plant.commonName}');
+    //   print('Plant description: ${plant.description}');
+    //   print('Plant growthRate: ${plant.growthRate}');
+    //   print('Plant leafColor: ${plant.leafColor}');
+    //   print('Plant imageUrl: ${plant.defaultImage?.mediumUrl}');
+    //   print('---------------------------');
+    // }
 
     emit(ProfileSuccessState());
   }
@@ -173,31 +167,25 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void removePlantById(
     int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit, {String? commonName}) {
-    print('removePlantById called with plantId: $plantId, commonName: $commonName');
+    // print('removePlantById called with plantId: $plantId, commonName: $commonName');
 
-    // Flag to determine if plant was successfully removed
     bool isPlantRemoved = false;
 
     if (plantId == -1 && commonName != null) {
-      // Debug: Removing by common name
-      print('Removing plant by common name: $commonName');
+      // print('Removing plant by common name: $commonName');
 
-      // Remove the plant from Hive by its common name if id == -1
       final plant = HiveHelpers.getPlantByCommonName(commonName);
       
       if (plant != null) {
-        // Debug: Found plant to remove
-        print('Found plant: $plant');
+        // print('Found plant: $plant');
 
         plantList.removeWhere((p) => p.commonName == commonName);  
         HiveHelpers.removePlantByCommonName(commonName);  
         isPlantRemoved = true;
         
-        // Debug: Plant removed successfully
-        print('Plant removed successfully by common name: $commonName');
+        // print('Plant removed successfully by common name: $commonName');
       } else {
-        // Debug: Plant not found
-        print('No plant found with common name: $commonName');
+        // print('No plant found with common name: $commonName');
       }
 
       cancelWateringNotification(commonName.hashCode);  
@@ -235,7 +223,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
       // DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
 
-      // Log the scheduled notification to Firestore
       await FirebaseFirestore.instance
           .collection('scheduled_notifications')
           .add({
@@ -256,7 +243,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         Duration(days: daysToNotify), 
       );
 
-      print("notification has been sent at $notifyTime with id $notificationId");
+      // print("notification has been sent at $notifyTime with id $notificationId");
     }
   }
 
@@ -271,7 +258,6 @@ class ProfileCubit extends Cubit<ProfileState> {
           .where('plant_id', isEqualTo: plantId)
           .get();
 
-      // Delete the document(s) from Firebase
       for (var doc in snapshot.docs) {
         await FirebaseFirestore.instance
             .collection('scheduled_notifications')

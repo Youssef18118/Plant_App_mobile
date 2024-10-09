@@ -1,17 +1,11 @@
 import 'dart:io';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/notification/notification.dart';
 import 'package:plant_app/Screens/profile/cubit/profile_cubit.dart';
-import 'package:plant_app/Screens/profile/model/plantModel.dart';
 import 'package:plant_app/const.dart';
 
 part 'add_plant_state.dart';
@@ -78,7 +72,7 @@ class AddPlantCubit extends Cubit<AddPlantState> {
     bool plantExists = existingPlants.any((plant) => plant['commonName'] == commonName);
 
     if (plantExists) {
-      print('Plant already exists in the garden');
+      // print('Plant already exists in the garden');
       return; // Exit the function if the plant exists
     }
 
@@ -96,11 +90,11 @@ class AddPlantCubit extends Cubit<AddPlantState> {
     HiveHelpers.addCreatedPlant(newPlant); 
     context.read<ProfileCubit>().fetchCreatedPlants();
 
-    print('Plant added to garden: $commonName with image path: $fullImagePath');
+    // print('Plant added to garden: $commonName with image path: $fullImagePath');
 
     
     final daysToNotify = await generateGeminiContent("How many days we water the $commonName ? Only answer with one number. Example response is 7");
-    print("daysToNotify : $daysToNotify");
+    // print("daysToNotify : $daysToNotify");
 
     // Schedule recurring notification
     DateTime notifyTime = DateTime.now().add(Duration(days: int.tryParse(daysToNotify)!));
@@ -114,7 +108,7 @@ class AddPlantCubit extends Cubit<AddPlantState> {
       Duration(days: int.tryParse(daysToNotify)!), 
     );
 
-    print('Water reminder notification scheduled for $commonName at $notifyTime with id $notificationId');
+    // print('Water reminder notification scheduled for $commonName at $notifyTime with id $notificationId');
   }
 
 

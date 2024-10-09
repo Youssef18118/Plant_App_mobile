@@ -4,7 +4,7 @@ import 'package:plant_app/Screens/add%20your%20plant/cubit/add_plant_cubit.dart'
 import 'add_your_plant_Widgets.dart';
 
 class AddYourPlantScreen extends StatefulWidget {
-  AddYourPlantScreen({super.key});
+  const AddYourPlantScreen({super.key});
 
   @override
   State<AddYourPlantScreen> createState() => _AddYourPlantScreenState();

@@ -35,7 +35,7 @@ class PlantDetailWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    print("image url: $imageUrl");
+    // print("image url: $imageUrl");
 
     return SingleChildScrollView(
       child: Padding(

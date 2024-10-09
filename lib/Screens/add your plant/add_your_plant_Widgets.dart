@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plant_app/Screens/add%20your%20plant/cubit/add_plant_cubit.dart';

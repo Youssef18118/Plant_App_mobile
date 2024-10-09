@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant_app/Screens/details%20created/cubit/details_created_cubit.dart';
 import 'package:plant_app/Screens/details%20created/detailsCreatedWidgets.dart';
-import 'package:plant_app/Screens/details/PlantDetailWidgets.dart';
 import 'package:plant_app/Screens/profile/model/plantModel.dart';
 
 class PlantDetailScreenCreated extends StatefulWidget {
@@ -19,7 +18,6 @@ class _PlantDetailScreenCreatedState extends State<PlantDetailScreenCreated> {
   @override
   void initState() {
     super.initState();
-    // Call the function to fetch plant details when the widget is first created
     context.read<DetailsCreatedCubit>().generatePlantDetails(widget.plantModel.commonName ?? 'Unknown Plant');
   }
 
@@ -71,12 +69,12 @@ class _PlantDetailScreenCreatedState extends State<PlantDetailScreenCreated> {
                 imagePath: widget.plantModel.defaultImage?.mediumUrl ?? 'assets/images/logoWithoutText.png',
                 plantName: widget.plantModel.commonName ?? 'Unknown Plant',
                 type: widget.plantModel.type ?? 'Unknown Type',
-                details: state.description, // from API
+                details: state.description, 
                 origin: widget.plantModel.origin?.join(', ') ?? 'N/A',
-                growthRate: state.growthRate, // from API
-                watering: state.watering, // from API
-                sunlight: state.sunlight.split(','), // from API
-                pruningMonth: state.pruning.split(','), // from API
+                growthRate: state.growthRate, 
+                watering: state.watering, 
+                sunlight: state.sunlight.split(','), 
+                pruningMonth: state.pruning.split(','), 
                 leafColor: widget.plantModel.leafColor ?? [],
                 rating: 4.0, 
                 themeColor: const Color(0xFF3DADA0),
