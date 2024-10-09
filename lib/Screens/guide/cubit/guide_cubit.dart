@@ -15,15 +15,18 @@ class GuideCubit extends Cubit<GuideState> {
 
     try {
       emit(GuideLoadingState());
-      final response = await DioHelpers.getData(
-        path: "/api/species-care-guide-list",
-        queryParameters: {
-          'key': apiKey3,
-          'species_id': plantId,
-          // 'page' : 1
-        },
-        customBaseUrl: plantBaseUrl,
-      );
+
+      // Loop through API keys until successful or all keys are exhausted
+      while (!success && currentApiKeyIndex < apiKeys.length) {
+        try {
+          final response = await DioHelpers.getData(
+            path: "/api/species-care-guide-list",
+            queryParameters: {
+              'key': apiKeys[currentApiKeyIndex], // Use current API key
+              'species_id': plantId,
+            },
+            customBaseUrl: plantBaseUrl,
+          );
 
           if (response.statusCode == 200) {
             guideModel = GuideModel.fromJson(response.data);

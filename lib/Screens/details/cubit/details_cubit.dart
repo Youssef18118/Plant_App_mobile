@@ -16,19 +16,32 @@ class PlantDetailsCubit extends Cubit<PlantDetailsState> {
     try {
       emit(PlantDetailsLoadingState());
 
-      final response = await DioHelpers.getData(
-        path: "/api/species/details/$plantId",
-        queryParameters: {
-          'key': apiKey3,
-        },
-        customBaseUrl: plantBaseUrl,
-      );
-      
-      if (response.statusCode == 200) {
-        plantModel = PlantModel.fromJson(response.data);
-        emit(PlantDetailsSuccessState());
-      } else {
-        emit(PlantDetailsErrorState("Failed to fetch plant details"));
+      while (!success && currentApiKeyIndex < apiKeys.length) {
+        try {
+          final response = await DioHelpers.getData(
+            path: "/api/species/details/$plantId",
+            queryParameters: {
+              'key': apiKeys[currentApiKeyIndex], 
+            },
+            customBaseUrl: plantBaseUrl,
+          );
+
+          if (response.statusCode == 200) {
+            plantModel = PlantModel.fromJson(response.data);
+            success = true; 
+            emit(PlantDetailsSuccessState());
+          } else {
+            currentApiKeyIndex++;
+            if (currentApiKeyIndex >= apiKeys.length) {
+              emit(PlantDetailsErrorState("Failed to fetch plant details (all keys exhausted)"));
+            }
+          }
+        } catch (e) {
+          currentApiKeyIndex++;
+          if (currentApiKeyIndex >= apiKeys.length) {
+            emit(PlantDetailsErrorState('Error: ${e.toString()}'));
+          }
+        }
       }
     } catch (e) {
       emit(PlantDetailsErrorState('Error: ${e.toString()}'));
