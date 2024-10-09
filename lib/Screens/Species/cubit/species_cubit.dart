@@ -28,7 +28,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     try {
       final response = await DioHelpers.getData(
         path: "/api/species-list",
-        queryParameters: {'key': apiKey3, 'page': currentPage},
+        queryParameters: {'key': apiKey4, 'page': currentPage},
         customBaseUrl: plantBaseUrl,
       );
 
