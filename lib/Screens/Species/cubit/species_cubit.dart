@@ -85,56 +85,73 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       HomeScreenCubit homeCubit,
       SpeciesCubit speciesCubit,
       BuildContext context) async {
-    if (addedPlantIds.contains(plantId)) {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Remove Plant"),
-            content: Text(
-                "Are you sure you want to remove this plant from the garden?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Cancel"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Remove plant from Hive and update state
-                  HiveHelpers.removePlantId(plantId);
-                  addedPlantIds.remove(plantId);
 
-                  profileCubit.removePlantById(
-                      plantId, homeCubit, speciesCubit);
+    // Emit loading state with the plantId being toggled
+    emit(TogglePlantSpeciesLoading(plantId));
 
-                  // Notify home screen to remove the plant
-                  homeCubit.addedPlantIds.remove(plantId);
-                  homeCubit.emit(ToggeldSuccessState());
+    try {
+      if (addedPlantIds.contains(plantId)) {
+        await showDialog(
+          context: context,
+          barrierDismissible: true,  // Allow dismissal by tapping outside
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Remove Plant"),
+              content: Text(
+                  "Are you sure you want to remove this plant from the garden?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    emit(ToggledPlantSpeciesSuccessState()); // Emit success state when canceled
+                  },
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // Remove plant from Hive and update state
+                    HiveHelpers.removePlantId(plantId);
+                    addedPlantIds.remove(plantId);
 
-                  emit(ToggePlantldSuccessState());
-                },
-                child: Text("Delete"),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      HiveHelpers.addPlantId(plantId);
-      addedPlantIds.add(plantId);
+                    profileCubit.removePlantById(
+                        plantId, homeCubit, speciesCubit);
 
-      await profileCubit.addPlantToMyGarden(plantId, context);
+                    // Notify home screen to remove the plant
+                    homeCubit.addedPlantIds.remove(plantId);
+                    homeCubit.emit(ToggledSuccessState());
 
-      // Notify home screen to add the plant
-      homeCubit.addedPlantIds.add(plantId);
-      homeCubit.emit(ToggeldSuccessState());
+                    emit(ToggledPlantSpeciesSuccessState()); // Emit success state
+                  },
+                  child: Text("Delete"),
+                ),
+              ],
+            );
+          },
+        ).then((value) {
+          // This will execute when the dialog is dismissed by tapping outside
+          if (value == null) {
+            emit(ToggledPlantSpeciesSuccessState()); // Emit success state for cancel
+          }
+        });
+      } else {
+        HiveHelpers.addPlantId(plantId);
+        addedPlantIds.add(plantId);
 
-      emit(ToggePlantldSuccessState());
+        await profileCubit.addPlantToMyGarden(plantId, context);
+
+        // Notify home screen to add the plant
+        homeCubit.addedPlantIds.add(plantId);
+        homeCubit.emit(ToggledSuccessState());
+
+        emit(ToggledPlantSpeciesSuccessState()); // Emit success state
+      }
+    } catch (e) {
+      emit(TogglePlantSpeciesFailed(msg: 'Error occurred while toggling plant'));
     }
   }
+
+
 
   // New function to notify the species screen when a plant is added/removed
   void notifyPlantChanged(int plantId, bool isAdded) {

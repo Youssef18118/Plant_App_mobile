@@ -208,7 +208,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       fetchedPlantIds.remove(plantId);  
       HiveHelpers.removePlantId(plantId); 
       homeCubit.addedPlantIds.remove(plantId);  
-      homeCubit.emit(ToggeldSuccessState()); 
+      homeCubit.emit(ToggledSuccessState()); 
       speciesCubit.notifyPlantChanged(plantId, false); 
       isPlantRemoved = true;  
     }

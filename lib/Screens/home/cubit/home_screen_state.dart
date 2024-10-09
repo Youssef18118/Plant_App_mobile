@@ -16,4 +16,14 @@ final class GettingPlantsLoading extends HomeScreenState {}
 
 final class ChangeButton extends HomeScreenState {}
 
-final class ToggeldSuccessState extends HomeScreenState {}
+class TogglePlantLoading extends HomeScreenState {
+  final int plantId;
+  TogglePlantLoading(this.plantId); // Store the plant being toggled
+}
+
+class ToggledSuccessState extends HomeScreenState {}
+
+class TogglePlantFailed extends HomeScreenState {
+  final String msg;
+  TogglePlantFailed({required this.msg});
+}

@@ -66,23 +66,29 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   }
 
   void togglePlant(
-      int plantId,
-      ProfileCubit profileCubit,
-      HomeScreenCubit homeCubit,
-      SpeciesCubit speciesCubit,
-      BuildContext context) async {
-    if (addedPlantIds.contains(plantId)) {
-      await showDialog(
+    int plantId,
+    ProfileCubit profileCubit,
+    HomeScreenCubit homeCubit,
+    SpeciesCubit speciesCubit,
+    BuildContext context,
+  ) async {
+    // Emit loading state with the plantId being toggled
+    emit(TogglePlantLoading(plantId));
+
+    try {
+      if (addedPlantIds.contains(plantId)) {
+        await showDialog(
           context: context,
+          barrierDismissible: true, // Allow dismissal by tapping outside
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text("Remove Plant"),
-              content: Text(
-                  "Are you sure you want to remove this plant from the garden?"),
+              content: Text("Are you sure you want to remove this plant from the garden?"),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    emit(ToggledSuccessState());
                   },
                   child: Text("Cancel"),
                 ),
@@ -91,30 +97,33 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
                     Navigator.of(context).pop();
                     HiveHelpers.removePlantId(plantId);
                     addedPlantIds.remove(plantId);
-
-                    profileCubit.removePlantById(
-                        plantId, homeCubit, speciesCubit);
-
-                    emit(ToggeldSuccessState());
-
+                    profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
+                    emit(ToggledSuccessState());
                     speciesCubit.notifyPlantChanged(plantId, false);
                   },
                   child: Text("Delete"),
                 ),
               ],
             );
-          });
-    } else {
-      HiveHelpers.addPlantId(plantId);
-      addedPlantIds.add(plantId);
-
-      await profileCubit.addPlantToMyGarden(plantId, context);
-
-      emit(ToggeldSuccessState());
-
-      speciesCubit.notifyPlantChanged(plantId, true);
+          },
+        ).then((value) {
+          // This block runs when the dialog is dismissed by tapping outside
+          if (value == null) {
+            emit(ToggledSuccessState());
+          }
+        });
+      } else {
+        HiveHelpers.addPlantId(plantId);
+        addedPlantIds.add(plantId);
+        await profileCubit.addPlantToMyGarden(plantId, context);
+        emit(ToggledSuccessState());
+        speciesCubit.notifyPlantChanged(plantId, true);
+      }
+    } catch (e) {
+      emit(TogglePlantFailed(msg: 'Error occurred while toggling plant'));
     }
   }
+
 
   void clearAddedPlants() {
     addedPlantIds.clear();
