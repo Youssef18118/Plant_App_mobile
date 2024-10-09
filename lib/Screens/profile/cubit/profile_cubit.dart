@@ -147,21 +147,33 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> getPlantById(int plantId) async {
     if (plantList.any((plant) => plant.id == plantId)) return;
 
-    try {
-      final response = await DioHelpers.getData(
-        path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKey4},
-        customBaseUrl: plantBaseUrl,
-      );
+    bool success = false;
+    
+    while (!success && currentApiKeyIndex < apiKeys.length) {
+      try {
+        final response = await DioHelpers.getData(
+          path: "/api/species/details/$plantId",
+          queryParameters: {'key': apiKeys[currentApiKeyIndex]}, // Use current key
+          customBaseUrl: plantBaseUrl,
+        );
 
-      if (response.statusCode == 200) {
-        final plant = PlantModel.fromJson(response.data);
-        plantList.add(plant);
-      } else {
-        emit(ProfileErrorState("Failed to fetch plant details"));
+        if (response.statusCode == 200) {
+          final plant = PlantModel.fromJson(response.data);
+          plantList.add(plant);
+          success = true; // Stop trying if successful
+        } else {
+          // If the response is not 200, move to the next key
+          currentApiKeyIndex++;
+          if (currentApiKeyIndex >= apiKeys.length) {
+            emit(ProfileErrorState("All API keys failed to fetch plant details"));
+          }
+        }
+      } catch (e) {
+        currentApiKeyIndex++;
+        if (currentApiKeyIndex >= apiKeys.length) {
+          emit(ProfileErrorState("Error: ${e.toString()}"));
+        }
       }
-    } catch (e) {
-      emit(ProfileErrorState(e.toString()));
     }
   }
 

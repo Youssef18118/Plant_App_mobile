@@ -16,3 +16,6 @@ const plantBaseUrl = "https://perenual.com";
 const String appBarImagePath = 'assets/images/ProfileBackground.png';
 const Color greyColor = Color.fromARGB(255, 224, 221, 221);
 const Color mainColor = Color(0xffFF1AAD81);
+
+List<String> apiKeys = [apiKey, apiKey2, apiKey3, apiKey4, apiKey5 , apiKeyW];
+int currentApiKeyIndex = 0; 

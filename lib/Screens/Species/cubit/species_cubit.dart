@@ -24,38 +24,60 @@ class SpeciesCubit extends Cubit<SpeciesState> {
   }
 
   Future<void> _fetchSpecies() async {
+    bool success = false;
+
     try {
-      final response = await DioHelpers.getData(
-        path: "/api/species-list",
-        queryParameters: {'key': apiKey4, 'page': currentPage},
-        customBaseUrl: plantBaseUrl,
-      );
+      // Loop through API keys until successful or all keys are exhausted
+      while (!success && currentApiKeyIndex < apiKeys.length) {
+        try {
+          final response = await DioHelpers.getData(
+            path: "/api/species-list",
+            queryParameters: {
+              'key': apiKeys[currentApiKeyIndex], // Use current API key
+              'page': currentPage,
+            },
+            customBaseUrl: plantBaseUrl,
+          );
 
-      PlantSpeciesModel currentPageModel =
-          PlantSpeciesModel.fromJson(response.data);
+          PlantSpeciesModel currentPageModel =
+              PlantSpeciesModel.fromJson(response.data);
 
-      if (response.statusCode == 200 && currentPageModel.data != null) {
-        if (currentPage == 1) {
-          model.data = currentPageModel.data;
-          filteredSpecies = model.data;
-        } else {
-          model.data!.addAll(currentPageModel.data!);
-          filteredSpecies = model.data;
+          if (response.statusCode == 200 && currentPageModel.data != null) {
+            if (currentPage == 1) {
+              model.data = currentPageModel.data;
+              filteredSpecies = model.data;
+            } else {
+              model.data!.addAll(currentPageModel.data!);
+              filteredSpecies = model.data;
+            }
+
+            // If no more data, stop loading
+            if (currentPageModel.data!.isEmpty) {
+              isLoadingMore = false;
+            }
+
+            success = true; // Stop trying if successful
+            emit(speciesSuccessState());
+          } else {
+            // If response is not 200, switch to the next key
+            currentApiKeyIndex++;
+            if (currentApiKeyIndex >= apiKeys.length) {
+              emit(speciesErrorState("Failed to load species (all keys exhausted)"));
+            }
+          }
+        } catch (e) {
+          // If an error occurs, move to the next key
+          currentApiKeyIndex++;
+          if (currentApiKeyIndex >= apiKeys.length) {
+            emit(speciesErrorState("Failed to load species: ${e.toString()}"));
+          }
         }
-
-        // If no more data, stop loading
-        if (currentPageModel.data!.isEmpty) {
-          isLoadingMore = false;
-        }
-
-        emit(speciesSuccessState());
-      } else {
-        emit(speciesErrorState("Failed to load species"));
       }
     } catch (e) {
       emit(speciesErrorState("Failed to load species: ${e.toString()}"));
     }
   }
+
 
   void loadMoreSpecies() async {
     if (isLoadingMore) return; // Prevent multiple loads at the same time

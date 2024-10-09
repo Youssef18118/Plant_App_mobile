@@ -11,26 +11,45 @@ class GuideCubit extends Cubit<GuideState> {
   GuideModel guideModel = GuideModel();
 
   Future<void> getGuideById(int plantId) async {
+    bool success = false;
+
     try {
       emit(GuideLoadingState());
-      final response = await DioHelpers.getData(
-        path: "/api/species-care-guide-list",
-        queryParameters: {
-          'key': apiKey4,
-          'species_id': plantId,
-          // 'page' : 1
-        },
-        customBaseUrl: plantBaseUrl,
-      );
 
-      if (response.statusCode == 200) {
-        guideModel = GuideModel.fromJson(response.data);
-        emit(GuideSuccessState());
-      } else {
-        emit(GuideErrorState("Failed to fetch plant details"));
+      // Loop through API keys until successful or all keys are exhausted
+      while (!success && currentApiKeyIndex < apiKeys.length) {
+        try {
+          final response = await DioHelpers.getData(
+            path: "/api/species-care-guide-list",
+            queryParameters: {
+              'key': apiKeys[currentApiKeyIndex], // Use current API key
+              'species_id': plantId,
+            },
+            customBaseUrl: plantBaseUrl,
+          );
+
+          if (response.statusCode == 200) {
+            guideModel = GuideModel.fromJson(response.data);
+            success = true; // Stop if successful
+            emit(GuideSuccessState());
+          } else {
+            // If response is not 200, switch to the next key
+            currentApiKeyIndex++;
+            if (currentApiKeyIndex >= apiKeys.length) {
+              emit(GuideErrorState("Failed to fetch plant details (all keys exhausted)"));
+            }
+          }
+        } catch (e) {
+          // If an error occurs, move to the next key
+          currentApiKeyIndex++;
+          if (currentApiKeyIndex >= apiKeys.length) {
+            emit(GuideErrorState('Error: ${e.toString()}'));
+          }
+        }
       }
     } catch (e) {
-      emit(GuideErrorState(e.toString()));
+      emit(GuideErrorState('Error: ${e.toString()}'));
     }
   }
+
 }
