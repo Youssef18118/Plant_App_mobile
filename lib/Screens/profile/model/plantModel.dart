@@ -196,6 +196,17 @@ class PlantModel {
     otherImages = json['other_images'];
   }
 
+  factory PlantModel.fromMap(Map<String, dynamic> map) {
+    return PlantModel(
+      id: map['id'],
+      commonName: map['commonName'],  // CamelCase key
+      description: map['description'],
+      growthRate: map['growthRate'],  // CamelCase key
+      leafColor: map['leafColor'] is List ? List<String>.from(map['leafColor']) : [],
+      defaultImage: map['imageUrl'] != null ? DefaultImage(mediumUrl: map['imageUrl']) : null,
+    );
+  }
+
 }
 
 class Dimensions {

@@ -92,53 +92,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             )
                           : ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              itemCount: plantList.length,
-                              separatorBuilder: (context, index) => SizedBox(
-                                height: 10,
-                              ),
-                              itemBuilder: (context, index) {
-                                final plant = plantList[index];
-                                return PlantCard(
-                                  plant,
-                                  plantList,
-                                  index,
-                                  profileCubit,
-                                  width,
-                                  onRemove: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text("Remove Plant"),
-                                            content: Text(
-                                                "Are you sure you want to remove this plant from the garden?"),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text("Cancel"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                  profileCubit.removePlantById(
-                                                      plant.id!,
-                                                      homeCubit,
-                                                      speciesCubit);
-                                                },
-                                                child: Text("Delete"),
-                                              ),
-                                            ],
-                                          );
-                                        });
-                                  },
-                                );
-                              },
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: plantList.length,
+                            separatorBuilder: (context, index) =>
+                                SizedBox(
+                              height: 10,
                             ),
+                            itemBuilder: (context, index) {
+                              final plant = plantList[index];
+                              return PlantCard(
+                                plant,
+                                plantList,
+                                index,
+                                profileCubit,
+                                width,
+                                onRemove: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Remove Plant"),
+                                          content: Text(
+                                              "Are you sure you want to remove this plant from the garden?"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop();
+                                              },
+                                              child: Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop();
+                                                profileCubit
+                                                    .removePlantById(
+                                                        plant.id!,
+                                                        homeCubit,
+                                                        speciesCubit,
+                                                        commonName: plant
+                                                            .commonName);
+                                              },
+                                              child: Text("Delete"),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                },
+                              );
+                            },
+                          ),
                     ],
                   ),
                 ),

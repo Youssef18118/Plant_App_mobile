@@ -108,25 +108,32 @@ Widget PlantCard(PlantSpeciesData? plantdata, double width, double height,
                       children: [
                         BlocBuilder<SpeciesCubit, SpeciesState>(
                           builder: (context, state) {
-                            final isAdded = cubit.addedPlantIds
-                                .contains(plantdata?.id ?? 1);
+                            final isAdded = cubit.addedPlantIds.contains(plantdata?.id ?? 1);
+                            final isProcessing = state is TogglePlantSpeciesLoading && state.plantId == plantdata?.id;
+
                             return ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isAdded
-                                    ? Colors.red
-                                    : Color.fromARGB(255, 26, 173, 129),
+                                backgroundColor: isProcessing
+                                    ? Colors.grey // Gray color when processing
+                                    : (isAdded ? Colors.red : Color.fromARGB(255, 26, 173, 129)),
                               ),
-                              onPressed: () {
-                                cubit.togglePlant(plantdata?.id ?? 1,
-                                    profileCubit, homeCubit, cubit, context);
+                              onPressed: isProcessing ? null : () {
+                                cubit.togglePlant(plantdata?.id ?? 1, profileCubit, homeCubit, cubit, context);
                               },
-                              child: Text(
-                                isAdded ? 'Remove' : 'Garden',
-                                style: TextStyle(
-                                    fontSize: width * 0.036,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: isProcessing 
+                                  ? Icon( 
+                                      Icons.hourglass_empty, // Show hourglass icon while processing
+                                      color: Colors.white,
+                                      size: width * 0.05, // Adjust icon size as needed
+                                    ) 
+                                  : Text(
+                                      isAdded ? 'Remove' : 'Garden',
+                                      style: TextStyle(
+                                        fontSize: width * 0.036,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             );
                           },
                         ),

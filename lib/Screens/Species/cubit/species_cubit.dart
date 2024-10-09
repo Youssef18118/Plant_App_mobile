@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:plant_app/Screens/helpers/hive_helpers.dart';
 import 'package:plant_app/Screens/home/cubit/home_screen_cubit.dart';
 import 'package:plant_app/Screens/home/model/plant_species_model.dart';
@@ -25,38 +24,60 @@ class SpeciesCubit extends Cubit<SpeciesState> {
   }
 
   Future<void> _fetchSpecies() async {
+    bool success = false;
+
     try {
-      final response = await DioHelpers.getData(
-        path: "/api/species-list",
-        queryParameters: {'key': apiKeyW, 'page': currentPage},
-        customBaseUrl: plantBaseUrl,
-      );
+      // Loop through API keys until successful or all keys are exhausted
+      while (!success && currentApiKeyIndex < apiKeys.length) {
+        try {
+          final response = await DioHelpers.getData(
+            path: "/api/species-list",
+            queryParameters: {
+              'key': apiKeys[currentApiKeyIndex], // Use current API key
+              'page': currentPage,
+            },
+            customBaseUrl: plantBaseUrl,
+          );
 
-      PlantSpeciesModel currentPageModel =
-          PlantSpeciesModel.fromJson(response.data);
+          PlantSpeciesModel currentPageModel =
+              PlantSpeciesModel.fromJson(response.data);
 
-      if (response.statusCode == 200 && currentPageModel.data != null) {
-        if (currentPage == 1) {
-          model.data = currentPageModel.data;
-          filteredSpecies = model.data;
-        } else {
-          model.data!.addAll(currentPageModel.data!);
-          filteredSpecies = model.data;
+          if (response.statusCode == 200 && currentPageModel.data != null) {
+            if (currentPage == 1) {
+              model.data = currentPageModel.data;
+              filteredSpecies = model.data;
+            } else {
+              model.data!.addAll(currentPageModel.data!);
+              filteredSpecies = model.data;
+            }
+
+            // If no more data, stop loading
+            if (currentPageModel.data!.isEmpty) {
+              isLoadingMore = false;
+            }
+
+            success = true; // Stop trying if successful
+            emit(speciesSuccessState());
+          } else {
+            // If response is not 200, switch to the next key
+            currentApiKeyIndex++;
+            if (currentApiKeyIndex >= apiKeys.length) {
+              emit(speciesErrorState("Failed to load species (all keys exhausted)"));
+            }
+          }
+        } catch (e) {
+          // If an error occurs, move to the next key
+          currentApiKeyIndex++;
+          if (currentApiKeyIndex >= apiKeys.length) {
+            emit(speciesErrorState("Failed to load species: ${e.toString()}"));
+          }
         }
-
-        // If no more data, stop loading
-        if (currentPageModel.data!.isEmpty) {
-          isLoadingMore = false;
-        }
-
-        emit(speciesSuccessState());
-      } else {
-        emit(speciesErrorState("Failed to load species"));
       }
     } catch (e) {
       emit(speciesErrorState("Failed to load species: ${e.toString()}"));
     }
   }
+
 
   void loadMoreSpecies() async {
     if (isLoadingMore) return; // Prevent multiple loads at the same time
@@ -85,56 +106,73 @@ class SpeciesCubit extends Cubit<SpeciesState> {
       HomeScreenCubit homeCubit,
       SpeciesCubit speciesCubit,
       BuildContext context) async {
-    if (addedPlantIds.contains(plantId)) {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Remove Plant"),
-            content: Text(
-                "Are you sure you want to remove this plant from the garden?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Cancel"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Remove plant from Hive and update state
-                  HiveHelpers.removePlantId(plantId);
-                  addedPlantIds.remove(plantId);
 
-                  profileCubit.removePlantById(
-                      plantId, homeCubit, speciesCubit);
+    // Emit loading state with the plantId being toggled
+    emit(TogglePlantSpeciesLoading(plantId));
 
-                  // Notify home screen to remove the plant
-                  homeCubit.addedPlantIds.remove(plantId);
-                  homeCubit.emit(ToggeldSuccessState());
+    try {
+      if (addedPlantIds.contains(plantId)) {
+        await showDialog(
+          context: context,
+          barrierDismissible: true,  // Allow dismissal by tapping outside
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Remove Plant"),
+              content: Text(
+                  "Are you sure you want to remove this plant from the garden?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    emit(ToggledPlantSpeciesSuccessState()); // Emit success state when canceled
+                  },
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // Remove plant from Hive and update state
+                    HiveHelpers.removePlantId(plantId);
+                    addedPlantIds.remove(plantId);
 
-                  emit(ToggePlantldSuccessState());
-                },
-                child: Text("Delete"),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      HiveHelpers.addPlantId(plantId);
-      addedPlantIds.add(plantId);
+                    profileCubit.removePlantById(
+                        plantId, homeCubit, speciesCubit);
 
-      await profileCubit.addPlantToMyGarden(plantId, context);
+                    // Notify home screen to remove the plant
+                    homeCubit.addedPlantIds.remove(plantId);
+                    homeCubit.emit(ToggledSuccessState());
 
-      // Notify home screen to add the plant
-      homeCubit.addedPlantIds.add(plantId);
-      homeCubit.emit(ToggeldSuccessState());
+                    emit(ToggledPlantSpeciesSuccessState()); // Emit success state
+                  },
+                  child: Text("Delete"),
+                ),
+              ],
+            );
+          },
+        ).then((value) {
+          // This will execute when the dialog is dismissed by tapping outside
+          if (value == null) {
+            emit(ToggledPlantSpeciesSuccessState()); // Emit success state for cancel
+          }
+        });
+      } else {
+        HiveHelpers.addPlantId(plantId);
+        addedPlantIds.add(plantId);
 
-      emit(ToggePlantldSuccessState());
+        await profileCubit.addPlantToMyGarden(plantId, context);
+
+        // Notify home screen to add the plant
+        homeCubit.addedPlantIds.add(plantId);
+        homeCubit.emit(ToggledSuccessState());
+
+        emit(ToggledPlantSpeciesSuccessState()); // Emit success state
+      }
+    } catch (e) {
+      emit(TogglePlantSpeciesFailed(msg: 'Error occurred while toggling plant'));
     }
   }
+
+
 
   // New function to notify the species screen when a plant is added/removed
   void notifyPlantChanged(int plantId, bool isAdded) {

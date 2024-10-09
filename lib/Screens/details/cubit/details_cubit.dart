@@ -11,17 +11,19 @@ class PlantDetailsCubit extends Cubit<PlantDetailsState> {
   PlantModel? plantModel;
 
   Future<void> getPlantById(int plantId) async {
+    bool success = false;
+
     try {
       emit(PlantDetailsLoadingState());
 
       final response = await DioHelpers.getData(
         path: "/api/species/details/$plantId",
         queryParameters: {
-          'key': apiKeyW,
+          'key': apiKey3,
         },
         customBaseUrl: plantBaseUrl,
       );
-
+      
       if (response.statusCode == 200) {
         plantModel = PlantModel.fromJson(response.data);
         emit(PlantDetailsSuccessState());
@@ -29,7 +31,7 @@ class PlantDetailsCubit extends Cubit<PlantDetailsState> {
         emit(PlantDetailsErrorState("Failed to fetch plant details"));
       }
     } catch (e) {
-      emit(PlantDetailsErrorState(e.toString()));
+      emit(PlantDetailsErrorState('Error: ${e.toString()}'));
     }
   }
 }

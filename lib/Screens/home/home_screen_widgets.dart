@@ -107,16 +107,12 @@ Widget containerBuilder(
                       ),
                       BlocBuilder<HomeScreenCubit, HomeScreenState>(
                         builder: (context, state) {
-                          final isAdded = bloc.addedPlantIds
-                              .contains(plant.id); // Check if plant is added
+                          final isAdded = bloc.addedPlantIds.contains(plant.id);
+                          final isProcessing = state is TogglePlantLoading && state.plantId == plant.id;
+                          
                           return InkWell(
-                            onTap: () {
-                              bloc.togglePlant(
-                                  plant.id ?? 1,
-                                  profileCubit,
-                                  homeCubit,
-                                  speciesCubit,
-                                  context); // Toggle add/remove
+                            onTap: isProcessing ? null : () {
+                              bloc.togglePlant(plant.id ?? 1, profileCubit, homeCubit, speciesCubit, context);
                             },
                             child: Center(
                               child: Container(
@@ -124,10 +120,10 @@ Widget containerBuilder(
                                 width: width * 0.16,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(18),
-                                  color: isAdded ? Colors.red : mainColor,
+                                  color: isProcessing ? Colors.grey : (isAdded ? Colors.red : mainColor),
                                 ),
                                 child: Icon(
-                                  isAdded ? Icons.delete : Icons.add,
+                                  isProcessing ? Icons.hourglass_empty : (isAdded ? Icons.delete : Icons.add),
                                   color: Colors.white,
                                   size: 32,
                                 ),

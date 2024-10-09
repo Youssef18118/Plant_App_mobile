@@ -5,7 +5,7 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> onDidReceiveNotification(NotificationResponse notificationResponse) async {
-    print("Notification receive");
+    // print("Notification receive");
   }
 
   static Future<void> init() async {
@@ -97,7 +97,7 @@ class NotificationService {
       int id, String title, String body, DateTime currentNotifyTime, Duration intervalDuration, int repetitionCount) async {
     
     if (repetitionCount >= 12) {
-      print("Notification scheduling stopped after 12 repetitions.");
+      // print("Notification scheduling stopped after 12 repetitions.");
       return; 
     }
 

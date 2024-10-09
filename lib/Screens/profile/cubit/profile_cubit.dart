@@ -40,7 +40,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       emit(ProfileSuccessState());
     } else {
-      // Fetch profile data from API if not stored locally
       getProfile();
     }
   }
@@ -89,9 +88,38 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
 
+    fetchCreatedPlants();
     emit(ProfileSuccessState());
   }
+  
+  void fetchCreatedPlants() async {
+    List<Map<String, dynamic>> createdPlantsList = HiveHelpers.getCreatedPlants();
 
+    List<PlantModel> plantsFromHive = createdPlantsList.map((plantMap) => PlantModel.fromMap(plantMap)).toList();
+
+    for (var plant in plantsFromHive) {
+      bool plantExists = plantList.any((existingPlant) => existingPlant.commonName == plant.commonName);
+
+      if (!plantExists) {
+        // print("added to list");
+        plantList.add(plant); 
+      }
+    }
+
+    // for (var plant in plantsFromHive) {
+    //   print('Plant ID: ${plant.id}');
+    //   print('Plant commonName: ${plant.commonName}');
+    //   print('Plant description: ${plant.description}');
+    //   print('Plant growthRate: ${plant.growthRate}');
+    //   print('Plant leafColor: ${plant.leafColor}');
+    //   print('Plant imageUrl: ${plant.defaultImage?.mediumUrl}');
+    //   print('---------------------------');
+    // }
+
+    emit(ProfileSuccessState());
+  }
+ 
+  
   Future<void> addPlantToMyGarden(int plantId, BuildContext context) async {
     if (!fetchedPlantIds.contains(plantId)) {
       await getPlantById(plantId);
@@ -119,35 +147,74 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> getPlantById(int plantId) async {
     if (plantList.any((plant) => plant.id == plantId)) return;
 
-    try {
-      final response = await DioHelpers.getData(
-        path: "/api/species/details/$plantId",
-        queryParameters: {'key': apiKeyW},
-        customBaseUrl: plantBaseUrl,
-      );
+    bool success = false;
+    
+    while (!success && currentApiKeyIndex < apiKeys.length) {
+      try {
+        final response = await DioHelpers.getData(
+          path: "/api/species/details/$plantId",
+          queryParameters: {'key': apiKeys[currentApiKeyIndex]}, // Use current key
+          customBaseUrl: plantBaseUrl,
+        );
 
-      if (response.statusCode == 200) {
-        final plant = PlantModel.fromJson(response.data);
-        plantList.add(plant);
-      } else {
-        emit(ProfileErrorState("Failed to fetch plant details"));
+        if (response.statusCode == 200) {
+          final plant = PlantModel.fromJson(response.data);
+          plantList.add(plant);
+          success = true; // Stop trying if successful
+        } else {
+          // If the response is not 200, move to the next key
+          currentApiKeyIndex++;
+          if (currentApiKeyIndex >= apiKeys.length) {
+            emit(ProfileErrorState("All API keys failed to fetch plant details"));
+          }
+        }
+      } catch (e) {
+        currentApiKeyIndex++;
+        if (currentApiKeyIndex >= apiKeys.length) {
+          emit(ProfileErrorState("Error: ${e.toString()}"));
+        }
       }
-    } catch (e) {
-      emit(ProfileErrorState(e.toString()));
     }
   }
 
   void removePlantById(
-      int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit) {
-    cancelWateringNotification(plantId);
-    plantList.removeWhere((plant) => plant.id == plantId);
-    fetchedPlantIds.remove(plantId);
-    HiveHelpers.removePlantId(plantId);
-    homeCubit.addedPlantIds.remove(plantId);
-    homeCubit.emit(ToggeldSuccessState());
-    speciesCubit.notifyPlantChanged(plantId, false);
+    int plantId, HomeScreenCubit homeCubit, SpeciesCubit speciesCubit, {String? commonName}) {
+    // print('removePlantById called with plantId: $plantId, commonName: $commonName');
+
+    bool isPlantRemoved = false;
+
+    if (plantId == -1 && commonName != null) {
+      // print('Removing plant by common name: $commonName');
+
+      final plant = HiveHelpers.getPlantByCommonName(commonName);
+      
+      if (plant != null) {
+        // print('Found plant: $plant');
+
+        plantList.removeWhere((p) => p.commonName == commonName);  
+        HiveHelpers.removePlantByCommonName(commonName);  
+        isPlantRemoved = true;
+        
+        // print('Plant removed successfully by common name: $commonName');
+      } else {
+        // print('No plant found with common name: $commonName');
+      }
+
+      cancelWateringNotification(commonName.hashCode);  
+
+    } else {    
+      cancelWateringNotification(plantId);  
+      plantList.removeWhere((plant) => plant.id == plantId);  
+      fetchedPlantIds.remove(plantId);  
+      HiveHelpers.removePlantId(plantId); 
+      homeCubit.addedPlantIds.remove(plantId);  
+      homeCubit.emit(ToggledSuccessState()); 
+      speciesCubit.notifyPlantChanged(plantId, false); 
+      isPlantRemoved = true;  
+    }
     emit(ProfileSuccessState());
   }
+
 
   Future<void> scheduleWateringNotification(int plantId) async {
     final plant = plantList.firstWhere(
@@ -168,7 +235,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       DateTime notifyTime = DateTime.now().add(Duration(days: daysToNotify));
       // DateTime notifyTime = DateTime.now().add(Duration(seconds: 10));
 
-      // Log the scheduled notification to Firestore
       await FirebaseFirestore.instance
           .collection('scheduled_notifications')
           .add({
@@ -179,15 +245,17 @@ class ProfileCubit extends Cubit<ProfileState> {
         'created_at': DateTime.now().toIso8601String(),
       });
 
+      final notificationId = plant.commonName.hashCode;
+
       await NotificationService.scheduleRecurringNotification(
-        plantId,
+        notificationId,
         "Water Reminder",
         "It's time to water your ${plant.commonName}",
         notifyTime,
         Duration(days: daysToNotify),
       );
 
-      print("notification has been sent at $notifyTime");
+      // print("notification has been sent at $notifyTime with id $notificationId");
     }
   }
 
@@ -202,7 +270,6 @@ class ProfileCubit extends Cubit<ProfileState> {
           .where('plant_id', isEqualTo: plantId)
           .get();
 
-      // Delete the document(s) from Firebase
       for (var doc in snapshot.docs) {
         await FirebaseFirestore.instance
             .collection('scheduled_notifications')

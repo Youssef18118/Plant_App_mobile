@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-class PlantDetailWidget extends StatelessWidget {
-  final String imageUrl;
+class PlantDetailsCreatedWidget extends StatelessWidget {
+  final String imagePath;
   final String plantName;
   final String details;
   final String? type;
@@ -15,9 +15,9 @@ class PlantDetailWidget extends StatelessWidget {
   final double? rating;
   final Color themeColor;
 
-  const PlantDetailWidget({
+  const PlantDetailsCreatedWidget({
     Key? key,
-    required this.imageUrl,
+    required this.imagePath, // Local image path
     required this.plantName,
     required this.details,
     this.type,
@@ -35,7 +35,6 @@ class PlantDetailWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    // print("image url: $imageUrl");
 
     return SingleChildScrollView(
       child: Padding(
@@ -63,14 +62,7 @@ class PlantDetailWidget extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  ),
+                  child: _buildLocalImage(imagePath), // Display local image
                 ),
               ),
             ),
@@ -160,6 +152,26 @@ class PlantDetailWidget extends StatelessWidget {
     );
   }
 
+  // Helper function to build the local image
+  Widget _buildLocalImage(String imagePath) {
+    if (File(imagePath).existsSync()) {
+      return Image.file(
+        File(imagePath),
+        height: 150,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Container(
+        height: 150,
+        width: double.infinity,
+        color: Colors.grey,
+        child: const Icon(Icons.image_not_supported, size: 50, color: Colors.white),
+      );
+    }
+  }
+
+  // Helper function to build details section
   Widget _buildDetailText(
       String label, String text, double screenWidth, double screenHeight) {
     return Padding(

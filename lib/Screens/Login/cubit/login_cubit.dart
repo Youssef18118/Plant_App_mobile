@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,18 +78,16 @@ class LoginCubit extends Cubit<LoginState> {
           await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
 
-      print('User Credential: $userCredential');
-      print('User: $user');
+      // print('User Credential: $userCredential');
+      // print('User: $user');
 
       if (user != null) {
-        // Check if user exists in Firestore
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.email)
             .get();
 
         if (userDoc.exists) {
-          // Retrieve token from Firestore
           String? token = userDoc['token'];
 
           // Check if token is not null and set it in Hive and Dio
@@ -109,7 +106,7 @@ class LoginCubit extends Cubit<LoginState> {
           await signOut();
         }
       } else {
-        print('User is null after Google sign-in.');
+        // print('User is null after Google sign-in.');
         await signOut();
         emit(LogineErrorState("Google sign-in failed"));
       }

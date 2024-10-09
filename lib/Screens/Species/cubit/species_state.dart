@@ -16,5 +16,16 @@ final class speciesErrorState extends SpeciesState {
 
 class SpeciesFiltered extends SpeciesState {}
 
-final class ToggePlantldSuccessState extends SpeciesState {}
 final class SpeciesUpdatedState extends SpeciesState {}
+
+class TogglePlantSpeciesLoading extends SpeciesState {
+  final int plantId;
+  TogglePlantSpeciesLoading(this.plantId);
+}
+
+class ToggledPlantSpeciesSuccessState extends SpeciesState {}
+
+class TogglePlantSpeciesFailed extends SpeciesState {
+  final String msg;
+  TogglePlantSpeciesFailed({required this.msg});
+}
