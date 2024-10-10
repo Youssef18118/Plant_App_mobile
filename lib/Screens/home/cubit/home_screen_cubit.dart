@@ -13,21 +13,23 @@ part 'home_screen_state.dart';
 
 class HomeScreenCubit extends Cubit<HomeScreenState> {
   HomeScreenCubit() : super(HomeScreenInitial());
+
   PlantSpeciesData plantSpeciesModel = PlantSpeciesData();
-  List<PlantSpeciesData> plantsSpecies = [];
+  List<PlantSpeciesData> allPlantsSpecies = []; // List to hold all plants
+  List<PlantSpeciesData> plantsSpecies = []; // List to display in the UI
   List<int> addedPlantIds = HiveHelpers.getPlantIds();
 
   void gettingPlants({String? searchText}) async {
     emit(GettingPlantsLoading());
 
+    // If there's a search query, filter locally from allPlantsSpecies
     if (searchText != null && searchText.isNotEmpty) {
       searchText =
           searchText.toLowerCase(); // Ensure search is case-insensitive
 
-      // Perform local search on common names
-      List<PlantSpeciesData> filteredPlants = plantsSpecies.where((plant) {
+      List<PlantSpeciesData> filteredPlants = allPlantsSpecies.where((plant) {
         return plant.commonName != null &&
-            plant.commonName!.toLowerCase().contains(searchText!);
+            plant.commonName!.toLowerCase().contains(searchText ?? "");
       }).toList();
 
       if (filteredPlants.isNotEmpty) {
@@ -37,30 +39,33 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       }
     }
 
+    // If no search query or filtered result is empty, fetch all plants
     bool success = false;
-    
+
     while (!success && currentApiKeyIndex < apiKeys.length) {
       try {
         final response = await DioHelpers.getData(
           path: '/api/species-list',
           queryParameters: {
-            'key': apiKeys[currentApiKeyIndex], 
+            'key': apiKeys[currentApiKeyIndex],
             'page': '1',
-            if (searchText != null && searchText.isNotEmpty) 'q': searchText
           },
           customBaseUrl: plantBaseUrl,
         );
 
         if (response.statusCode == 200) {
-          plantsSpecies = (response.data['data'] as List)
+          allPlantsSpecies = (response.data['data'] as List)
               .map((e) => PlantSpeciesData.fromJson(e))
               .toList();
-          success = true; 
+          plantsSpecies = allPlantsSpecies; // Reset to all plants when fetched
+
+          success = true;
           emit(GettingPlantsSuccess());
         } else {
           currentApiKeyIndex++;
           if (currentApiKeyIndex >= apiKeys.length) {
-            emit(GettingPlantsFailed(msg: 'Couldn’t load plants (API problem, all keys exhausted)'));
+            emit(GettingPlantsFailed(
+                msg: 'Couldn’t load plants (API problem, all keys exhausted)'));
           }
         }
       } catch (e) {
@@ -72,6 +77,12 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     }
   }
 
+  // When returning to the Home screen, reset plants list
+  void resetPlantsOnHomePage() {
+    // Call gettingPlants() without searchText to fetch all plants again
+    gettingPlants();
+  }
+
   void togglePlant(
     int plantId,
     ProfileCubit profileCubit,
@@ -79,18 +90,18 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     SpeciesCubit speciesCubit,
     BuildContext context,
   ) async {
-    // Emit loading state with the plantId being toggled
     emit(TogglePlantLoading(plantId));
 
     try {
       if (addedPlantIds.contains(plantId)) {
         await showDialog(
           context: context,
-          barrierDismissible: true, // Allow dismissal by tapping outside
+          barrierDismissible: true,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text("Remove Plant"),
-              content: Text("Are you sure you want to remove this plant from the garden?"),
+              content: Text(
+                  "Are you sure you want to remove this plant from the garden?"),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -104,7 +115,8 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
                     Navigator.of(context).pop();
                     HiveHelpers.removePlantId(plantId);
                     addedPlantIds.remove(plantId);
-                    profileCubit.removePlantById(plantId, homeCubit, speciesCubit);
+                    profileCubit.removePlantById(
+                        plantId, homeCubit, speciesCubit);
                     emit(ToggledSuccessState());
                     speciesCubit.notifyPlantChanged(plantId, false);
                   },
@@ -114,7 +126,6 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
             );
           },
         ).then((value) {
-          // This block runs when the dialog is dismissed by tapping outside
           if (value == null) {
             emit(ToggledSuccessState());
           }
@@ -131,11 +142,9 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     }
   }
 
-
   void clearAddedPlants() {
     addedPlantIds.clear();
     HiveHelpers.clearPlantIds();
-
     emit(GettingPlantsSuccess());
   }
 }
