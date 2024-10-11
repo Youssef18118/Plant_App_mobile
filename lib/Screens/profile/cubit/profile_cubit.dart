@@ -252,7 +252,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         "Water Reminder",
         "It's time to water your ${plant.commonName}",
         notifyTime,
-        Duration(days: daysToNotify), 
+        Duration(days: daysToNotify),
       );
 
       // print("notification has been sent at $notifyTime with id $notificationId");
