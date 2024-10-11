@@ -28,7 +28,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       searchText =
           searchText.toLowerCase(); // Ensure search is case-insensitive
 
-      List<PlantSpeciesData> filteredPlants = allPlantsSpecies.where((plant) {
+      List<PlantSpeciesData> filteredPlants = oldplantsSpecies.where((plant) {
         return plant.commonName != null &&
             plant.commonName!.toLowerCase().contains(searchText ?? "");
       }).toList();
@@ -55,7 +55,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
         );
 
         if (response.statusCode == 200) {
-          allPlantsSpecies = (response.data['data'] as List)
+          oldplantsSpecies = (response.data['data'] as List)
               .map((e) => PlantSpeciesData.fromJson(e))
               .toList();
           oldplantsSpecies = plantsSpecies;
