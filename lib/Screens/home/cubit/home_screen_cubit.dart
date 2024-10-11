@@ -15,6 +15,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   HomeScreenCubit() : super(HomeScreenInitial());
   PlantSpeciesData plantSpeciesModel = PlantSpeciesData();
   List<PlantSpeciesData> plantsSpecies = [];
+  List<PlantSpeciesData> oldplantsSpecies = [];
   List<int> addedPlantIds =
       HiveHelpers.getPlantIds(); 
 
@@ -57,6 +58,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
           plantsSpecies = (response.data['data'] as List)
               .map((e) => PlantSpeciesData.fromJson(e))
               .toList();
+          oldplantsSpecies = plantsSpecies;
           success = true; 
           emit(GettingPlantsSuccess());
         } else {
@@ -140,5 +142,9 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
 
     
     emit(GettingPlantsSuccess()); 
+  }
+
+  void resetAllplantSearch(){
+    plantsSpecies = oldplantsSpecies;
   }
 }

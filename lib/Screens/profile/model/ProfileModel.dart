@@ -1,6 +1,6 @@
 class ProfileModel {
   bool? status;
-  Null message;
+  String? message;
   ProfileData? data;
 
   ProfileModel({this.status, this.message, this.data});

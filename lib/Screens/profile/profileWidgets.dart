@@ -155,8 +155,10 @@ void _showLogoutDialog(BuildContext context) {
               Navigator.of(context).pop();
               HiveHelpers.clearAll();
               context.read<HomeScreenCubit>().clearAddedPlants();
+              context.read<HomeScreenCubit>().resetAllplantSearch();
               context.read<ProfileCubit>().clearAddedPlants();
               context.read<SpeciesCubit>().clearAddedPlants();
+              context.read<SpeciesCubit>().resetAllplantSearch();
               Get.offAll(() => const Login());
             },
             child: const Text('Logout'),

@@ -14,6 +14,7 @@ class SpeciesCubit extends Cubit<SpeciesState> {
 
   PlantSpeciesModel model = PlantSpeciesModel();
   List<PlantSpeciesData>? filteredSpecies;
+  List<PlantSpeciesData>? oldfilteredSpecies;
   int currentPage = 1;
   bool isLoadingMore = false;
   List<int> addedPlantIds = HiveHelpers.getPlantIds();
@@ -46,9 +47,12 @@ class SpeciesCubit extends Cubit<SpeciesState> {
             if (currentPage == 1) {
               model.data = currentPageModel.data;
               filteredSpecies = model.data;
+              oldfilteredSpecies = filteredSpecies;
             } else {
               model.data!.addAll(currentPageModel.data!);
               filteredSpecies = model.data;
+              oldfilteredSpecies = filteredSpecies;
+
             }
 
             // If no more data, stop loading
@@ -198,5 +202,8 @@ class SpeciesCubit extends Cubit<SpeciesState> {
     HiveHelpers.clearPlantIds();
 
     emit(SpeciesUpdatedState());
+  }
+  void resetAllplantSearch(){
+    filteredSpecies = oldfilteredSpecies;
   }
 }
