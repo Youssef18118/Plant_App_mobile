@@ -56,10 +56,7 @@ Widget form(AddPlantCubit cubit, double height, double width, BuildContext conte
           SizedBox(
             height: height * 0.013,
           ),
-          Text(
-            'Image ',
-            style: TextStyle(color: Colors.black, fontSize: 20),
-          ),
+          title_of_field("Image "),
           SizedBox(height: height * 0.013),
           UploadImageWidget(cubit, height, width),
           SizedBox(height: height * 0.035),
@@ -89,40 +86,55 @@ Widget form(AddPlantCubit cubit, double height, double width, BuildContext conte
 GestureDetector UploadImageWidget(AddPlantCubit cubit, double height, double width) {
   return GestureDetector(
     onTap: cubit.getImage,
-    child: Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: const Color.fromARGB(
-                255, 91, 91, 91)), 
-        borderRadius:
-            BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: height * 0.02,
-        horizontal: width * 0.05,
-      ),
-      child: Row(
-        children: [
-          Text(
-            cubit.selectedImagename ??
-                'Upload Image', 
-            style: TextStyle(
-              color: Color.fromARGB(255, 115, 115, 115),
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: const Color.fromARGB(
+                    255, 91, 91, 91)), 
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: height * 0.02,
+            horizontal: width * 0.05,
+          ),
+          child: Row(
+            children: [
+              Text(
+                cubit.selectedImagename ?? 'Upload Image', 
+                style: TextStyle(
+                  color: Color.fromARGB(255, 115, 115, 115),
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Spacer(),
+              Icon(
+                Icons.upload,
+                color: Color.fromARGB(255, 115, 115, 115),
+              ),
+            ],
+          ),
+        ),
+        if (cubit.selectedImagename == null || cubit.selectedImagename!.isEmpty)
+          Padding(
+            padding: EdgeInsets.only(top: height * 0.01),
+            child: Text(
+              'This field cannot be empty', 
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 13,
+              ),
             ),
           ),
-          Spacer(),
-          Icon(
-            Icons.upload,
-            color: Color.fromARGB(255, 115, 115, 115),
-          ),
-        ],
-      ),
+      ],
     ),
   );
 }
+
 
 DropdownButtonFormField<T> buildDropdownFormField<T>({
   required AddPlantCubit cubit,
