@@ -41,8 +41,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAC3BSbIFqxhx7Dbf6Gb3hTduCLPY1Y9lU',
-    appId: '1:421711278324:web:fb384580af0f432d2f6ea1',
+    apiKey: '',
+    appId: '',
     messagingSenderId: '421711278324',
     projectId: 'plantapplication-8cf7d',
     authDomain: 'plantapplication-8cf7d.firebaseapp.com',
@@ -51,16 +51,16 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBnqYq6zDa_ZoQ_uL6Ugcz8GWturP7oFWA',
-    appId: '1:421711278324:android:7514aef27a1f196b2f6ea1',
+    apiKey: '',
+    appId: '',
     messagingSenderId: '421711278324',
     projectId: 'plantapplication-8cf7d',
     storageBucket: 'plantapplication-8cf7d.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDB-CZtSZzcs3spHMsaUAV-2o4OSk57hfI',
-    appId: '1:421711278324:ios:f6cedfcabec1a9af2f6ea1',
+    apiKey: '',
+    appId: '',
     messagingSenderId: '421711278324',
     projectId: 'plantapplication-8cf7d',
     storageBucket: 'plantapplication-8cf7d.appspot.com',
@@ -68,8 +68,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDB-CZtSZzcs3spHMsaUAV-2o4OSk57hfI',
-    appId: '1:421711278324:ios:f6cedfcabec1a9af2f6ea1',
+    apiKey: '',
+    appId: '',
     messagingSenderId: '421711278324',
     projectId: 'plantapplication-8cf7d',
     storageBucket: 'plantapplication-8cf7d.appspot.com',
@@ -77,13 +77,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAC3BSbIFqxhx7Dbf6Gb3hTduCLPY1Y9lU',
-    appId: '1:421711278324:web:03113570f6a176d82f6ea1',
+    apiKey: '',
+    appId: '',
     messagingSenderId: '421711278324',
     projectId: 'plantapplication-8cf7d',
     authDomain: 'plantapplication-8cf7d.firebaseapp.com',
     storageBucket: 'plantapplication-8cf7d.appspot.com',
     measurementId: 'G-YQ7K4P98JX',
   );
-
 }
